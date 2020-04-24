@@ -111,7 +111,7 @@ $(document).ready(() => {
             }).addTo(mymap));
         }
         for (var i = 0; i < circles.length; i++) {
-            circles[i].bindPopup("<h4><b>Past 24 Hour Average</b></h4><h4>pm10: " + items[i][3] + "</h4> <h4>pm2.5: " + items[i][4] + "</h4><p></p>");
+            circles[i].bindPopup("<h4><b>Past 24 Hour Average</b></h4><h4>pm10: " + items[i][3] + "</h4> <h4>pm2.5: " + items[i][4] + "</h4><p></p> <h3> Sensor ID </h3>" +items[i][5] );
             data_values.push([items[i][0], items[i][1]]);
             circles[i].on('click', function (event) {
                 circle_chosen = event.target.options.choice_id
