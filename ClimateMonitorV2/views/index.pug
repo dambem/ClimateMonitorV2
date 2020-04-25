@@ -4,13 +4,10 @@ block content
   script(src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js", integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==", crossorigin="")
   script(src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.min.js")
   body
-     div(class="container-fluid")
-        div(class="row")
-            div(class="col-md-4")
-                img(class="img-fluid", src="sheffsense.png") 
-            div(class="col-md-4")
-                h2() SheffSense: Sheffield Climate Monitor
-       
+     nav(class="navbar navbar-light bg-light")
+        img(class="img-fluid", id="headerimage", src="sheffsense.png") 
+        a(class="navbar-brand") SheffSense: Sheffield Climate Monitor
+
      div(class='container-fluid')
         div(class="row")
             div(class="col-md-8")

@@ -9,17 +9,10 @@ router.get('/', function (req, res) {
     res.render('index', { title: 'SheffSenseV2: Sheffield Climate Monitor' });
 });
 
-router.post('/', function (req, res) {
-    try {
-        http.get("http://archive.luftdaten.info/2020-01-04/2020-01-04_sds011_sensor_20978.csv")
-            .pipe(new StringStream())
-            .CSVParse()
-            .consume(object => console.log("Row:", object))
-            .then(() => console.log("All Done"))
-        console.log("test")
-    }catch(error){
-        console.log(error)
-    }
+router.post('/', function (req, res,next) {
+    var userData = req.body;
+
+    return userData
 })
 
 module.exports = router;

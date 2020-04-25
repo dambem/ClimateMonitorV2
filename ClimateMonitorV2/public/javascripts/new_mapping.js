@@ -1,6 +1,25 @@
 const data_values = [];
 var items = [];
+function sendAjaxQuery(url, data) {
+    const input = JSON.stringify(data);
+    $.ajax({
+        url: url,
+        data: input,
+        contentType: 'application/json',
+        type: 'POST',
+        success: function (dataR) {
+            var ret = dataR;
+            console.log(ret)
+        },
+        error: function (xhr, status, error) {
+            alert('Error!' + error.message);
+        }
+    })
+}
 
+function testAjax() {
+
+}
 $(document).ready(() => {
     var date = new Date();
     var slider = document.getElementById("myRange")
