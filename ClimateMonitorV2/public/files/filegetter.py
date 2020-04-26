@@ -1,6 +1,7 @@
 import json
 import urllib.request
 import os
+import time
 from datetime import date, timedelta
 
 # download raw json object
@@ -23,11 +24,10 @@ print("Found all sensors in sheffield")
 print(list_of_sensors)
 print(len(list_of_sensors))
 print("Beginning to take dates, first one:")
-amount_of_days = 120
+amount_of_days = 365
 # Print iterations progress
 
 # Initial call to print 0% progress
-list_of_sensors = [31706]
 
 
 progresscounter = amount_of_days*len(list_of_sensors)
@@ -50,17 +50,20 @@ for n in range(amount_of_days):
         date_at = year + "-" + month + "-" + day
         folder = date_at+"/sds011/"
         print ("Creating: " + date_at + folder + "Sensor Number: " + str(sensor))
-        url = "http://archive.luftdaten.info/"+date_at+"/"+date_at+"_"+"sds011_sensor_"+str(sensor)+".csv"
+        url = "http://archive.sensor.community/"+date_at+"/"+date_at+"_"+"sds011_sensor_"+str(sensor)+".csv"
+        print(url)
         try:
             os.makedirs(folder)
         except FileExistsError:
             print("Folder Already exists!!")
         try:
             urllib.request.urlretrieve(url, date_at+"/sds011/"+str(sensor)+".csv")
-        except PermissionError:
-            print("File Already Exists! So Skipping...")
+        except urllib.error.HTTPError:
+            print("HTTP error, skipping")
+            time.sleep(1)
         currprog += 1
         print("Current Download Progress:")
-        print(currprog/progresscounter)
+        print(currprog/progresscounter*100)
+        time.sleep(0.1)
         
         
