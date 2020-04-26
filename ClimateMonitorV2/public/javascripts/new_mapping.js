@@ -11,6 +11,10 @@ function sendAjaxQuery(url, data) {
             var ret = dataR;
             console.log(ret)
         },
+        complete: function (data, res) {
+            console.log(data)
+            console.log(res)
+        },
         error: function (xhr, status, error) {
             alert('Error!' + error.message);
         }
