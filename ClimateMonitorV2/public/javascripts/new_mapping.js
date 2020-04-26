@@ -21,6 +21,10 @@ function testAjax() {
     data ='{"menu": { "id": "file","value": "File",  "popup": {"menuitem": [{ "value": "New", "onclick": "CreateNewDoc()" },{ "value": "Open", "onclick": "OpenDoc()" },{ "value": "Close", "onclick": "CloseDoc()" }]}}}'
     sendAjaxQuery('/index', JSON.parse(data))
 }
+
+function testLocalParse() {
+    sendAjaxQuery('/local', "foo")
+}
 $(document).ready(() => {
     var date = new Date();
     var slider = document.getElementById("myRange")

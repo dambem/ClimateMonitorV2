@@ -39,6 +39,7 @@
     <Content Include="public\javascripts\mapping.js">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="routes\local_parse.js" />
     <Content Include="routes\index.js" />
     <Content Include="routes\users.js" />
     <Content Include="package.json" />

@@ -7,8 +7,10 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 const { StringStream } = require("scramjet");
+var Papa = require('papaparse');
 
 var routes = require('./routes/index');
+var local_parse = require('./routes/local_parse');
 var users = require('./routes/users');
 
 var app = express();
@@ -27,7 +29,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
+app.use('/local', local_parse);
 
+function printSomething() {
+    console.log("Testing Printing")
+}
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
     var err = new Error('Not Found');
@@ -36,7 +42,6 @@ app.use(function (req, res, next) {
 });
 
 // error handlers
-
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
