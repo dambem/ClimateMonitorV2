@@ -18,7 +18,8 @@ function sendAjaxQuery(url, data) {
 }
 
 function testAjax() {
-
+    data ='{"menu": { "id": "file","value": "File",  "popup": {"menuitem": [{ "value": "New", "onclick": "CreateNewDoc()" },{ "value": "Open", "onclick": "OpenDoc()" },{ "value": "Close", "onclick": "CloseDoc()" }]}}}'
+    sendAjaxQuery('http://localhost:1337/', JSON.parse(data))
 }
 $(document).ready(() => {
     var date = new Date();
