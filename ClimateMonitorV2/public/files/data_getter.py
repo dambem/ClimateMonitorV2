@@ -44,11 +44,12 @@ def csv_parser():
                 hours = time_and_date[11:]
                 dates.append(hours)
                 pm10_list.append(float(pm10))
-                pm2_list.append(pm2)
+                pm2_list.append(float(pm2))
             rowcount+=1
         daily_dates.append(date_chosen)
         print(np.average(pm10_list))
-        daily_averages.append(np.average(pm10_list))
+        #daily_averages.append(np.average(pm10_list))
+        daily_averages.append(np.average(pm2_list))
     real_dates = dates
     
     plt.plot(daily_dates, daily_averages)
