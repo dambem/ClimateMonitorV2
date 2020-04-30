@@ -33,6 +33,7 @@
     <Content Include="public\files\filegetter.py">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="public\files\graphmaker.py" />
     <Content Include="public\javascripts\new_mapping.js">
       <SubType>Code</SubType>
     </Content>

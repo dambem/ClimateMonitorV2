@@ -1,3 +1,4 @@
+# ugly ugly inefficient file getter and code
 import json
 import urllib.request
 import os
@@ -14,6 +15,7 @@ print("Done")
 # output some object attributes
 print(obj[0]["location"])
 list_of_sensors = []
+#
 for n in obj:
     latitude = float(n["location"]["latitude"])
     longitude = float(n["location"]["longitude"])

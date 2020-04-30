@@ -18,7 +18,7 @@ router.post('/index', function (req, res, next) {
     var userDataArray = req.body;
     var options = {
         delimiter: ';', // default is ,
-        endLine: ';;', // default is \n,
+        endLine: '\n', // default is \n,
         columns: ['columnName1', 'columnName2'] // by default read the first line and use values found as columns
     }
     console.log("Going Into Parse")
@@ -47,6 +47,7 @@ router.post('/index', function (req, res, next) {
     });
     csvStreamPromise.then((successMessage) => {
         console.log("Yay, we've succeded" + successMessage)
+        res.send(successMessage)
     })
 });
 

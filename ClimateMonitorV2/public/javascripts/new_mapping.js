@@ -1,5 +1,7 @@
+// This is the main file for the mapping, and sensor information
 const data_values = [];
 var items = [];
+
 function sendAjaxQuery(url, data) {
     const input = JSON.stringify(data);
     $.ajax({
@@ -26,9 +28,6 @@ function testAjax() {
     sendAjaxQuery('/index', JSON.parse(data))
 }
 
-function testLocalParse() {
-    sendAjaxQuery('/local', "foo")
-}
 $(document).ready(() => {
     var date = new Date();
     var slider = document.getElementById("myRange")
@@ -72,11 +71,7 @@ $(document).ready(() => {
             alert("Data:" +data + "\nStatus:" +status)
         })
     }
-    function print_all() {
-        for (var i = 0; i < items.length; i++) {
 
-        }
-    }
     $('#currentdate').text(date)
     var json = $.getJSON('http://api.luftdaten.info/static/v2/data.24h.json', function (data) {
         var counter = 0
