@@ -1,4 +1,3 @@
-# ugly ugly inefficient file getter and code
 import json
 import urllib.request
 import os
@@ -15,7 +14,6 @@ print("Done")
 # output some object attributes
 print(obj[0]["location"])
 list_of_sensors = []
-#
 for n in obj:
     latitude = float(n["location"]["latitude"])
     longitude = float(n["location"]["longitude"])
@@ -36,6 +34,7 @@ progresscounter = amount_of_days*len(list_of_sensors)
 
 
 currprog = 0
+list_of_sensors = [31706]
 
 for n in range(amount_of_days):
     for sensor in list_of_sensors:
@@ -54,15 +53,20 @@ for n in range(amount_of_days):
         print ("Creating: " + date_at + folder + "Sensor Number: " + str(sensor))
         url = "http://archive.sensor.community/"+date_at+"/"+date_at+"_"+"sds011_sensor_"+str(sensor)+".csv"
         print(url)
-        try:
+        if os.path.exists(folder):
+            print("Folder already exists, so not making a new one")
+        else:
             os.makedirs(folder)
-        except FileExistsError:
-            print("Folder Already exists!!")
-        try:
-            urllib.request.urlretrieve(url, date_at+"/sds011/"+str(sensor)+".csv")
-        except urllib.error.HTTPError:
-            print("HTTP error, skipping")
-            time.sleep(1)
+        file = str(sensor)+".csv"
+        full_file_dir = folder+file
+        if os.path.exists(full_file_dir):
+            print("File Exists, so Skipping!")
+        else:
+            try:
+                urllib.request.urlretrieve(url, full_file_dir)
+            except urllib.error.HTTPError:
+                print("HTTP error, skipping")
+                time.sleep(1)
         currprog += 1
         print("Current Download Progress:")
         print(currprog/progresscounter*100)
