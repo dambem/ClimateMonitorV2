@@ -19,11 +19,12 @@ router.post('/index', function (req, res, next) {
     var options = {
         delimiter: ';', // default is ,
         endLine: '\n', // default is \n,
-        columns: ['columnName1', 'columnName2'] // by default read the first line and use values found as columns
+        columns: ['sensor_id', 'sensor_type', 'location', 'lat', 'lon', 'timestamp', 'P1', 'durP1', 'ratioP1', 'P2', 'durP2', 'ratioP2'] // by default read the first line and use values found as columns
     }
     console.log("Going Into Parse")
     var full_data = []
     let csvStreamPromise = new Promise((resolve, reject) => {
+        var header = true;
         var csvStream = csv.createStream(options);
         request('http://archive.sensor.community/2020-04-24/2020-04-24_sds011_sensor_20926.csv').pipe(csvStream)
             .on('error', function (err) {
@@ -33,17 +34,13 @@ router.post('/index', function (req, res, next) {
                 console.log(columns);
             })
             .on('data', function (data) {
-                console.log(data);
-                console.log(full_data)
+                console.log(data)
+                full_data.push(data)
+
+            })
+            .on('end', function () {
                 resolve(full_data)
-
-            })
-            .on('column', function (key, value) {
-                console.log('#' + key + '=' + value);
-                full_data.push(value)
-
-            })
-
+            });
     });
     csvStreamPromise.then((successMessage) => {
         console.log("Yay, we've succeded" + successMessage)
