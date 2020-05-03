@@ -24,17 +24,12 @@ router.post('/index', function (req, res, next) {
     console.log("Going Into Parse")
     var full_data = []
     let csvStreamPromise = new Promise((resolve, reject) => {
-        var header = true;
         var csvStream = csv.createStream(options);
         request('http://archive.sensor.community/2020-04-24/2020-04-24_sds011_sensor_20926.csv').pipe(csvStream)
             .on('error', function (err) {
                 console.log(err);
             })
-            .on('header', function (columns) {
-                console.log(columns);
-            })
             .on('data', function (data) {
-                console.log(data)
                 full_data.push(data)
 
             })
