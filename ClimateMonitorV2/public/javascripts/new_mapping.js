@@ -2,36 +2,12 @@
 const data_values = [];
 var items = [];
 
-function sendAjaxQuery(url, data) {
-    const input = JSON.stringify(data);
-    $.ajax({
-        url: url,
-        data: input,
-        contentType: 'application/json',
-        type: 'POST',
-        success: function (dataR) {
-            var ret = dataR;
-            console.log(ret)
-        },
-        complete: function (data, res) {
-            console.log(data)
-            console.log(res)
-        },
-        error: function (xhr, status, error) {
-            alert('Error!' + error.message);
-        }
-    })
-}
-
-function testAjax() {
-    data ='{"menu": { "id": "file","value": "File",  "popup": {"menuitem": [{ "value": "New", "onclick": "CreateNewDoc()" },{ "value": "Open", "onclick": "OpenDoc()" },{ "value": "Close", "onclick": "CloseDoc()" }]}}}'
-    sendAjaxQuery('/index', JSON.parse(data))
-}
-
 $(document).ready(() => {
     var date = new Date();
     var slider = document.getElementById("myRange")
     var output = document.getElementById("value")
+    var ctx = document.getElementById('testChart').getContext('2d');
+
     // Update the current slider value (each time you drag the slider handle)
     slider.oninput = function () {
         current_date = new Date();
@@ -44,7 +20,7 @@ $(document).ready(() => {
         console.log(current_date)
         link = build_link_from_date(current_date)
         full_link = link + "20978.csv"
-        testAjax()
+        getData(full_link, ctx)
     }
 
     function build_link_from_date(date) {
@@ -65,43 +41,57 @@ $(document).ready(() => {
         return link
     }
 
-    var ctx = document.getElementById('testChart').getContext('2d');
-    var myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-            datasets: [{
-                label: '# of Votes',
-                data: [12, 19, 3, 5, 2, 3],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
+
+
+    function getData(data, graph) {
+        const input = JSON.stringify(data);
+        $.ajax({
+            url: '/index',
+            data: '',
+            contentType: 'application/json',
+            type: 'POST',
+            success: function (dataR) {
+                var ret = dataR;
+                updateGraph(graph, ret)
+            },
+            complete: function (data, res) {
+                console.log(res)
+            },
+            error: function (xhr, status, error) {
+                alert('Error!' + error.message);
             }
+        })
+    }
+
+    function updateGraph(graph, data) {
+        var i;
+        var graphData = []
+        for (i = 1; i < data.length; i++) {
+            console.log(data[i])
+            date = new Date(Date.parse(data[i]['timestamp']))
+            item = {x: date, y:data[i]['P2']}
+            graphData.push(item)
         }
-    })
+        console.log(graphData)
+        var scatterChart = new Chart(ctx, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'PM2.5 Values',
+                    data: graphData,
+                    backgroundColor: 'red'
+                }]
+            },
+            options: {
+                scales: {
+                    xAxes: [{
+                        type: 'linear',
+                        position: 'bottom'
+                    }]
+                }
+            }
+        })
+    }
     $('#currentdate').text(date)
     var json = $.getJSON('http://api.luftdaten.info/static/v2/data.24h.json', function (data) {
         var counter = 0
