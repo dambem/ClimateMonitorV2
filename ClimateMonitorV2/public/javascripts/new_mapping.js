@@ -68,7 +68,8 @@ $(document).ready(() => {
         var graphData = []
         for (i = 1; i < data.length; i++) {
             console.log(data[i])
-            date = new Date(Date.parse(data[i]['timestamp']))
+            date = new Date(data[i]['timestamp'])
+            console.log(data[i]['timestamp'])
             item = {x: date, y:data[i]['P2']}
             graphData.push(item)
         }
@@ -85,8 +86,11 @@ $(document).ready(() => {
             options: {
                 scales: {
                     xAxes: [{
-                        type: 'linear',
-                        position: 'bottom'
+                        type: 'time',
+                        position: 'bottom',
+                        time: {
+                            unit: 'hour'
+                        }
                     }]
                 }
             }
