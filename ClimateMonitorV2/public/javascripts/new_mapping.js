@@ -44,7 +44,7 @@ $(document).ready(() => {
         console.log(current_date)
         link = build_link_from_date(current_date)
         full_link = link + "20978.csv"
-        build_csv(full_link)
+        testAjax()
     }
 
     function build_link_from_date(date) {
@@ -63,13 +63,6 @@ $(document).ready(() => {
         link = "http://archive.luftdaten.info/" + year + "-" + month + "-" + day + "/" + year + "-" + month + "-" + day + "_" +"sds011_sensor_20978.csv"
         console.log(link)
         return link
-    }
-
-    function build_csv(link) {
-        console.log("Building CSV")
-        $.post("/", function (data, status) {
-            alert("Data:" +data + "\nStatus:" +status)
-        })
     }
 
     $('#currentdate').text(date)
