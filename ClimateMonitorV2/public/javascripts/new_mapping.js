@@ -39,8 +39,7 @@ $(document).ready(() => {
         current_date.setDate(current_date.getDate() + parseInt(this.value))
         console.log(current_date)
         link = build_link_from_date(current_date)
-        full_link = link + "20978.csv"
-        getData(full_link, ctx)
+        getData(link, ctx)
     }
 
     function build_link_from_date(date) {
@@ -56,18 +55,18 @@ $(document).ready(() => {
             day = "0"+day
         }
         console.log(day)
-        link = "http://archive.luftdaten.info/" + year + "-" + month + "-" + day + "/" + year + "-" + month + "-" + day + "_" +"sds011_sensor_20978.csv"
+        link = "http://archive.sensor.community/" + year + "-" + month + "-" + day + "/" + year + "-" + month + "-" + day + "_" +"sds011_sensor_20978.csv"
         console.log(link)
         return link
     }
 
 
 
-    function getData(data, graph) {
-        const input = JSON.stringify(data);
+    function getData(dateSent, graph) {
+        jsonData = {date:dateSent}
         $.ajax({
             url: '/index',
-            data: '',
+            data: JSON.stringify(jsonData),
             contentType: 'application/json',
             type: 'POST',
             success: function (dataR) {
@@ -78,7 +77,7 @@ $(document).ready(() => {
                 console.log(res)
             },
             error: function (xhr, status, error) {
-                alert('Error!' + error.message);
+                console.log(error.message);
             }
         })
     }
@@ -93,7 +92,7 @@ $(document).ready(() => {
             graphData.push(item)
         }
         console.log(graphData)
-        var scatterChart = new Chart(ctx, {
+        var scatterChart = new Chart(graph, {
             type: 'scatter',
             data: {
                 datasets: [{
@@ -115,6 +114,7 @@ $(document).ready(() => {
             }
         })
     }
+
     $('#currentdate').text(date)
     var json = $.getJSON('http://api.luftdaten.info/static/v2/data.24h.json', function (data) {
         var counter = 0
@@ -161,11 +161,12 @@ $(document).ready(() => {
             }).addTo(sensorMap));
         }
         for (var i = 0; i < circles.length; i++) {
-            circles[i].bindPopup("<h4><b>Past 24 Hour Average</b></h4><h4>pm10: " + items[i][3] + "</h4> <h4>pm2.5: " + items[i][4] + "</h4><p></p> <h3> Sensor ID </h3>" +items[i][5] );
+            circles[i].bindPopup("<h4><b>Past 24 Hour Average</b></h4><h4>pm10: " + items[i][3] + "</h4> <h4>pm2.5: " + items[i][4] + "</h4><p></p> <h3> Sensor ID </h3>" +items[i][5]);
             data_values.push([items[i][0], items[i][1]]);
             circles[i].on('click', function (event) {
                 circle_chosen = event.target.options.choice_id
-
+                console.log(circle_chosen)
+                var cxt2 = document.getElementById('specificOne').getContext('2d');
             })
         }
         var ctx = document.getElementById("myChart").getContext('2d');
@@ -191,4 +192,3 @@ $(document).ready(() => {
         });
     });
 });
-

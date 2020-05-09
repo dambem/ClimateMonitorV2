@@ -15,7 +15,9 @@ router.get('/local', function (req, res) {
 });
 
 router.post('/index', function (req, res, next) {
-    var userDataArray = req.body;
+    console.log(req.body)
+    var full_link = req.body['date']
+    console.log(full_link)
     var options = {
         delimiter: ';', // default is ,
         endLine: '\n', // default is \n,
@@ -25,7 +27,7 @@ router.post('/index', function (req, res, next) {
     var full_data = []
     let csvStreamPromise = new Promise((resolve, reject) => {
         var csvStream = csv.createStream(options);
-        request('http://archive.sensor.community/2020-04-24/2020-04-24_sds011_sensor_20926.csv').pipe(csvStream)
+        request(full_link).pipe(csvStream)
             .on('error', function (err) {
                 console.log(err);
             })
