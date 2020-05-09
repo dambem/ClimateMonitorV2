@@ -1,6 +1,9 @@
 // This is the main file for the mapping, and sensor information
 const data_values = [];
 var items = [];
+var date = new Date();
+
+// Values for colours
 var light = "#FFF275"
 var medium = "#FF8C42"
 var high = '#FF3C38'
@@ -8,7 +11,37 @@ var veryhigh = '#d600a4'
 var danger = '#a20049'
 var bigdanger = '#1a0006'
 var safe = '#6699CC'
+
+// Function that returns different colours based on pollution 
+function colorForPollution(pm10, pm2) {
+    if (pm10 >= 20 && pm10 < 30 || pm2 >= 10 && pm2 < 15) {
+        return light
+    }
+    else if (pm10 >= 30 && pm10 < 50 || pm2 >= 15 && pm2 < 25) {
+        return medium
+    }
+    else if (pm10 >= 50 && pm10 < 70 || pm2 >= 25 && pm2 < 35) {
+        colour = high
+    }
+    else if (pm10 >= 70 || pm2 >= 35) {
+        colour = veryhigh
+    }
+    else if (pm10 >= 100 || pm2 >= 50) {
+        colour = danger
+    }
+    else if (pm10 >= 150 || pm2 >= 75) {
+        colour = bigdanger
+    }
+    else {
+        colour = safe
+    }
+}
+// Everything required once loaded
 $(document).ready(() => {
+    // Displays current date on top of map (for debugging uses)
+    $('#currentdate').text(date)
+
+    // Creates options for the initial sensor map
     var sensorMap = L.map('mapid', {
         minZoom: 12,
         fullscreenControl: true,
@@ -23,7 +56,6 @@ $(document).ready(() => {
         accessToken: 'pk.eyJ1IjoiZGFtYmVtIiwiYSI6ImNrOWJhZzNkYjAzdmEzZW14Zjgxdmk3aHoifQ.ZHdBdk1Gh5hfX4uxURjsHA'
     }).addTo(sensorMap);
     sensorMap.setView([53.382, -1.47], 13);
-    var date = new Date();
     var slider = document.getElementById("myRange")
     var output = document.getElementById("value")
     var ctx = document.getElementById('testChart').getContext('2d');
@@ -59,8 +91,6 @@ $(document).ready(() => {
         console.log(link)
         return link
     }
-
-
 
     function getData(dateSent, graph) {
         jsonData = {date:dateSent}
@@ -114,8 +144,6 @@ $(document).ready(() => {
             }
         })
     }
-
-    $('#currentdate').text(date)
     var json = $.getJSON('http://api.luftdaten.info/static/v2/data.24h.json', function (data) {
         var counter = 0
         $.each(data, function (key, val) {
@@ -129,27 +157,7 @@ $(document).ready(() => {
         $('input[name="dates"]').daterangepicker();
         circles = []
         for (var i = 0; i < items.length; i++) {
-            if (items[i][3] >= 20 && items[i][3] < 30 || items[i][4] >= 10 && items[i][4] < 15) {
-                colour = light
-            }
-            else if (items[i][3] >= 30 && items[i][3] < 50 || items[i][4] >= 15 && items[i][4] < 25) {
-                colour = medium
-            }
-            else if (items[i][3] >= 50 && items[i][3] < 70 || items[i][4] >= 25 && items[i][4] < 35) {
-                colour = high
-            }
-            else if (items[i][3] >= 70 || items[i][4] >= 35) {
-                colour = veryhigh
-            }
-            else if (items[i][3] >= 100 || items[i][4] >= 50) {
-                colour = danger
-            }
-            else if (items[i][3] >= 150 || items[i][4] >= 75) {
-                colour = bigdanger
-            }
-            else {
-                colour = safe
-            }
+            color = colorForPollution(items[i][3], items[i][4])
             circles.push(L.circle([items[i][1], items[i][2]], {
                 color: 'black',
                 fillColor: colour,
@@ -170,7 +178,7 @@ $(document).ready(() => {
             })
         }
         var ctx = document.getElementById("myChart").getContext('2d');
-        var myChart = new Chart(ctx, {
+        var pollutionGuidelinesChart = new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: ["pm10", "pm2.5"],
