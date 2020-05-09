@@ -23,7 +23,6 @@ router.post('/index', function (req, res, next) {
         endLine: '\n', // default is \n,
         columns: ['sensor_id', 'sensor_type', 'location', 'lat', 'lon', 'timestamp', 'P1', 'durP1', 'ratioP1', 'P2', 'durP2', 'ratioP2'] // by default read the first line and use values found as columns
     }
-    console.log("Going Into Parse")
     var full_data = []
     let csvStreamPromise = new Promise((resolve, reject) => {
         var csvStream = csv.createStream(options);
@@ -44,5 +43,6 @@ router.post('/index', function (req, res, next) {
         res.send(successMessage)
     })
 });
+
 
 module.exports = router;

@@ -36,8 +36,50 @@ function colorForPollution(pm10, pm2) {
         colour = safe
     }
 }
+
+// This function builds the link to the sensor given a certain date.
+function build_link_from_date(date) {
+    year = date.getFullYear();
+    month = date.getMonth();
+    if (month < 10) {
+        month = "0" + month
+    }
+    console.log(month)
+    day = date.getDay();
+    if (day < 10) {
+        day = "0" + day
+    }
+    console.log(day)
+    link = "http://archive.sensor.community/" + year + "-" + month + "-" + day + "/" + year + "-" + month + "-" + day + "_" + "sds011_sensor_20978.csv"
+    console.log(link)
+    return link
+}
+
 // Everything required once loaded
 $(document).ready(() => {
+    // Create the pollution chart 
+    var ctx = document.getElementById("pollutionChart").getContext('2d');
+    var pollutionGuidelinesChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ["pm10", "pm2.5"],
+            datasets: [
+                { label: 'Within guidelines', data: [20, 10], backgroundColor: [safe, safe], borderWidth: 1 },
+                { label: '3% Increase In LTM', data: [30, 15], backgroundColor: [light, light,], borderWidth: 1 },
+                { label: '9% Increase In LTM', data: [50, 25], backgroundColor: [medium, medium], borderWidth: 1 },
+                { label: '15% Increase in LTM', data: [75, 37.5], backgroundColor: [high, high], borderWidth: 1 },
+                { label: '1.2% Increase In STM, 15% Increase in LTM', data: [100, 50], backgroundColor: [veryhigh, veryhigh], borderWidth: 1 },
+                { label: '2.5% Increase In STM, 15% Increase in LTM', data: [150, 75], backgroundColor: [danger, danger], borderWidth: 1 },
+                { label: '5% Increase In STM, 15% Increase in LTM', data: [175, 175], backgroundColor: [bigdanger, bigdanger], borderWidth: 1 }]
+        },
+        options: {
+            title: { display: true, text: "Effects of PM10 and PM2.5 on Long and Short Term Mortality (LTM, STM)" },
+            scales: {
+                yAxes: [{ ticks: { beginAtZero: true } }],
+                xAxes: [{ stacked: true }]
+            }
+        }
+    });
     // Displays current date on top of map (for debugging uses)
     $('#currentdate').text(date)
 
@@ -49,16 +91,19 @@ $(document).ready(() => {
             position: 'topleft'
         }
     })
+    // This builds the actual map.
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
         attribution: 'Sensor Data <a href="https://luftdaten.info/en/home-en/">Luftdaten</a> | Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         maxZoom: 18,
         id: 'mapbox.streets',
         accessToken: 'pk.eyJ1IjoiZGFtYmVtIiwiYSI6ImNrOWJhZzNkYjAzdmEzZW14Zjgxdmk3aHoifQ.ZHdBdk1Gh5hfX4uxURjsHA'
     }).addTo(sensorMap);
+    // Localises the view to go to Sheffield
     sensorMap.setView([53.382, -1.47], 13);
     var slider = document.getElementById("myRange")
     var output = document.getElementById("value")
-    var ctx = document.getElementById('testChart').getContext('2d');
+    var pm2Chart = document.getElementById('pm2Chart').getContext('2d');
+    var pm10Chart = document.getElementById('pm10Chart').getContext('2d');
 
     // Update the current slider value (each time you drag the slider handle)
     slider.oninput = function () {
@@ -66,33 +111,15 @@ $(document).ready(() => {
         current_date.setDate(current_date.getDate() + parseInt(this.value))
         output.innerHTML = current_date;
     }
+    // Once slider is released, goes to the date chosen.
     slider.onmouseup = function () {
         current_date = new Date();
         current_date.setDate(current_date.getDate() + parseInt(this.value))
-        console.log(current_date)
         link = build_link_from_date(current_date)
-        getData(link, ctx)
+        getData(link)
     }
 
-    function build_link_from_date(date) {
-        year = date.getFullYear();
-        console.log(year)
-        month = date.getMonth();
-        if (month < 10) {
-            month = "0"+month
-        }
-        console.log(month)
-        day = date.getDay();
-        if (day < 10) {
-            day = "0"+day
-        }
-        console.log(day)
-        link = "http://archive.sensor.community/" + year + "-" + month + "-" + day + "/" + year + "-" + month + "-" + day + "_" +"sds011_sensor_20978.csv"
-        console.log(link)
-        return link
-    }
-
-    function getData(dateSent, graph) {
+    function getData(dateSent) {
         jsonData = {date:dateSent}
         $.ajax({
             url: '/index',
@@ -101,7 +128,7 @@ $(document).ready(() => {
             type: 'POST',
             success: function (dataR) {
                 var ret = dataR;
-                updateGraph(graph, ret)
+                updateGraph(ret)
             },
             complete: function (data, res) {
                 console.log(res)
@@ -112,22 +139,45 @@ $(document).ready(() => {
         })
     }
 
-    function updateGraph(graph, data) {
+    function updateGraph(data) {
         var i;
-        var graphData = []
+        var pm2Data = []
+        var pm10Data = []
         for (i = 1; i < data.length; i++) {
             console.log(data[i])
             date = new Date(data[i]['timestamp'])
-            item = {x: date, y:data[i]['P2']}
-            graphData.push(item)
+            pm2 = { x: date, y: data[i]['P2'] }
+            pm10 = { x: date, y: data[i]['P1']}
+            pm2Data.push(pm2)
+            pm10Data.push(pm10)
         }
-        console.log(graphData)
-        var scatterChart = new Chart(graph, {
+        var scatterChart = new Chart(pm2Chart, {
             type: 'scatter',
             data: {
                 datasets: [{
                     label: 'PM2.5 Values',
-                    data: graphData,
+                    data: pm2Data,
+                    backgroundColor: 'red'
+                }]
+            },
+            options: {
+                scales: {
+                    xAxes: [{
+                        type: 'time',
+                        position: 'bottom',
+                        time: {
+                            unit: 'hour'
+                        }
+                    }]
+                }
+            }
+        })
+        var scatterChart = new Chart(pm10Chart, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'PM10 Values',
+                    data: pm10Data,
                     backgroundColor: 'red'
                 }]
             },
@@ -173,30 +223,9 @@ $(document).ready(() => {
             data_values.push([items[i][0], items[i][1]]);
             circles[i].on('click', function (event) {
                 circle_chosen = event.target.options.choice_id
-                console.log(circle_chosen)
-                var cxt2 = document.getElementById('specificOne').getContext('2d');
             })
         }
-        var ctx = document.getElementById("myChart").getContext('2d');
-        var pollutionGuidelinesChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ["pm10", "pm2.5"],
-                datasets: [
-                    {label: 'Within guidelines',data: [20, 10],backgroundColor: [safe,safe],borderWidth: 1},
-                    {label: '3% Increase In LTM',data: [30, 15],backgroundColor: [light,light,],borderWidth: 1},
-                    {label: '9% Increase In LTM',data: [50, 25],backgroundColor: [medium,medium],borderWidth: 1},
-                    {label: '15% Increase in LTM',data: [75, 37.5],backgroundColor: [high,high],borderWidth: 1},
-                    {label: '1.2% Increase In STM, 15% Increase in LTM',data: [100, 50],backgroundColor: [veryhigh,veryhigh],borderWidth: 1},
-                    {label: '2.5% Increase In STM, 15% Increase in LTM',data: [150, 75],backgroundColor: [danger,danger],borderWidth: 1},
-                    {label: '5% Increase In STM, 15% Increase in LTM',data: [175, 175],backgroundColor: [bigdanger,bigdanger],borderWidth: 1}]},
-            options: {
-                title: {display: true,text: "Effects of PM10 and PM2.5 on Long and Short Term Mortality (LTM, STM)"},
-                scales: {
-                    yAxes: [{ticks: {beginAtZero: true}}],
-                    xAxes: [{stacked: true}]
-                }
-            }
-        });
+
+
     });
 });

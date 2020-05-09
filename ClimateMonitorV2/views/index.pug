@@ -7,6 +7,7 @@ block content
 
   script(src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.min.js")
   body
+
      nav(class="navbar fixed-top navbar-expand-lg navbar-light bg-light" id="mainNavigator")
         img(class="img-fluid", id="headerimage", src="sheffsense.png") 
         a(class="navbar-brand") SheffSense: Sheffield Climate Monitor
@@ -18,7 +19,23 @@ block content
                     a(class="nav-link" href="#") About
                 li(class="nav-item")
                     a(class="nav-link" href="#")
-     
+     #exampleModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true')
+        .modal-dialog(role='document')
+            .modal-content
+                .modal-header
+                    h5#exampleModalLabel.modal-title PM10 and PM2.5 Values Of Sensor (SENSORID)
+                    button.close(type='button' data-dismiss='modal' aria-label='Close')
+                        span(aria-hidden='true') &times;
+                .modal-body
+                    div(class="col-md-12")
+                        canvas(id="pm2Chart" width="400" height="200")
+                    div(class="col-md-12")
+                        canvas(id="pm10Chart" width="400" height="200")
+                .modal-footer
+                    button.btn.btn-secondary(type='button' data-dismiss='modal') Close
+                    button.btn.btn-primary(type='button') Save changes
+     button.btn.btn-primary(type='button' data-toggle='modal' data-target='#exampleModal')
+        | Launch demo modal
      div(class='container-fluid' id="mainContainer")
         div(class="row")
             div(class="col-md-8")
@@ -32,10 +49,9 @@ block content
                  div(id='value') Today
 
             div(class="col-md-4")
-                 div(class='myChart')
-                    canvas(id='myChart', height='350')
-                 div(class="col-md-12")
-                    canvas(id="testChart" width="400" height="200")
+                 div(class='pollutionChart')
+                    canvas(id='pollutionChart', height='350')
+
         div(class="row")
             div(class="accordion" id="accordionInfo")
                 div(class="card")
