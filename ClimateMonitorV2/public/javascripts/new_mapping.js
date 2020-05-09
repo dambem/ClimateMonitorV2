@@ -1,8 +1,28 @@
 // This is the main file for the mapping, and sensor information
 const data_values = [];
 var items = [];
-
+var light = "#FFF275"
+var medium = "#FF8C42"
+var high = '#FF3C38'
+var veryhigh = '#d600a4'
+var danger = '#a20049'
+var bigdanger = '#1a0006'
+var safe = '#6699CC'
 $(document).ready(() => {
+    var sensorMap = L.map('mapid', {
+        minZoom: 12,
+        fullscreenControl: true,
+        fullscreenControlOptions: {
+            position: 'topleft'
+        }
+    })
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+        attribution: 'Sensor Data <a href="https://luftdaten.info/en/home-en/">Luftdaten</a> | Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        maxZoom: 18,
+        id: 'mapbox.streets',
+        accessToken: 'pk.eyJ1IjoiZGFtYmVtIiwiYSI6ImNrOWJhZzNkYjAzdmEzZW14Zjgxdmk3aHoifQ.ZHdBdk1Gh5hfX4uxURjsHA'
+    }).addTo(sensorMap);
+    sensorMap.setView([53.382, -1.47], 13);
     var date = new Date();
     var slider = document.getElementById("myRange")
     var output = document.getElementById("value")
@@ -69,7 +89,6 @@ $(document).ready(() => {
         for (i = 1; i < data.length; i++) {
             console.log(data[i])
             date = new Date(data[i]['timestamp'])
-            console.log(data[i]['timestamp'])
             item = {x: date, y:data[i]['P2']}
             graphData.push(item)
         }
@@ -108,23 +127,7 @@ $(document).ready(() => {
             counter++;
         });
         $('input[name="dates"]').daterangepicker();
-        console.log($('input[name="dates"]'))
-        var mymap = L.map('mapid').setView([51.505, -0.09], 13);
-        mymap.setView([53.382, -1.47], 13);
-        L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-            attribution: 'Sensor Data <a href="https://luftdaten.info/en/home-en/">Luftdaten</a> | Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-            maxZoom: 18,
-            id: 'mapbox.streets',
-            accessToken: 'pk.eyJ1IjoiZGFtYmVtIiwiYSI6ImNrOWJhZzNkYjAzdmEzZW14Zjgxdmk3aHoifQ.ZHdBdk1Gh5hfX4uxURjsHA'
-        }).addTo(mymap);
         circles = []
-        var light = "#FFF275"
-        var medium = "#FF8C42"
-        var high = '#FF3C38'
-        var veryhigh = '#d600a4'
-        var danger = '#a20049'
-        var bigdanger = '#1a0006'
-        var safe = '#6699CC'
         for (var i = 0; i < items.length; i++) {
             if (items[i][3] >= 20 && items[i][3] < 30 || items[i][4] >= 10 && items[i][4] < 15) {
                 colour = light
@@ -155,7 +158,7 @@ $(document).ready(() => {
                 p10: [items[i][3]],
                 p2: [items[i][4]],
                 choice_id: i
-            }).addTo(mymap));
+            }).addTo(sensorMap));
         }
         for (var i = 0; i < circles.length; i++) {
             circles[i].bindPopup("<h4><b>Past 24 Hour Average</b></h4><h4>pm10: " + items[i][3] + "</h4> <h4>pm2.5: " + items[i][4] + "</h4><p></p> <h3> Sensor ID </h3>" +items[i][5] );
