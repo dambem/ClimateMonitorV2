@@ -4,11 +4,19 @@ block content
   script(src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js", integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==", crossorigin="")
   script(src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.min.js")
   body
-     nav(class="navbar navbar-light bg-light")
+     nav(class="navbar fixed-top navbar-expand-lg navbar-light bg-light" id="mainNavigator")
         img(class="img-fluid", id="headerimage", src="sheffsense.png") 
         a(class="navbar-brand") SheffSense: Sheffield Climate Monitor
-
-     div(class='container-fluid')
+        div(class="collapse navbar-collapse" id="navbarNav")
+            ul(class="navbar-nav")
+                li(class = "nav-item active")
+                    a(class="nav-link" href="#") Home
+                li(class="nav-item")
+                    a(class="nav-link" href="#") About
+                li(class="nav-item")
+                    a(class="nav-link" href="#")
+     
+     div(class='container-fluid' id="mainContainer")
         div(class="row")
             div(class="col-md-8")
                  div(class="col-md-12")
