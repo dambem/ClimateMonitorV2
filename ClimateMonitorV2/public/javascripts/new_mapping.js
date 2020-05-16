@@ -79,9 +79,7 @@ $(document).ready(() => {
     var scatterChartPM2 = new Chart(pm2Chart, {
         type: 'scatter',
         data: {
-            datasets: [{
-                 {x:5, y:10}
-            }]
+
         },
         options: {
             scales: {
