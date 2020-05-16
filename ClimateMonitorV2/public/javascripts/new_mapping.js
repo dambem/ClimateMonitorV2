@@ -11,7 +11,23 @@ var veryhigh = '#d600a4'
 var danger = '#a20049'
 var bigdanger = '#1a0006'
 var safe = '#6699CC'
-
+// Function for adding data to chart
+function addData(chart, label, data) {
+    chart.data.labels.push(label);
+    chart.data.datasets.forEach((dataset) => {
+        dataset.data.push(data);
+        console.log(data)
+    });
+    chart.update();
+}
+// Function for removing data from charts
+function removeData(chart) {
+    chart.data.labels.pop();
+    chart.data.datasets.forEach((dataset) => {
+        dataset.data.pop();
+    });
+    chart.update();
+}
 // Function that returns different colours based on pollution 
 function colorForPollution(pm10, pm2) {
     if (pm10 >= 20 && pm10 < 30 || pm2 >= 10 && pm2 < 15) {
@@ -57,6 +73,47 @@ function build_link_from_date(date) {
 
 // Everything required once loaded
 $(document).ready(() => {
+    var pm2Chart = document.getElementById('pm2Chart').getContext('2d');
+    var pm10Chart = document.getElementById('pm10Chart').getContext('2d');
+
+    var scatterChartPM2 = new Chart(pm2Chart, {
+        type: 'scatter',
+        data: {
+            datasets: [{
+                 {x:5, y:10}
+            }]
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                    type: 'time',
+                    position: 'bottom',
+                    time: {
+                        unit: 'day'
+                    }
+                }]
+            }
+        },
+    })
+    var scatterChartPM10 = new Chart(pm10Chart, {
+        type: 'scatter',
+        data: {
+            datasets: [{
+
+            }]
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                    type: 'time',
+                    position: 'bottom',
+                    time: {
+                        unit: 'hour'
+                    }
+                }]
+            }
+        },
+    })
     // Create the pollution chart 
     var ctx = document.getElementById("pollutionChart").getContext('2d');
     var pollutionGuidelinesChart = new Chart(ctx, {
@@ -102,8 +159,6 @@ $(document).ready(() => {
     sensorMap.setView([53.382, -1.47], 13);
     var slider = document.getElementById("myRange")
     var output = document.getElementById("value")
-    var pm2Chart = document.getElementById('pm2Chart').getContext('2d');
-    var pm10Chart = document.getElementById('pm10Chart').getContext('2d');
 
     // Update the current slider value (each time you drag the slider handle)
     slider.oninput = function () {
@@ -140,59 +195,27 @@ $(document).ready(() => {
     }
 
     function updateGraph(data) {
+
         var i;
+        label2 = "PM2.5 Values"
         var pm2Data = []
         var pm10Data = []
+        var pm2Color = []
+        var pm10Color = []
         for (i = 1; i < data.length; i++) {
             console.log(data[i])
             date = new Date(data[i]['timestamp'])
-            pm2 = { x: date, y: data[i]['P2'] }
+            pm2 = { x: date, y: data[i]['P2']}
             pm10 = { x: date, y: data[i]['P1']}
+            pm2Color.push('green')
+            pm10Color.push('red')
             pm2Data.push(pm2)
             pm10Data.push(pm10)
         }
-        var scatterChart = new Chart(pm2Chart, {
-            type: 'scatter',
-            data: {
-                datasets: [{
-                    label: 'PM2.5 Values',
-                    data: pm2Data,
-                    backgroundColor: 'red'
-                }]
-            },
-            options: {
-                scales: {
-                    xAxes: [{
-                        type: 'time',
-                        position: 'bottom',
-                        time: {
-                            unit: 'hour'
-                        }
-                    }]
-                }
-            }
-        })
-        var scatterChart = new Chart(pm10Chart, {
-            type: 'scatter',
-            data: {
-                datasets: [{
-                    label: 'PM10 Values',
-                    data: pm10Data,
-                    backgroundColor: 'red'
-                }]
-            },
-            options: {
-                scales: {
-                    xAxes: [{
-                        type: 'time',
-                        position: 'bottom',
-                        time: {
-                            unit: 'hour'
-                        }
-                    }]
-                }
-            }
-        })
+        addData(scatterChartPM10, "PM10 Values", pm10Data)
+        addData(scatterChartPM2, "PM2.5 Values", pm2Data)
+
+
     }
     var json = $.getJSON('http://api.luftdaten.info/static/v2/data.24h.json', function (data) {
         var counter = 0

@@ -13,7 +13,7 @@ router.get('/', function (req, res) {
 router.get('/local', function (req, res) {
     res.render('index', { title: "Parsing Some Local Data" })
 });
-
+// Our post route for getting daily values
 router.post('/index', function (req, res, next) {
     console.log(req.body)
     var full_link = req.body['date']
@@ -39,7 +39,6 @@ router.post('/index', function (req, res, next) {
             });
     });
     csvStreamPromise.then((successMessage) => {
-        console.log("Yay, we've succeded" + successMessage)
         res.send(successMessage)
     })
 });

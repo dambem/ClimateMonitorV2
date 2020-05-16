@@ -6,6 +6,9 @@ block content
   link(href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet')
 
   script(src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.min.js")
+  script(src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8")
+  script(src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@0.7.7")
+
   body
 
      nav(class="navbar fixed-top navbar-expand-lg navbar-light bg-light" id="mainNavigator")
@@ -70,7 +73,7 @@ block content
                             img(class="img-fluid", src="https://assets.publishing.service.gov.uk/government/uploads/system/uploads/image_data/file/81010/Infographic_on_the_scale_of_the_problem_with_air_pollution.jpg")
                             a(href="https://www.gov.uk/government/publications/health-matters-air-pollution/health-matters-air-pollution?fbclid=IwAR1WCj4WuVHtGuDehhsQZ682MUpF4MIdM2AL8i4Z6UvyjnIkOiePaYjrQks") Information and images from Gov.UK
 
-
+     script(type="text/javascript", src="/javascripts/zoompluginconfig.js")
      script(type='text/javascript', src='/javascripts/new_mapping.js')
   script(src="https://d3js.org/d3.v5.min.js")
   footer

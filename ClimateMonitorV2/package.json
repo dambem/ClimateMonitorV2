@@ -10,10 +10,10 @@
     "name": ""
   },
   "dependencies": {
-    "request": "2.88.2",
     "acorn": "^7.1.1",
     "body-parser": "^1.15.0",
     "bulma": "^0.8.2",
+    "chartjs-plugin-zoom": "^0.7.7",
     "cookie-parser": "^1.4.5",
     "csv-stream": "^0.2.0",
     "debug": "^2.2.0",
@@ -23,6 +23,7 @@
     "morgan": "^1.10.0",
     "papaparse": "^5.2.0",
     "pug": "^2.0.0-beta6",
+    "request": "2.88.2",
     "request-progress": "^3.0.0",
     "request-promise": "^4.2.5",
     "scramjet": "^4.28.7",
