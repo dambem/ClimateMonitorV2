@@ -7,3 +7,4 @@ By making the data freely and easily accesible and understandable, we woke that 
 The majority of this repo is a bog-standard nodeJS express installation, however, in public/files you'll find two python files. One of which (file_getter.py) is to download archive.luftdaten.info to your local file-system, the second is to parse it into matplotlib in python, and gather some information. 
 ## How can I help?
 We accept any contributors to this project, just contact Damian Bemben (dbemben1@sheffield.ac.uk) or, if you'd rather use our foundations, just make a fork and start working on it yourself! 
+## Getting Started 
