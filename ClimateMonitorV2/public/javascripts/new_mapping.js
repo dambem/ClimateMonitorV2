@@ -151,7 +151,7 @@ $(document).ready(() => {
         attribution: 'Sensor Data <a href="https://luftdaten.info/en/home-en/">Luftdaten</a> | Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         maxZoom: 18,
         id: 'mapbox.streets',
-        accessToken: 'pk.eyJ1IjoiZGFtYmVtIiwiYSI6ImNrOWJhZzNkYjAzdmEzZW14Zjgxdmk3aHoifQ.ZHdBdk1Gh5hfX4uxURjsHA'
+        accessToken: config.MAP_KEY
     }).addTo(sensorMap);
     // Localises the view to go to Sheffield
     sensorMap.setView([53.382, -1.47], 13);
