@@ -15,11 +15,14 @@ print("Done")
 print(obj[0]["location"])
 list_of_sensors = []
 for n in obj:
-    latitude = float(n["location"]["latitude"])
-    longitude = float(n["location"]["longitude"])
-    if (longitude > -1.58 and longitude < -1.34 and latitude <= 53.468 and latitude >= 53.29):
-        if (n["sensor"]["sensor_type"]["name"] == "SDS011"):
-            list_of_sensors.append(n["sensor"]["id"])
+    try:
+        latitude = float(n["location"]["latitude"])
+        longitude = float(n["location"]["longitude"])
+        if (longitude > -1.58 and longitude < -1.34 and latitude <= 53.468 and latitude >= 53.29):
+            if (n["sensor"]["sensor_type"]["name"] == "SDS011"):
+                list_of_sensors.append(n["sensor"]["id"])
+    except ValueError: 
+        continue
 print("Found all sensors in sheffield")
 print(list_of_sensors)
 print(len(list_of_sensors))
