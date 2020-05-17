@@ -29,7 +29,9 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include=".gitignore" />
     <Content Include="app.js" />
+    <Content Include="public\javascripts\config.js" />
     <Content Include="public\files\filegetter.py">
       <SubType>Code</SubType>
     </Content>
