@@ -8,3 +8,9 @@ The majority of this repo is a bog-standard nodeJS express installation, however
 ## How can I help?
 We accept any contributors to this project, just contact Damian Bemben (dbemben1@sheffield.ac.uk) or, if you'd rather use our foundations, just make a fork and start working on it yourself! 
 ## Getting Started 
+```javascript
+
+npm install
+
+npm start
+```
