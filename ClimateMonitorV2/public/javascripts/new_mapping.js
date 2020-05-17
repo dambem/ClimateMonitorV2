@@ -174,6 +174,7 @@ $(document).ready(() => {
 
     function getData(dateSent) {
         jsonData = {date:dateSent}
+        $body = $("body");
         $.ajax({
             url: '/index',
             data: JSON.stringify(jsonData),
@@ -188,7 +189,10 @@ $(document).ready(() => {
             },
             error: function (xhr, status, error) {
                 console.log(error.message);
-            }
+            },
+             // shows the loader         
+            beforeSend: function () { $body.addClass("loading");   },
+            complete: function () { $body.removeClass("loading"); },             
         })
     }
 
