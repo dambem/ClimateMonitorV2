@@ -21,6 +21,7 @@
     "fs-extra": "^9.0.0",
     "http": "0.0.1-security",
     "morgan": "^1.10.0",
+    "package.json": "^2.0.1",
     "papaparse": "^5.2.0",
     "pug": "^2.0.0-beta6",
     "request": "2.88.2",
