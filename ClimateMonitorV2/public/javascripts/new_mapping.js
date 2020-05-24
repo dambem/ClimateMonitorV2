@@ -37,19 +37,19 @@ function colorForPollution(pm10, pm2) {
         return medium
     }
     else if (pm10 >= 50 && pm10 < 70 || pm2 >= 25 && pm2 < 35) {
-        colour = high
+        return high
     }
     else if (pm10 >= 70 || pm2 >= 35) {
-        colour = veryhigh
+        return veryhigh
     }
     else if (pm10 >= 100 || pm2 >= 50) {
-        colour = danger
+        return danger
     }
     else if (pm10 >= 150 || pm2 >= 75) {
-        colour = bigdanger
+         return bigdanger
     }
     else {
-        colour = safe
+        return safe
     }
 }
 
@@ -172,6 +172,27 @@ $(document).ready(() => {
         getData(link)
     }
 
+    function getRequest() {
+        $.ajax({
+            url: chosen_url,
+            data: '',
+            contentType: 'application/json',
+            type: 'GET',
+            success: function (dataR) {
+                var ret = dataR;
+                console.log(ret)
+            },
+            complete: function (data, res) {
+                console.log(res)
+            },
+            error: function (xhr, status, error) {
+                console.log(error.message)
+            },
+            // shows the loader         
+            beforeSend: function () { $body.addClass("loading"); },
+            complete: function () { $body.removeClass("loading"); },     
+        })
+    }
     function getData(dateSent) {
         jsonData = {date:dateSent}
         $body = $("body");
@@ -235,7 +256,7 @@ $(document).ready(() => {
             color = colorForPollution(items[i][3], items[i][4])
             circles.push(L.circle([items[i][1], items[i][2]], {
                 color: 'black',
-                fillColor: colour,
+                fillColor: color,
                 fillOpacity: 0.8,
                 radius: 150,
                 p10: [items[i][3]],
