@@ -90,9 +90,8 @@ $(document).ready(() => {
     var scatterChartPM2 = new Chart(pm2Chart, {
         type: 'scatter',
         data: {
-
         },
-/*        options: {
+        options: {
             scales: {
                 xAxes: [{
                     type: 'time',
@@ -102,16 +101,13 @@ $(document).ready(() => {
                     }
                 }]
             }
-        },*/
+        },
     })
     var scatterChartPM10 = new Chart(pm10Chart, {
         type: 'scatter',
         data: {
-            datasets: [{
-
-            }]
         },
-/*        options: {
+        options: {
             scales: {
                 xAxes: [{
                     type: 'time',
@@ -121,7 +117,7 @@ $(document).ready(() => {
                     }
                 }]
             }
-        },*/
+        },
     })
     // Create the pollution chart 
     var ctx = document.getElementById("pollutionChart").getContext('2d');
@@ -240,20 +236,20 @@ $(document).ready(() => {
         var pm10Data = []
         var pm2Color = []
         var pm10Color = []
-        for (i = 1; i < 2; i++) {
+        scatterChartPM10.data.datasets = []
+        scatterChartPM2.data.datasets = []
+        for (i = 1; i < data.length; i++) {
             date = new Date(data[i]['timestamp'])
-            pm2 = { x: 0, y: parseFloat(data[i]['P2'])/100}
-            pm10 = { x: 0, y: parseFloat(data[i]['P1'])/100}
+            pm2 = { x: date, y: parseFloat(data[i]['P2'])}
+            pm10 = { x: date, y: parseFloat(data[i]['P1']) }
             pm2Color.push('green')
             pm10Color.push('red')
             pm2Data.push(pm2)
             pm10Data.push(pm10)
-            scatterChartPM2.data.datasets.label = "PM2 Values"
-            scatterChartPM10.data.datasets.label = "PM10 Values"
-            scatterChartPM10.data.datasets.push(pm10)
-            scatterChartPM2.data.datasets.push(pm2)
         }
         console.log(scatterChartPM10.data)
+        scatterChartPM10.data.datasets.push({label:"Pm10 Data", data:pm10Data })
+        scatterChartPM2.data.datasets.push({label: "Pm2 Data", data:pm2Data})
         scatterChartPM10.update()
         scatterChartPM2.update()
         
