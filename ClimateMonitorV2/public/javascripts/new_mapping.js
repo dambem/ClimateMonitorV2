@@ -11,15 +11,7 @@ var veryhigh = '#d600a4'
 var danger = '#a20049'
 var bigdanger = '#1a0006'
 var safe = '#6699CC'
-// Function for adding data to chart
-function addData(chart, label, data) {
-    chart.data.labels.push(label);
-    chart.data.datasets.forEach((dataset) => {
-        dataset.data.push(data);
-        console.log(data)
-    });
-    chart.update();
-}
+
 // Function for removing data from charts
 function removeData(chart) {
     chart.data.labels.pop();
@@ -75,13 +67,32 @@ function build_link_from_date(date) {
 $(document).ready(() => {
     var pm2Chart = document.getElementById('pm2Chart').getContext('2d');
     var pm10Chart = document.getElementById('pm10Chart').getContext('2d');
-
+    var testChart = document.getElementById('testChart').getContext('2d');
+    var testChart = new Chart(testChart, {
+        type: 'scatter',
+        data: {
+            labels: ["pm10", "pm2.5"],
+            datasets: [{
+                label: 'Within guidelines',
+                data: [{ x: 0.5, y: 0.5 },
+                        {x:0.6, y:0.6}]
+            }], 
+        },
+        options: {
+            title: { display: true, text: "Effects of PM10 and PM2.5 on Long and Short Term Mortality (LTM, STM)" },
+            scales: {
+                yAxes: [{ ticks: { beginAtZero: true } }],
+                xAxes: [{ stacked: true }]
+            }
+        }
+    })
+    console.log(testChart.data)
     var scatterChartPM2 = new Chart(pm2Chart, {
         type: 'scatter',
         data: {
 
         },
-        options: {
+/*        options: {
             scales: {
                 xAxes: [{
                     type: 'time',
@@ -91,7 +102,7 @@ $(document).ready(() => {
                     }
                 }]
             }
-        },
+        },*/
     })
     var scatterChartPM10 = new Chart(pm10Chart, {
         type: 'scatter',
@@ -100,7 +111,7 @@ $(document).ready(() => {
 
             }]
         },
-        options: {
+/*        options: {
             scales: {
                 xAxes: [{
                     type: 'time',
@@ -110,7 +121,7 @@ $(document).ready(() => {
                     }
                 }]
             }
-        },
+        },*/
     })
     // Create the pollution chart 
     var ctx = document.getElementById("pollutionChart").getContext('2d');
@@ -180,10 +191,12 @@ $(document).ready(() => {
             type: 'GET',
             success: function (dataR) {
                 var ret = dataR;
+                console.log("Everything")
                 console.log(ret)
             },
             complete: function (data, res) {
                 console.log(res)
+                console.log("Fully Complete")
             },
             error: function (xhr, status, error) {
                 console.log(error.message)
@@ -202,18 +215,20 @@ $(document).ready(() => {
             contentType: 'application/json',
             type: 'POST',
             success: function (dataR) {
-                var ret = dataR;
+                var ret = dataR
+                console.log("Success Hit")
                 updateGraph(ret)
             },
             complete: function (data, res) {
+                console.log("Complete Hit")
                 console.log(res)
+                $body.removeClass("loading");
             },
             error: function (xhr, status, error) {
                 console.log(error.message);
             },
              // shows the loader         
             beforeSend: function () { $body.addClass("loading");   },
-            complete: function () { $body.removeClass("loading"); },             
         })
     }
 
@@ -225,19 +240,23 @@ $(document).ready(() => {
         var pm10Data = []
         var pm2Color = []
         var pm10Color = []
-        for (i = 1; i < data.length; i++) {
-            console.log(data[i])
+        for (i = 1; i < 2; i++) {
             date = new Date(data[i]['timestamp'])
-            pm2 = { x: date, y: data[i]['P2']}
-            pm10 = { x: date, y: data[i]['P1']}
+            pm2 = { x: 0, y: parseFloat(data[i]['P2'])/100}
+            pm10 = { x: 0, y: parseFloat(data[i]['P1'])/100}
             pm2Color.push('green')
             pm10Color.push('red')
             pm2Data.push(pm2)
             pm10Data.push(pm10)
+            scatterChartPM2.data.datasets.label = "PM2 Values"
+            scatterChartPM10.data.datasets.label = "PM10 Values"
+            scatterChartPM10.data.datasets.push(pm10)
+            scatterChartPM2.data.datasets.push(pm2)
         }
-        addData(scatterChartPM10, "PM10 Values", pm10Data)
-        addData(scatterChartPM2, "PM2.5 Values", pm2Data)
-
+        console.log(scatterChartPM10.data)
+        scatterChartPM10.update()
+        scatterChartPM2.update()
+        
 
     }
     var json = $.getJSON('http://api.luftdaten.info/static/v2/data.24h.json', function (data) {
