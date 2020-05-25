@@ -8,6 +8,9 @@ var csv = require('csv-stream');
 var request = require("request")
 /* Pull Request Test */
 /* GET home page. */
+router.get('/test', function (req, res) {
+    res.render("newtest", { title: "SheffSenseV2: Sheffield Climate Monitor" });
+});
 router.get('/', function (req, res) {
     res.render('index', { title: 'SheffSenseV2: Sheffield Climate Monitor' });
 });

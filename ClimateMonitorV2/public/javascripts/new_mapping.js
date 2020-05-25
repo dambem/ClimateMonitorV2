@@ -11,15 +11,7 @@ var veryhigh = '#d600a4'
 var danger = '#a20049'
 var bigdanger = '#1a0006'
 var safe = '#6699CC'
-// Function for adding data to chart
-function addData(chart, label, data) {
-    chart.data.labels.push(label);
-    chart.data.datasets.forEach((dataset) => {
-        dataset.data.push(data);
-        console.log(data)
-    });
-    chart.update();
-}
+
 // Function for removing data from charts
 function removeData(chart) {
     chart.data.labels.pop();
@@ -37,19 +29,19 @@ function colorForPollution(pm10, pm2) {
         return medium
     }
     else if (pm10 >= 50 && pm10 < 70 || pm2 >= 25 && pm2 < 35) {
-        colour = high
+        return high
     }
     else if (pm10 >= 70 || pm2 >= 35) {
-        colour = veryhigh
+        return veryhigh
     }
     else if (pm10 >= 100 || pm2 >= 50) {
-        colour = danger
+        return danger
     }
     else if (pm10 >= 150 || pm2 >= 75) {
-        colour = bigdanger
+         return bigdanger
     }
     else {
-        colour = safe
+        return safe
     }
 }
 
@@ -75,11 +67,29 @@ function build_link_from_date(date) {
 $(document).ready(() => {
     var pm2Chart = document.getElementById('pm2Chart').getContext('2d');
     var pm10Chart = document.getElementById('pm10Chart').getContext('2d');
-
+    var testChart = document.getElementById('testChart').getContext('2d');
+    var testChart = new Chart(testChart, {
+        type: 'scatter',
+        data: {
+            labels: ["pm10", "pm2.5"],
+            datasets: [{
+                label: 'Within guidelines',
+                data: [{ x: 0.5, y: 0.5 },
+                        {x:0.6, y:0.6}]
+            }], 
+        },
+        options: {
+            title: { display: true, text: "Effects of PM10 and PM2.5 on Long and Short Term Mortality (LTM, STM)" },
+            scales: {
+                yAxes: [{ ticks: { beginAtZero: true } }],
+                xAxes: [{ stacked: true }]
+            }
+        }
+    })
+    console.log(testChart.data)
     var scatterChartPM2 = new Chart(pm2Chart, {
         type: 'scatter',
         data: {
-
         },
         options: {
             scales: {
@@ -96,9 +106,6 @@ $(document).ready(() => {
     var scatterChartPM10 = new Chart(pm10Chart, {
         type: 'scatter',
         data: {
-            datasets: [{
-
-            }]
         },
         options: {
             scales: {
@@ -172,6 +179,29 @@ $(document).ready(() => {
         getData(link)
     }
 
+    function getRequest() {
+        $.ajax({
+            url: chosen_url,
+            data: '',
+            contentType: 'application/json',
+            type: 'GET',
+            success: function (dataR) {
+                var ret = dataR;
+                console.log("Everything")
+                console.log(ret)
+            },
+            complete: function (data, res) {
+                console.log(res)
+                console.log("Fully Complete")
+            },
+            error: function (xhr, status, error) {
+                console.log(error.message)
+            },
+            // shows the loader         
+            beforeSend: function () { $body.addClass("loading"); },
+            complete: function () { $body.removeClass("loading"); },     
+        })
+    }
     function getData(dateSent) {
         jsonData = {date:dateSent}
         $body = $("body");
@@ -181,18 +211,20 @@ $(document).ready(() => {
             contentType: 'application/json',
             type: 'POST',
             success: function (dataR) {
-                var ret = dataR;
+                var ret = dataR
+                console.log("Success Hit")
                 updateGraph(ret)
             },
             complete: function (data, res) {
+                console.log("Complete Hit")
                 console.log(res)
+                $body.removeClass("loading");
             },
             error: function (xhr, status, error) {
                 console.log(error.message);
             },
              // shows the loader         
             beforeSend: function () { $body.addClass("loading");   },
-            complete: function () { $body.removeClass("loading"); },             
         })
     }
 
@@ -204,19 +236,23 @@ $(document).ready(() => {
         var pm10Data = []
         var pm2Color = []
         var pm10Color = []
+        scatterChartPM10.data.datasets = []
+        scatterChartPM2.data.datasets = []
         for (i = 1; i < data.length; i++) {
-            console.log(data[i])
             date = new Date(data[i]['timestamp'])
-            pm2 = { x: date, y: data[i]['P2']}
-            pm10 = { x: date, y: data[i]['P1']}
+            pm2 = { x: date, y: parseFloat(data[i]['P2'])}
+            pm10 = { x: date, y: parseFloat(data[i]['P1']) }
             pm2Color.push('green')
             pm10Color.push('red')
             pm2Data.push(pm2)
             pm10Data.push(pm10)
         }
-        addData(scatterChartPM10, "PM10 Values", pm10Data)
-        addData(scatterChartPM2, "PM2.5 Values", pm2Data)
-
+        console.log(scatterChartPM10.data)
+        scatterChartPM10.data.datasets.push({label:"Pm10 Data", data:pm10Data })
+        scatterChartPM2.data.datasets.push({label: "Pm2 Data", data:pm2Data})
+        scatterChartPM10.update()
+        scatterChartPM2.update()
+        
 
     }
     var json = $.getJSON('http://api.luftdaten.info/static/v2/data.24h.json', function (data) {
@@ -235,7 +271,7 @@ $(document).ready(() => {
             color = colorForPollution(items[i][3], items[i][4])
             circles.push(L.circle([items[i][1], items[i][2]], {
                 color: 'black',
-                fillColor: colour,
+                fillColor: color,
                 fillOpacity: 0.8,
                 radius: 150,
                 p10: [items[i][3]],
