@@ -67,26 +67,9 @@ function build_link_from_date(date) {
 $(document).ready(() => {
     var pm2Chart = document.getElementById('pm2Chart').getContext('2d');
     var pm10Chart = document.getElementById('pm10Chart').getContext('2d');
-    var testChart = document.getElementById('testChart').getContext('2d');
-    var testChart = new Chart(testChart, {
-        type: 'scatter',
-        data: {
-            labels: ["pm10", "pm2.5"],
-            datasets: [{
-                label: 'Within guidelines',
-                data: [{ x: 0.5, y: 0.5 },
-                        {x:0.6, y:0.6}]
-            }], 
-        },
-        options: {
-            title: { display: true, text: "Effects of PM10 and PM2.5 on Long and Short Term Mortality (LTM, STM)" },
-            scales: {
-                yAxes: [{ ticks: { beginAtZero: true } }],
-                xAxes: [{ stacked: true }]
-            }
-        }
-    })
-    console.log(testChart.data)
+    var pm2ChartAll = document.getElementById('pm2ChartAll').getContext('2d');
+    var pm10ChartAll = document.getElementById('pm10ChartAll').getContext('2d');
+
     var scatterChartPM2 = new Chart(pm2Chart, {
         type: 'scatter',
         data: {
@@ -104,6 +87,38 @@ $(document).ready(() => {
         },
     })
     var scatterChartPM10 = new Chart(pm10Chart, {
+        type: 'scatter',
+        data: {
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                    type: 'time',
+                    position: 'bottom',
+                    time: {
+                        unit: 'hour'
+                    }
+                }]
+            }
+        },
+    })
+    var scatterChartPM2All = new Chart(pm2ChartAll, {
+        type: 'scatter',
+        data: {
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                    type: 'time',
+                    position: 'bottom',
+                    time: {
+                        unit: 'day'
+                    }
+                }]
+            }
+        },
+    })
+    var scatterChartPM10All = new Chart(pm10ChartAll, {
         type: 'scatter',
         data: {
         },
@@ -284,6 +299,7 @@ $(document).ready(() => {
             data_values.push([items[i][0], items[i][1]]);
             circles[i].on('click', function (event) {
                 circle_chosen = event.target.options.choice_id
+                $('#exampleModal').modal('show')
             })
         }
 
