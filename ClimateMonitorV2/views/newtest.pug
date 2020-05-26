@@ -1,0 +1,30 @@
+extends layout
+
+block content
+  script(src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js", integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==", crossorigin="")
+  script(src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js')
+  link(href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet')
+
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.min.js")
+  script(src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8")
+  script(src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@0.7.7")
+
+  body
+     nav(class="navbar fixed-top navbar-expand-lg navbar-light bg-light" id="mainNavigator")
+        img(class="img-fluid", id="headerimage", src="sheffsense.png") 
+        a(class="navbar-brand") SheffSense: Sheffield Climate Monitor
+        div(class="collapse navbar-collapse" id="navbarNav")
+            ul(class="navbar-nav")
+                li(class = "nav-item active")
+                    a(class="nav-link" href="#") Home
+                li(class="nav-item")
+                    a(class="nav-link" href="/test") About
+                li(class="nav-item")
+                    a(class="nav-link" href="#")
+     div
+        canvas( id="testCanvas", width="500", height ="500"
+
+     script(type='text/javascript' src='/javascripts/config.js')
+     script(type='text/javascript', src='/javascripts/new_mapping.js')
+  script(src="https://d3js.org/d3.v5.min.js")
+  footer
