@@ -42,18 +42,21 @@
     <Content Include="public\javascripts\mapping.js">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="public\javascripts\testing.js">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="routes\index.js" />
     <Content Include="routes\users.js" />
     <Content Include="package.json" />
     <Content Include="public\stylesheets\main.css" />
     <Content Include="README.md" />
-    <Content Include="views\index - Copy.pug" />
     <Content Include="views\index.pug" />
     <Content Include="views\layout.pug" />
     <Content Include="views\error.pug" />
     <Content Include="views\footer.pug">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="views\newtest.pug" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="public\" />
