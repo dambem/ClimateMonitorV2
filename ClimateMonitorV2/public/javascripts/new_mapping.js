@@ -12,7 +12,15 @@ var veryhigh = '#d600a4'
 var danger = '#a20049'
 var bigdanger = '#1a0006'
 var safe = '#6699CC'
-
+function human_display(good, bad, id) {
+    $(id).empty()
+    for (i = 0; i < good; i++) {
+        $(id).append('<svg class="bi bi - person - fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" /></svg >')
+    }
+    for (i = 0; i < bad; i++) {
+        $(id).append('<svg class="bi bi - person - fill" width="1em" height="1em" viewBox="0 0 16 16" fill="red" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" /></svg >')
+    }
+}
 // Function for removing data from charts
 function removeData(chart) {
     chart.data.labels.pop();
@@ -70,7 +78,17 @@ $(document).ready(() => {
     var pm10Chart = document.getElementById('pm10Chart').getContext('2d');
     var pm2ChartAll = document.getElementById('pm2ChartAll').getContext('2d');
     var pm10ChartAll = document.getElementById('pm10ChartAll').getContext('2d');
+    $(function () {
+        $('input[name="daterange"]').daterangepicker({
+            opens: 'left'
+        }, function (start, end, label) {
+            console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+        });
+    });
 
+
+
+    human_display(700, 300, "#danger_level")
     var scatterChartPM2 = new Chart(pm2Chart, {
         type: 'scatter',
         data: {
@@ -296,14 +314,13 @@ $(document).ready(() => {
             }).addTo(sensorMap));
         }
         for (var i = 0; i < circles.length; i++) {
-            circles[i].bindPopup("<h4><b>Past 24 Hour Average</b></h4><h4>pm10: " + items[i][3] + "</h4> <h4>pm2.5: " + items[i][4] + "</h4><p></p> <h3> Sensor ID </h3>" +items[i][5]);
+            circles[i].bindPopup("<h4><b>Past 24 Hour Average</b></h4><h4>pm10: " + items[i][3] + "</h4> <h4>pm2.5: " + items[i][4] + "<button class='btn btn-primary' type='button' data-toggle='modal' data-target='#exampleModal'>Get Detailed Information And Statistics</button>");
             data_values.push([items[i][0], items[i][1]]);
             circles[i].on('click', function (event) {
                 link = build_link_from_date(chosen_date, sensor_id)
                 getData(link)
                 circle_chosen = event.target.options.choice_id
                 sensor_id = event.target.options.sensor_id
-                $('#exampleModal').modal('show')
             })
         }
 
