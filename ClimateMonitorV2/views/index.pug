@@ -26,7 +26,7 @@ block content
         .modal-dialog(role='document')
             .modal-content
                 .modal-header
-                    h5#exampleModalLabel.modal-title PM10 and PM2.5 Values Of Sensor (SENSORID)
+                    h5#exampleModalLabel.modal-title PM10 and PM2.5 Values Of Sensor 
                     button.close(type='button' data-dismiss='modal' aria-label='Close')
                         span(aria-hidden='true') &times;
                 .modal-body
@@ -34,6 +34,11 @@ block content
                         canvas(id="pm2Chart" width="400" height="200")
                     div(class="col-md-12")
                         canvas(id="pm10Chart" width="400" height="200")
+                    div(class="col-md-12")
+                        div(class='slidecontainer')
+                            input(type="range", min=-364, max=0, value=0, class="slider", id="myRange")
+                        div(id='value') Today
+
                 .modal-footer
                     button.btn.btn-secondary(type='button' data-dismiss='modal') Close
                     button.btn.btn-primary(type='button') Save changes
@@ -47,10 +52,6 @@ block content
                  div(class="col-md-12")
                      div(id='mapid')
                         div(class="loader")
-                 div(class="col-md-12")
-                    div(class='slidecontainer')
-                         input(type="range", min=-364, max=0, value=0, class="slider", id="myRange")
-                 div(id='value') Today
             div(class="col-md-4")
                  div(class='pollutionChart')
                     canvas(id='pollutionChart', height='350')
