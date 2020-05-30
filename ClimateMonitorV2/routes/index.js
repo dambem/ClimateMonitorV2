@@ -21,6 +21,7 @@ router.get('/local', function (req, res) {
 router.post('/index', function (req, res, next) {
     console.log(req.body)
     var full_link = req.body['date']
+    var id = req.body['id']
     console.log(full_link)
     var options = {
         delimiter: ';', // default is ,

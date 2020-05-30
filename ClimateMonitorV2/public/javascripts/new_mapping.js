@@ -2,7 +2,8 @@
 const data_values = [];
 var items = [];
 var date = new Date();
-
+var chosen_date = new Date();
+var sensor_id = 0;
 // Values for colours
 var light = "#FFF275"
 var medium = "#FF8C42"
@@ -58,7 +59,7 @@ function build_link_from_date(date) {
         day = "0" + day
     }
     console.log(day)
-    link = "http://archive.sensor.community/" + year + "-" + month + "-" + day + "/" + year + "-" + month + "-" + day + "_" + "sds011_sensor_20978.csv"
+    link = "http://archive.sensor.community/" + year + "-" + month + "-" + day + "/" + year + "-" + month + "-" + day + "_" + "sds011_sensor_"+sensor_id+".csv"
     console.log(link)
     return link
 }
@@ -188,9 +189,8 @@ $(document).ready(() => {
     }
     // Once slider is released, goes to the date chosen.
     slider.onmouseup = function () {
-        current_date = new Date();
-        current_date.setDate(current_date.getDate() + parseInt(this.value))
-        link = build_link_from_date(current_date)
+        chosen_date.setDate(current_date.getDate() + parseInt(this.value))
+        link = build_link_from_date(current_date, sensor_id)
         getData(link)
     }
 
@@ -217,8 +217,8 @@ $(document).ready(() => {
             complete: function () { $body.removeClass("loading"); },     
         })
     }
-    function getData(dateSent) {
-        jsonData = {date:dateSent}
+    function getData(dateSent, sensorID) {
+        jsonData = {date:dateSent, id:sensorID}
         $body = $("body");
         $.ajax({
             url: '/index',
@@ -255,7 +255,7 @@ $(document).ready(() => {
         scatterChartPM2.data.datasets = []
         for (i = 1; i < data.length; i++) {
             date = new Date(data[i]['timestamp'])
-            pm2 = { x: date, y: parseFloat(data[i]['P2'])}
+            pm2 = { x: date, y: parseFloat(data[i]['P2']) }
             pm10 = { x: date, y: parseFloat(data[i]['P1']) }
             pm2Color.push('green')
             pm10Color.push('red')
@@ -263,8 +263,8 @@ $(document).ready(() => {
             pm10Data.push(pm10)
         }
         console.log(scatterChartPM10.data)
-        scatterChartPM10.data.datasets.push({label:"Pm10 Data", data:pm10Data })
-        scatterChartPM2.data.datasets.push({label: "Pm2 Data", data:pm2Data})
+        scatterChartPM10.data.datasets.push({ label: "Pm10 Data", data: pm10Data, backgroundColor: 'red' })
+        scatterChartPM2.data.datasets.push({label: "Pm2 Data", data:pm2Data, backgroundColor: 'blue'})
         scatterChartPM10.update()
         scatterChartPM2.update()
         
@@ -291,6 +291,7 @@ $(document).ready(() => {
                 radius: 150,
                 p10: [items[i][3]],
                 p2: [items[i][4]],
+                sensor_id: [items[i][5]],
                 choice_id: i
             }).addTo(sensorMap));
         }
@@ -298,7 +299,10 @@ $(document).ready(() => {
             circles[i].bindPopup("<h4><b>Past 24 Hour Average</b></h4><h4>pm10: " + items[i][3] + "</h4> <h4>pm2.5: " + items[i][4] + "</h4><p></p> <h3> Sensor ID </h3>" +items[i][5]);
             data_values.push([items[i][0], items[i][1]]);
             circles[i].on('click', function (event) {
+                link = build_link_from_date(chosen_date, sensor_id)
+                getData(link)
                 circle_chosen = event.target.options.choice_id
+                sensor_id = event.target.options.sensor_id
                 $('#exampleModal').modal('show')
             })
         }
