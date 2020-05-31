@@ -85,8 +85,8 @@ $(document).ready(() => {
             console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
         });
     });
-    human_display(1000, 0, "#danger_level")
-    human_display(700, 300, "#danger_level2")
+    human_display(500, 0, "#danger_level")
+    human_display(250, 250, "#danger_level2")
 
     var scatterChartPM2 = new Chart(pm2Chart, {
         type: 'scatter',
@@ -175,8 +175,7 @@ $(document).ready(() => {
             }
         }
     });
-    // Displays current date on top of map (for debugging uses)
-    $('#currentdate').text(date)
+ 
 
     // Creates options for the initial sensor map
     var sensorMap = L.map('mapid', {
@@ -261,7 +260,6 @@ $(document).ready(() => {
     }
 
     function updateGraph(data) {
-
         var i;
         label2 = "PM2.5 Values"
         var pm2Data = []
@@ -290,7 +288,9 @@ $(document).ready(() => {
         }
 
     }
+
     var json = $.getJSON('http://api.luftdaten.info/static/v2/data.24h.json', function (data) {
+        console.log("Going To Luftdaten")
         var counter = 0
         $.each(data, function (key, val) {
             if ((val.location.longitude > -1.58) && (val.location.longitude < -1.34) && (val.location.latitude <= 53.468) && (val.location.latitude >= 53.29)) {
@@ -325,7 +325,5 @@ $(document).ready(() => {
                 sensor_id = event.target.options.sensor_id
             })
         }
-
-
     });
 });
