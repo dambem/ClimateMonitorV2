@@ -4,8 +4,9 @@ body {
     margin-top: 2em;
 }
 
+
 #mainContainer {
-    margin-top: 4em;
+    margin-top: 1em;
 }
 a {
     color: #00B7FF;
@@ -13,8 +14,15 @@ a {
 #headerimage{
     width:50px;
 }
+#healtheffects {
+    border-radius: 5px;
+}
 #mapid {
-    height: 700px;
+    height: 450px;
+    margin-bottom: 2em;
+    border-radius: 25px;
+    padding-right:0;
+    padding-left:0;
 }
 
 .slidecontainer {

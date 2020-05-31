@@ -35,6 +35,7 @@ block content
                     div(class="col-md-12")
                         canvas(id="pm10Chart" width="400" height="200")
                     div(class="col-md-12")
+                        input(type="text" name="daterange" value="01/01/2018 - 01/15/2018") 
                         div(class='slidecontainer')
                             input(type="range", min=-364, max=0, value=0, class="slider", id="myRange")
                         div(id='value') Today
@@ -42,32 +43,55 @@ block content
                 .modal-footer
                     button.btn.btn-secondary(type='button' data-dismiss='modal') Close
                     button.btn.btn-primary(type='button') Save changes
-     button.btn.btn-primary(type='button' data-toggle='modal' data-target='#exampleModal')
-        | Launch demo modal
      div(class='container-fluid' id="mainContainer")
         div(class="row")
-            div(class="col-md-8")
-                 div(class="col-md-12")
-                    div(id='currentdate') ???
-                 div(class="col-md-12")
-                     div(id='mapid')
-                        div(class="loader")
+            div(class="col-md-6")
+                div(class="card")
+                    h2() Current Average Pollution Levels In Sheffield:
+                        h4() PM10: PLACE_HOLDER
+                        h4() PM2.5: PLACE_HOLDER
+                        h4() NO2: PLACE_HOLDER
+            div(class="col-md-3")
+                div(class="card")
+                    canvas(id='pm10ChartAll', height='100')
+            div(class="col-md-3")
+                div(class="card")
+                    canvas(id='pm2ChartAll', height='100')
+
+        div(class="row")
+            div(class="col-md-12")
+                div(id='mapid')
+                    div(class="loader")
+
+        div(class="row")
             div(class="col-md-4")
-                 div(class='pollutionChart')
-                    canvas(id='pollutionChart', height='350')
-                 div(class='testchart')
-                    canvas(id='pm10ChartAll', height='200')
-                    canvas(id='pm2ChartAll', height='200')
+                div(class="col-md-12")
+                    div(class="card")
+                        div(class="card-body")
+                            div(class='pollutionChart')
+                                canvas(id='pollutionChart', height='250')
+            div(class="col-md-8" id = "healtheffects")
+                div(class="card")
+                    div(class="card-body")
+                        div(class="card-title")
+                            h2() Health Effects
+                        h3() But what does this actually mean?
+                        div(class="col-md-12")
+                            p() Using an average of 100 people, the current pollution level in Sheffield is expected to do the following:
+                            div(id="danger_level") 
+                        div(class="col-md-12")
+                            p() Using an average of 100 people, the current pollution level in Sheffield is expected to do the following:
+                            div(id="danger_level2") 
+
         div(class="row")
             div(class="accordion" id="accordionInfo")
                 div(class="card")
                     div(class="card-header" id="headerWhatIs")
                         h2(class="mb-0")
-                            button(class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseWhatIs" aria-expanded="true" aria-controls="collapseWhatIs")
-                                div() What is PM10 and PM2.5?
-                    div(class="collapse show" id="collapseWhatIs" aria-labelledby="headerWhatIs" data-parent="accordionInfo")
+                            button(class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseWhatIs" aria-expanded="true" aria-controls="collapseWhatIs")
+                                h3() What is PM10 and PM2.5?
+                    div(class="collapse hide" id="collapseWhatIs" aria-labelledby="headerWhatIs" data-parent="#accordionInfo")
                         div(class="card-body")
-                            h3 What is PM10 and PM2.5?
                             p PM is a generic term used to describe mixtures of solids and liquids in varying size. The main source of man-made PM is through the combustion of fuels (E.g, Vehicles and Industry)
                             p <b>PM10</b> Refers to course particles that are less than 10 microns (�m) in diameter
                             p <b>PM2.5</b> Refers to particles that are less than 2.5 (�m) in diameter.

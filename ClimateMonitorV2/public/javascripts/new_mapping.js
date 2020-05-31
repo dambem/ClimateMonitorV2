@@ -12,7 +12,15 @@ var veryhigh = '#d600a4'
 var danger = '#a20049'
 var bigdanger = '#1a0006'
 var safe = '#6699CC'
-
+function human_display(good, bad, id) {
+    $(id).empty()
+    for (i = 0; i < good; i++) {
+        $(id).append('<svg class="bi bi - person - fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" /></svg >')
+    }
+    for (i = 0; i < bad; i++) {
+        $(id).append('<svg class="bi bi - person - fill" width="1em" height="1em" viewBox="0 0 16 16" fill="red" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" /></svg >')
+    }
+}
 // Function for removing data from charts
 function removeData(chart) {
     chart.data.labels.pop();
@@ -70,6 +78,15 @@ $(document).ready(() => {
     var pm10Chart = document.getElementById('pm10Chart').getContext('2d');
     var pm2ChartAll = document.getElementById('pm2ChartAll').getContext('2d');
     var pm10ChartAll = document.getElementById('pm10ChartAll').getContext('2d');
+    $(function () {
+        $('input[name="daterange"]').daterangepicker({
+            opens: 'left'
+        }, function (start, end, label) {
+            console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+        });
+    });
+    human_display(500, 0, "#danger_level")
+    human_display(250, 250, "#danger_level2")
 
     var scatterChartPM2 = new Chart(pm2Chart, {
         type: 'scatter',
@@ -142,13 +159,13 @@ $(document).ready(() => {
         data: {
             labels: ["pm10", "pm2.5"],
             datasets: [
-                { label: 'Within guidelines', data: [20, 10], backgroundColor: [safe, safe], borderWidth: 1 },
-                { label: '3% Increase In LTM', data: [30, 15], backgroundColor: [light, light,], borderWidth: 1 },
-                { label: '9% Increase In LTM', data: [50, 25], backgroundColor: [medium, medium], borderWidth: 1 },
-                { label: '15% Increase in LTM', data: [75, 37.5], backgroundColor: [high, high], borderWidth: 1 },
-                { label: '1.2% Increase In STM, 15% Increase in LTM', data: [100, 50], backgroundColor: [veryhigh, veryhigh], borderWidth: 1 },
-                { label: '2.5% Increase In STM, 15% Increase in LTM', data: [150, 75], backgroundColor: [danger, danger], borderWidth: 1 },
-                { label: '5% Increase In STM, 15% Increase in LTM', data: [175, 175], backgroundColor: [bigdanger, bigdanger], borderWidth: 1 }]
+                { label: 'Within guidelines', data: [20, 10], backgroundColor: [safe, safe], borderWidth: 0 },
+                { label: '3% Increase In LTM', data: [30, 15], backgroundColor: [light, light,], borderWidth: 0 },
+                { label: '9% Increase In LTM', data: [50, 25], backgroundColor: [medium, medium], borderWidth: 0 },
+                { label: '15% Increase in LTM', data: [75, 37.5], backgroundColor: [high, high], borderWidth: 0 },
+                { label: '1.2% Increase In STM, 15% Increase in LTM', data: [100, 50], backgroundColor: [veryhigh, veryhigh], borderWidth: 0 },
+                { label: '2.5% Increase In STM, 15% Increase in LTM', data: [150, 75], backgroundColor: [danger, danger], borderWidth: 0 },
+                { label: '5% Increase In STM, 15% Increase in LTM', data: [175, 175], backgroundColor: [bigdanger, bigdanger], borderWidth: 0 }]
         },
         options: {
             title: { display: true, text: "Effects of PM10 and PM2.5 on Long and Short Term Mortality (LTM, STM)" },
@@ -158,8 +175,7 @@ $(document).ready(() => {
             }
         }
     });
-    // Displays current date on top of map (for debugging uses)
-    $('#currentdate').text(date)
+ 
 
     // Creates options for the initial sensor map
     var sensorMap = L.map('mapid', {
@@ -244,7 +260,6 @@ $(document).ready(() => {
     }
 
     function updateGraph(data) {
-
         var i;
         label2 = "PM2.5 Values"
         var pm2Data = []
@@ -253,24 +268,29 @@ $(document).ready(() => {
         var pm10Color = []
         scatterChartPM10.data.datasets = []
         scatterChartPM2.data.datasets = []
-        for (i = 1; i < data.length; i++) {
-            date = new Date(data[i]['timestamp'])
-            pm2 = { x: date, y: parseFloat(data[i]['P2']) }
-            pm10 = { x: date, y: parseFloat(data[i]['P1']) }
-            pm2Color.push('green')
-            pm10Color.push('red')
-            pm2Data.push(pm2)
-            pm10Data.push(pm10)
+        if (data.length == 0) {
+            alert("Sorry, the data wasn't found!")
+        } else {
+            for (i = 1; i < data.length; i++) {
+                date = new Date(data[i]['timestamp'])
+                pm2 = { x: date, y: parseFloat(data[i]['P2']) }
+                pm10 = { x: date, y: parseFloat(data[i]['P1']) }
+                pm2Color.push('green')
+                pm10Color.push('red')
+                pm2Data.push(pm2)
+                pm10Data.push(pm10)
+            }
+            console.log(scatterChartPM10.data)
+            scatterChartPM10.data.datasets.push({ label: "Pm10 Data", data: pm10Data, backgroundColor: 'red' })
+            scatterChartPM2.data.datasets.push({ label: "Pm2 Data", data: pm2Data, backgroundColor: 'blue' })
+            scatterChartPM10.update()
+            scatterChartPM2.update()
         }
-        console.log(scatterChartPM10.data)
-        scatterChartPM10.data.datasets.push({ label: "Pm10 Data", data: pm10Data, backgroundColor: 'red' })
-        scatterChartPM2.data.datasets.push({label: "Pm2 Data", data:pm2Data, backgroundColor: 'blue'})
-        scatterChartPM10.update()
-        scatterChartPM2.update()
-        
 
     }
+
     var json = $.getJSON('http://api.luftdaten.info/static/v2/data.24h.json', function (data) {
+        console.log("Going To Luftdaten")
         var counter = 0
         $.each(data, function (key, val) {
             if ((val.location.longitude > -1.58) && (val.location.longitude < -1.34) && (val.location.latitude <= 53.468) && (val.location.latitude >= 53.29)) {
@@ -288,7 +308,7 @@ $(document).ready(() => {
                 color: 'black',
                 fillColor: color,
                 fillOpacity: 0.8,
-                radius: 150,
+                radius: 100,
                 p10: [items[i][3]],
                 p2: [items[i][4]],
                 sensor_id: [items[i][5]],
@@ -296,17 +316,14 @@ $(document).ready(() => {
             }).addTo(sensorMap));
         }
         for (var i = 0; i < circles.length; i++) {
-            circles[i].bindPopup("<h4><b>Past 24 Hour Average</b></h4><h4>pm10: " + items[i][3] + "</h4> <h4>pm2.5: " + items[i][4] + "</h4><p></p> <h3> Sensor ID </h3>" +items[i][5]);
+            circles[i].bindPopup("<h4><b>Past 24 Hour Average</b></h4><h4>pm10: " + items[i][3] + "</h4> <h4>pm2.5: " + items[i][4] + "<button class='btn btn-primary' type='button' data-toggle='modal' data-target='#exampleModal'>Get Detailed Information And Statistics</button>");
             data_values.push([items[i][0], items[i][1]]);
             circles[i].on('click', function (event) {
                 link = build_link_from_date(chosen_date, sensor_id)
                 getData(link)
                 circle_chosen = event.target.options.choice_id
                 sensor_id = event.target.options.sensor_id
-                $('#exampleModal').modal('show')
             })
         }
-
-
     });
 });
