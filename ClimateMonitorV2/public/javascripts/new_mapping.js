@@ -21,6 +21,27 @@ function removeData(chart) {
     });
     chart.update();
 }
+
+function linkExist(url) {
+        jsonData = {'url': url}
+        $.ajax({
+            url: '/link',
+            data: JSON.stringify(jsonData),
+            contentType: 'application/json',
+            type: 'POST',
+            success: function (dataR) {
+                var ret = dataR;
+                console.log("Everything")
+                console.log(ret)
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        })
+
+        
+
+}
 // Function that returns different colours based on pollution 
 function colorForPollution(pm10, pm2) {
     if (pm10 >= 20 && pm10 < 30 || pm2 >= 10 && pm2 < 15) {
@@ -193,6 +214,7 @@ $(document).ready(() => {
         link = build_link_from_date(current_date, sensor_id)
         getData(link)
     }
+
 
     function getRequest() {
         $.ajax({

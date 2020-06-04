@@ -27,6 +27,7 @@
     "request": "2.88.2",
     "request-progress": "^3.0.0",
     "request-promise": "^4.2.5",
+    "requestify": "^0.2.5",
     "scramjet": "^4.28.7",
     "serve-favicon": "^2.3.0",
     "stream": "0.0.2",
