@@ -12,6 +12,9 @@ var veryhigh = '#d600a4'
 var danger = '#a20049'
 var bigdanger = '#1a0006'
 var safe = '#6699CC'
+var average_pm2
+var average_pm10
+
 function human_display(good, bad, id) {
     $(id).empty()
     for (i = 0; i < good; i++) {
@@ -314,15 +317,23 @@ $(document).ready(() => {
     var json = $.getJSON('http://api.luftdaten.info/static/v2/data.24h.json', function (data) {
         console.log("Going To Luftdaten")
         var counter = 0
+        var totalpm2 = 0
+        var totalpm10 = 0
         $.each(data, function (key, val) {
             if ((val.location.longitude > -1.58) && (val.location.longitude < -1.34) && (val.location.latitude <= 53.468) && (val.location.latitude >= 53.29)) {
                 if (val.sensordatavalues[0].value_type == "P1") {
+                    counter++;
+                    totalpm10 += parseFloat(val.sensordatavalues[0].value)
+                    totalpm2 += parseFloat(val.sensordatavalues[1].value)
                     items.push([key, val.location.latitude, val.location.longitude, val.sensordatavalues[0].value, val.sensordatavalues[1].value, val.sensor.id, val.sensor.sensor_type.name]);
                 }
             }
-            counter++;
+            
         });
-        $('input[name="dates"]').daterangepicker();
+
+        $('#pm10averagetotal').html("PM10 Average: " + (totalpm10/counter))
+        $('#pm2averagetotal').html("PM2.5 Average: " +  (totalpm2/counter))
+        $('#input[name="dates"]').daterangepicker();
         circles = []
         for (var i = 0; i < items.length; i++) {
             color = colorForPollution(items[i][3], items[i][4])
@@ -341,7 +352,7 @@ $(document).ready(() => {
             circles[i].bindPopup("<h4><b>Past 24 Hour Average</b></h4><h4>pm10: " + items[i][3] + "</h4> <h4>pm2.5: " + items[i][4] + "<button class='btn btn-primary' type='button' data-toggle='modal' data-target='#exampleModal'>Get Detailed Information And Statistics</button>");
             data_values.push([items[i][0], items[i][1]]);
             circles[i].on('click', function (event) {
-                link = build_link_from_date(chosen_date, sensor_id)
+                //link = build_link_from_date(chosen_date, sensor_id)
                 getData(link)
                 circle_chosen = event.target.options.choice_id
                 sensor_id = event.target.options.sensor_id
