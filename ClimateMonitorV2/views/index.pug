@@ -51,35 +51,30 @@ block content
                 div(id='mapid')
                     div(class="loader")
         div(class="row")
-            div(class="col-md-6")
-                div(class="card")
-                    h2() Current Average Pollution Levels In Sheffield:
-                        h4(id="pm10averagetotal")   
-                        h4(id="pm2averagetotal") 
-            div(class="col-md-3")
-                div(class="card")
-                    canvas(id='pm10ChartAll', height='300')
-            div(class="col-md-3")
-                div(class="card")
-                    canvas(id='pm2ChartAll', height='300')
-
-        div(class="row")
             div(class="col-md-4")
                 div(class="col-md-12")
                     div(class="card")
                         div(class="card-body")
+                            h3() PM10 and PM2.5 Pollution Guidelines
                             div(class='pollutionChart')
-                                canvas(id='pollutionChart', height='250')
-            div(class="col-md-8" id = "healtheffects")
+                                canvas(id='pollutionChart', height='500')
+            div(class="col-md-8")
+                div(class="card")
+                    h2() Current Average Pollution Levels In Sheffield:
+                        h4(id="pm10averagetotal")   
+                        h4(id="pm2averagetotal") 
+                        div(class="col-md-12" id = "healtheffects")
                 div(class="card")
                     div(class="card-body")
                         div(class="card-title")
                             h2() Health Effects
-                        h3() But what does this actually mean?
+                        h3() But what do the pollution values actually mean?
                         div(class="col-md-12")
+                            br
                             p() Using an average of 100 people, the current pollution level in Sheffield is expected to do the following:
                             div(id="danger_level") 
                         div(class="col-md-12")
+                            br
                             p() Using an average of 100 people, the current pollution level in Sheffield is expected to do the following:
                             div(id="danger_level2") 
 

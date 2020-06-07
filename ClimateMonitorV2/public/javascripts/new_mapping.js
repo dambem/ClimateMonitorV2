@@ -53,6 +53,30 @@ function linkExist(url) {
         
 
 }
+// Function that returns different phrase based on pollution 
+function colorForPollutionPhrase(pm10, pm2) {
+    if (pm10 >= 20 && pm10 < 30 || pm2 >= 10 && pm2 < 15) {
+        return "The pollution levels are just above WHO guidelines for safe pollution, and can lead to long term health issues"
+    }
+    else if (pm10 >= 30 && pm10 < 50 || pm2 >= 15 && pm2 < 25) {
+        return "The pollution levels are above WHO guidelines for safe pollution, and can lead to long term health issues"
+    }
+    else if (pm10 >= 50 && pm10 < 70 || pm2 >= 25 && pm2 < 35) {
+        return "The pollution levels are above WHO guidelines for safe pollution, and can lead to long term health issues"
+    }
+    else if (pm10 >= 70 || pm2 >= 35) {
+        return "The pollution levels are above WHO guidelines for safe pollution, and can lead to long term health issues"
+    }
+    else if (pm10 >= 100 || pm2 >= 50) {
+        return "The pollution levels are dangerously above WHO guidelines for safe pollution, and can lead to long <b> and </b> short term health issues"
+    }
+    else if (pm10 >= 150 || pm2 >= 75) {
+        return "The pollution levels are <b> dangerously </b> above WHO guidelines for safe pollution, and can lead to long and short term health issues"
+    }
+    else {
+        return "The pollution levels are currently within WHO guidelines!"
+    }
+}
 // Function that returns different colours based on pollution 
 function colorForPollution(pm10, pm2) {
     if (pm10 >= 20 && pm10 < 30 || pm2 >= 10 && pm2 < 15) {
@@ -78,21 +102,18 @@ function colorForPollution(pm10, pm2) {
     }
 }
 
-// This function builds the link to the sensor given a certain date.
+// This function builds the link to the sensor CSV given a certain date.
 function build_link_from_date(date) {
     year = date.getFullYear();
     month = date.getMonth();
     if (month < 10) {
         month = "0" + month
     }
-    console.log(month)
     day = date.getDay();
     if (day < 10) {
         day = "0" + day
     }
-    console.log(day)
     link = "http://archive.sensor.community/" + year + "-" + month + "-" + day + "/" + year + "-" + month + "-" + day + "_" + "sds011_sensor_"+sensor_id+".csv"
-    console.log(link)
     return link
 }
 
@@ -100,8 +121,7 @@ function build_link_from_date(date) {
 $(document).ready(() => {
     var pm2Chart = document.getElementById('pm2Chart').getContext('2d');
     var pm10Chart = document.getElementById('pm10Chart').getContext('2d');
-    var pm2ChartAll = document.getElementById('pm2ChartAll').getContext('2d');
-    var pm10ChartAll = document.getElementById('pm10ChartAll').getContext('2d');
+    // Currently not in use, date range picker for graphs
     $(function () {
         $('input[name="daterange"]').daterangepicker({
             opens: 'left'
@@ -109,6 +129,8 @@ $(document).ready(() => {
             console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
         });
     });
+
+    // appends danger_level div with certain human displays
     human_display(500, 0, "#danger_level")
     human_display(250, 250, "#danger_level2")
 
@@ -129,38 +151,6 @@ $(document).ready(() => {
         },
     })
     var scatterChartPM10 = new Chart(pm10Chart, {
-        type: 'scatter',
-        data: {
-        },
-        options: {
-            scales: {
-                xAxes: [{
-                    type: 'time',
-                    position: 'bottom',
-                    time: {
-                        unit: 'hour'
-                    }
-                }]
-            }
-        },
-    })
-    var scatterChartPM2All = new Chart(pm2ChartAll, {
-        type: 'scatter',
-        data: {
-        },
-        options: {
-            scales: {
-                xAxes: [{
-                    type: 'time',
-                    position: 'bottom',
-                    time: {
-                        unit: 'day'
-                    }
-                }]
-            }
-        },
-    })
-    var scatterChartPM10All = new Chart(pm10ChartAll, {
         type: 'scatter',
         data: {
         },
@@ -330,9 +320,12 @@ $(document).ready(() => {
             }
             
         });
-
-        $('#pm10averagetotal').html("PM10 Average: " + (totalpm10/counter))
-        $('#pm2averagetotal').html("PM2.5 Average: " +  (totalpm2/counter))
+        average_pm10 = (totalpm10 / counter)
+        average_pm2 = (totalpm2 / counter)
+        $('#pm10averagetotal').html("PM10 Average: " + average_pm10 + " - " + colorForPollutionPhrase(average_pm10, 0))
+        $('#pm2averagetotal').html("PM2.5 Average: " + average_pm2 + " - " + colorForPollutionPhrase(0, average_pm2))
+        $('#pm10averagetotal').css("color", colorForPollution(average_pm10, 0))
+        $('#pm2averagetotal').css("color", colorForPollution(0, average_pm2))
         $('#input[name="dates"]').daterangepicker();
         circles = []
         for (var i = 0; i < items.length; i++) {

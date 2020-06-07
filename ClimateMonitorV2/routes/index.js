@@ -25,6 +25,20 @@ router.post('/link', function (req, res) {
         res.send(response.code)
     })
 })
+
+function build_link_from_date(date, sensor_id) {
+    year = date.getFullYear();
+    month = date.getMonth();
+    if (month < 10) {
+        month = "0" + month
+    }
+    day = date.getDay();
+    if (day < 10) {
+        day = "0" + day
+    }
+    link = "http://archive.sensor.community/" + year + "-" + month + "-" + day + "/" + year + "-" + month + "-" + day + "_" + "sds011_sensor_" + sensor_id + ".csv"
+    return link
+}
 // Our post route for getting daily values
 router.post('/index', function (req, res, next) {
     console.log(req.body)
@@ -56,5 +70,8 @@ router.post('/index', function (req, res, next) {
     })
 });
 
+router.post('/multipledates, function (req, res, next') {
+    
+}
 
 module.exports = router;
