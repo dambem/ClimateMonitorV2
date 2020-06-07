@@ -44,24 +44,24 @@ block content
                     button.btn.btn-secondary(type='button' data-dismiss='modal') Close
                     button.btn.btn-primary(type='button') Save changes
      div(class='container-fluid' id="mainContainer")
-        div(class="row")
-            div(class="col-md-6")
-                div(class="card")
-                    h2() Current Average Pollution Levels In Sheffield:
-                        h4() PM10: PLACE_HOLDER
-                        h4() PM2.5: PLACE_HOLDER
-                        h4() NO2: PLACE_HOLDER
-            div(class="col-md-3")
-                div(class="card")
-                    canvas(id='pm10ChartAll', height='100')
-            div(class="col-md-3")
-                div(class="card")
-                    canvas(id='pm2ChartAll', height='100')
+
 
         div(class="row")
             div(class="col-md-12")
                 div(id='mapid')
                     div(class="loader")
+        div(class="row")
+            div(class="col-md-6")
+                div(class="card")
+                    h2() Current Average Pollution Levels In Sheffield:
+                        h4(id="pm10averagetotal")   
+                        h4(id="pm2averagetotal") 
+            div(class="col-md-3")
+                div(class="card")
+                    canvas(id='pm10ChartAll', height='300')
+            div(class="col-md-3")
+                div(class="card")
+                    canvas(id='pm2ChartAll', height='300')
 
         div(class="row")
             div(class="col-md-4")
