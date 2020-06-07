@@ -6,6 +6,7 @@ var Papa = require('papaparse');
 var router = express.Router();
 var csv = require('csv-stream');
 var request = require("request")
+var requestify = require('requestify')
 /* Pull Request Test */
 /* GET home page. */
 router.get('/test', function (req, res) {
@@ -17,6 +18,13 @@ router.get('/', function (req, res) {
 router.get('/local', function (req, res) {
     res.render('index', { title: "Parsing Some Local Data" })
 });
+router.post('/link', function (req, res) {
+    console.log(req.body)
+    requestify.get(req.body['url']).then(function (response) {
+        console.log(response.code)
+        res.send(response.code)
+    })
+})
 // Our post route for getting daily values
 router.post('/index', function (req, res, next) {
     console.log(req.body)

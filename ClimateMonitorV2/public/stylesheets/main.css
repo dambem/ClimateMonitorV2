@@ -4,6 +4,10 @@ body {
     margin-top: 2em;
 }
 
+.navbar-brand {
+    font-family: 'Bellota Text', cursive;
+}
+
 
 #mainContainer {
     margin-top: 1em;
