@@ -33,10 +33,10 @@ function removeData(chart) {
     chart.update();
 }
 
-function linkExist(url) {
-        jsonData = {'url': url}
+function linkExist(id) {
+        jsonData = {'id': id}
         $.ajax({
-            url: '/link',
+            url: '/checkdates',
             data: JSON.stringify(jsonData),
             contentType: 'application/json',
             type: 'POST',
@@ -101,7 +101,30 @@ function colorForPollution(pm10, pm2) {
         return safe
     }
 }
-
+// Function that returns different colours based on pollution 
+function colorForPollution(pm10, pm2) {
+    if (pm10 >= 20 && pm10 < 30 || pm2 >= 10 && pm2 < 15) {
+        return light
+    }
+    else if (pm10 >= 30 && pm10 < 50 || pm2 >= 15 && pm2 < 25) {
+        return medium
+    }
+    else if (pm10 >= 50 && pm10 < 70 || pm2 >= 25 && pm2 < 35) {
+        return high
+    }
+    else if (pm10 >= 70 || pm2 >= 35) {
+        return veryhigh
+    }
+    else if (pm10 >= 100 || pm2 >= 50) {
+        return danger
+    }
+    else if (pm10 >= 150 || pm2 >= 75) {
+        return bigdanger
+    }
+    else {
+        return safe
+    }
+}
 // This function builds the link to the sensor CSV given a certain date.
 function build_link_from_date(date) {
     year = date.getFullYear();
@@ -113,12 +136,14 @@ function build_link_from_date(date) {
     if (day < 10) {
         day = "0" + day
     }
-    link = "http://archive.sensor.community/" + year + "-" + month + "-" + day + "/" + year + "-" + month + "-" + day + "_" + "sds011_sensor_"+sensor_id+".csv"
+    link = "http://archive.sensor.community/" + year + "-" + month + "-" + day + "/" + year + "-" + month + "-" + day + "_" + "sds011_sensor_" + sensor_id + ".csv"
+    console.log(link)
     return link
 }
 
 // Everything required once loaded
 $(document).ready(() => {
+
     var pm2Chart = document.getElementById('pm2Chart').getContext('2d');
     var pm10Chart = document.getElementById('pm10Chart').getContext('2d');
     // Currently not in use, date range picker for graphs
@@ -225,20 +250,19 @@ $(document).ready(() => {
     }
 
 
-    function getRequest() {
+    function findDates(id_chosen) {
+        jsonData = { id: id_chosen }
+        $body = $("body");
+
         $.ajax({
-            url: chosen_url,
-            data: '',
+            url: '/checkdates',
+            data: JSON.stringify(jsonData),
             contentType: 'application/json',
-            type: 'GET',
+            type: 'POST',
             success: function (dataR) {
-                var ret = dataR;
-                console.log("Everything")
-                console.log(ret)
+                console.log(dataR)
             },
             complete: function (data, res) {
-                console.log(res)
-                console.log("Fully Complete")
             },
             error: function (xhr, status, error) {
                 console.log(error.message)
@@ -303,7 +327,9 @@ $(document).ready(() => {
         }
 
     }
-
+    $('#available_dates').click(function () {
+        findDates(sensor_id)
+    });
     var json = $.getJSON('http://api.luftdaten.info/static/v2/data.24h.json', function (data) {
         console.log("Going To Luftdaten")
         var counter = 0
@@ -342,11 +368,16 @@ $(document).ready(() => {
             }).addTo(sensorMap));
         }
         for (var i = 0; i < circles.length; i++) {
-            circles[i].bindPopup("<h4><b>Past 24 Hour Average</b></h4><h4>pm10: " + items[i][3] + "</h4> <h4>pm2.5: " + items[i][4] + "<button class='btn btn-primary' type='button' data-toggle='modal' data-target='#exampleModal'>Get Detailed Information And Statistics</button>");
+            colorPM10 = colorForPollution(parseFloat(items[i][3]), 0)
+            colorPM2 = colorForPollution(0, parseFloat(items[i][4]))
+            iconPM10 = '<svg class="bi bi-heart-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="'+colorPM10+'" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" /> </svg>'
+            iconPM2 = '<svg class="bi bi-heart-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="'+colorPM2+'" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" /> </svg>'
+
+            circles[i].bindPopup("<h4><b>Past 24 Hour Average</b></h4><h4>pm10: " + items[i][3] + " " + iconPM10 + "</h4><p>" + colorForPollutionPhrase(parseFloat(items[i][3]), 0) + "</p><h4>pm2.5: " + items[i][4] + " " + iconPM2+ "</h4><p>" + colorForPollutionPhrase(0,parseFloat(items[i][4]))+ "</p><br> <button class='btn btn-primary' type='button' data-toggle='modal' data-target='#exampleModal'>Get Detailed Information And Statistics</button>");
             data_values.push([items[i][0], items[i][1]]);
             circles[i].on('click', function (event) {
                 //link = build_link_from_date(chosen_date, sensor_id)
-                getData(link)
+                //getData(link)
                 circle_chosen = event.target.options.choice_id
                 sensor_id = event.target.options.sensor_id
             })
