@@ -70,8 +70,5 @@ router.post('/index', function (req, res, next) {
     })
 });
 
-router.post('/multipledates', function (req, res, next) {
-    
-}
 
 module.exports = router;
