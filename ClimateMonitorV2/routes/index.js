@@ -25,8 +25,19 @@ router.post('/link', function (req, res) {
         res.send(response.code)
     })
 })
-
+const getMethods = (obj) => {
+    let properties = new Set()
+    let currentObj = obj
+    do {
+        Object.getOwnPropertyNames(currentObj).map(item => properties.add(item))
+    } while ((currentObj = Object.getPrototypeOf(currentObj)))
+    return [...properties.keys()].filter(item => typeof obj[item] === 'function')
+}
 function build_link_from_date(date, sensor_id) {
+    var year
+    var month
+    var day
+    var link
     year = date.getFullYear();
     month = date.getMonth();
     if (month < 10) {
@@ -41,10 +52,8 @@ function build_link_from_date(date, sensor_id) {
 }
 // Our post route for getting daily values
 router.post('/index', function (req, res, next) {
-    console.log(req.body)
     var full_link = req.body['date']
     var id = req.body['id']
-    console.log(full_link)
     var options = {
         delimiter: ';', // default is ,
         endLine: '\n', // default is \n,
@@ -69,6 +78,40 @@ router.post('/index', function (req, res, next) {
         res.send(successMessage)
     })
 });
+function getUrl(url, chosen_date) {
+    return new Promise((resolve) => {
+        requestify.get(url)
+            .then(function (response) {
+                resolve([chosen_date, true])
+            })
+            .fail(function (response) {
+                resolve([chosen_date, false])
+            })
+    })
 
+}
+router.post('/checkdates', function (req, res, next) {
+    var i
+    var list_of_dates = []
+    var id = req.body['id']
+    var promises = []
+    for (i = 1; i < 100; i++) {
+        var chosen_date = new Date();
+        chosen_date.setDate(chosen_date.getDate() - i)
+        var url = build_link_from_date(chosen_date, id)
+        console.log("Initial Push")
+        promises.push(getUrl(url, chosen_date))
+    }
+    console.log("almost got there")
+    Promise.all(promises)
+        .then((results) => {
+            console.log(results)
+            console.log("finished!")
+            res.send(results)
+        })
+        .catch((e) => {
+            console.log(e)
+        });
+})
 
 module.exports = router;
