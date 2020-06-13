@@ -245,7 +245,8 @@ $(document).ready(() => {
     
     var currentValidDates = []
     function findDates(id_chosen) {
-        jsonData = { id: id_chosen, days:10 }
+        days_found = parseInt(document.getElementById("days").value)
+        jsonData = { id: id_chosen, days:days_found }
         $body = $("body");
 
         $.ajax({
@@ -260,7 +261,6 @@ $(document).ready(() => {
                     endDate: "06/13/2020",
                     opens: 'left',
                     isInvalidDate: function (date) {
-                        
                         for (i = 0; i < dataR.length; i++){
                             var invalid = true;
                             var item = dataR[i]
@@ -271,7 +271,7 @@ $(document).ready(() => {
                                 console.log("Found one!")
                                 currentValidDates.push(dateMoment)
                             }
-                            for (j = 0; j < currentValidDates; j++) {
+                            for (j = 0; j < currentValidDates.length; j++) {
                                 if (currentValidDates[j].isSame(date, 'day')) {
                                     invalid = false
                                 }
@@ -279,6 +279,9 @@ $(document).ready(() => {
                         }
                         return invalid
                     }
+                }, function (start, end, label) {
+                    console.log(start)
+                    console.log(end)
                     
                 })
              },
