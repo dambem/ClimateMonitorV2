@@ -94,19 +94,18 @@ router.post('/checkdates', function (req, res, next) {
     var i
     var list_of_dates = []
     var id = req.body['id']
+    var days = parseInt(req.body['days'])
     var promises = []
-    for (i = 1; i < 100; i++) {
+    for (i = 1; i < days; i++) {
         var chosen_date = new Date();
         chosen_date.setDate(chosen_date.getDate() - i)
         var url = build_link_from_date(chosen_date, id)
-        console.log("Initial Push")
         promises.push(getUrl(url, chosen_date))
     }
-    console.log("almost got there")
     Promise.all(promises)
         .then((results) => {
+            
             console.log(results)
-            console.log("finished!")
             res.send(results)
         })
         .catch((e) => {

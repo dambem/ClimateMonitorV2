@@ -147,13 +147,7 @@ $(document).ready(() => {
     var pm2Chart = document.getElementById('pm2Chart').getContext('2d');
     var pm10Chart = document.getElementById('pm10Chart').getContext('2d');
     // Currently not in use, date range picker for graphs
-    $(function () {
-        $('input[name="daterange"]').daterangepicker({
-            opens: 'left'
-        }, function (start, end, label) {
-            console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
-        });
-    });
+    
 
     // appends danger_level div with certain human displays
     human_display(500, 0, "#danger_level")
@@ -248,10 +242,10 @@ $(document).ready(() => {
         link = build_link_from_date(current_date, sensor_id)
         getData(link)
     }
-
-
+    
+    var currentValidDates = []
     function findDates(id_chosen) {
-        jsonData = { id: id_chosen }
+        jsonData = { id: id_chosen, days:10 }
         $body = $("body");
 
         $.ajax({
@@ -261,8 +255,35 @@ $(document).ready(() => {
             type: 'POST',
             success: function (dataR) {
                 console.log(dataR)
-            },
+                $('input[name="daterange"]').daterangepicker({
+                    startDate: "06/07/2020",
+                    endDate: "06/13/2020",
+                    opens: 'left',
+                    isInvalidDate: function (date) {
+                        
+                        for (i = 0; i < dataR.length; i++){
+                            var invalid = true;
+                            var item = dataR[i]
+                            var dateObj = new Date(item[0])
+                            var dateMoment = moment(dateObj)
+                            if (item[1] && dateMoment.isSame(date, 'day')) {
+                                invalid = false
+                                console.log("Found one!")
+                                currentValidDates.push(dateMoment)
+                            }
+                            for (j = 0; j < currentValidDates; j++) {
+                                if (currentValidDates[j].isSame(date, 'day')) {
+                                    invalid = false
+                                }
+                            }
+                        }
+                        return invalid
+                    }
+                    
+                })
+             },
             complete: function (data, res) {
+                
             },
             error: function (xhr, status, error) {
                 console.log(error.message)
@@ -348,8 +369,8 @@ $(document).ready(() => {
         });
         average_pm10 = (totalpm10 / counter)
         average_pm2 = (totalpm2 / counter)
-        $('#pm10averagetotal').html("PM10 Average: " + average_pm10 + " - " + colorForPollutionPhrase(average_pm10, 0))
-        $('#pm2averagetotal').html("PM2.5 Average: " + average_pm2 + " - " + colorForPollutionPhrase(0, average_pm2))
+        $('#pm10averagetotal').html("PM10 Average: " + Math.round(average_pm10) + " - " + colorForPollutionPhrase(average_pm10, 0))
+        $('#pm2averagetotal').html("PM2.5 Average: " + Math.round(average_pm2) + " - " + colorForPollutionPhrase(0, average_pm2))
         $('#pm10averagetotal').css("color", colorForPollution(average_pm10, 0))
         $('#pm2averagetotal').css("color", colorForPollution(0, average_pm2))
         $('#input[name="dates"]').daterangepicker();
