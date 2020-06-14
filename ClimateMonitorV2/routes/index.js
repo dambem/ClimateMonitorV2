@@ -15,6 +15,9 @@ router.get('/test', function (req, res) {
 router.get('/', function (req, res) {
     res.render('index', { title: 'SheffSenseV2: Sheffield Climate Monitor' });
 });
+router.get('/about', function (req, res) {
+    res.render('about', { title: 'About SheffSenseV2' });
+});
 router.get('/local', function (req, res) {
     res.render('index', { title: "Parsing Some Local Data" })
 });
