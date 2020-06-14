@@ -78,6 +78,19 @@ router.post('/index', function (req, res, next) {
         res.send(successMessage)
     })
 });
+
+router.post('/fromto', function (req, res, next) {
+
+    var sensor = req.body['sensor']
+    var from = req.body['from']
+    var to = req.body['to']
+    var StartDate = new Date(from)
+    var EndDate = new Date(to)
+    for (var d = new Date(StartDate); d <= EndDate; d.setDate(d.getDate() + 1)) {
+        console.log(d)
+    }
+
+})
 function getUrl(url, chosen_date) {
     return new Promise((resolve) => {
         requestify.get(url)

@@ -49,8 +49,39 @@ function linkExist(id) {
                 console.log(error)
             }
         })
+}
 
-        
+function linkExist(id) {
+    jsonData = { 'id': id }
+    $.ajax({
+        url: '/checkdates',
+        data: JSON.stringify(jsonData),
+        contentType: 'application/json',
+        type: 'POST',
+        success: function (dataR) {
+            var ret = dataR;
+            console.log("Everything")
+            console.log(ret)
+        },
+        error: function (error) {
+            console.log(error)
+        }
+    })
+}
+function dangerBasedOnPM(PM10, PM2, people) {
+    var validPM10 = 20
+    var validPM2 = 15
+    people = 1000
+    var PM10inc = (PM10 - validPM10)/10
+    var PM2inc = (PM2 - validPM2)/10
+    
+    percentageMortalityPM10 = 0.58*PM10inc
+    percentageRespDiseasePM2 = 2.07 * PM2inc
+    lifespandecrease = 0.35 * PM2inc
+    console.log(percentageMortalityPM10)
+    console.log(percentageRespDiseasePM2)
+    console.log(lifespandecrease)
+
 
 }
 // Function that returns different phrase based on pollution 
@@ -268,7 +299,6 @@ $(document).ready(() => {
                             var dateMoment = moment(dateObj)
                             if (item[1] && dateMoment.isSame(date, 'day')) {
                                 invalid = false
-                                console.log("Found one!")
                                 currentValidDates.push(dateMoment)
                             }
                             for (j = 0; j < currentValidDates.length; j++) {
@@ -374,6 +404,7 @@ $(document).ready(() => {
         average_pm2 = (totalpm2 / counter)
         $('#pm10averagetotal').html("PM10 Average: " + Math.round(average_pm10) + " - " + colorForPollutionPhrase(average_pm10, 0))
         $('#pm2averagetotal').html("PM2.5 Average: " + Math.round(average_pm2) + " - " + colorForPollutionPhrase(0, average_pm2))
+        dangerBasedOnPM(Math.round(average_pm10), Math.round(average_pm2), 100)
         $('#pm10averagetotal').css("color", colorForPollution(average_pm10, 0))
         $('#pm2averagetotal').css("color", colorForPollution(0, average_pm2))
         $('#input[name="dates"]').daterangepicker();
