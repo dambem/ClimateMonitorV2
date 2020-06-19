@@ -14,13 +14,48 @@ var bigdanger = '#1a0006'
 var safe = '#6699CC'
 var average_pm2
 var average_pm10
+function dangerBasedOnPM(PM10, PM2, people, id) {
+    var validPM10 = 20
+    var validPM2 = 15
+    people = 1000
+    var PM10inc = (PM10 - validPM10) / 10
+    var PM2inc = (PM2 - validPM2) / 10
 
-function human_display(good, bad, id) {
+    percentageMortalityPM10 = 0.58 * PM10inc
+    percentageRespDiseasePM2 = 2.07 * PM2inc
+    lifespandecreasePM2 = 0.35 * PM2inc
+    console.log(percentageMortalityPM10)
+    console.log(percentageRespDiseasePM2)
+    console.log(lifespandecreasePM2)
+    mortalityOnPeoplePM10 = people * (percentageMortalityPM10 * 0.01)
+    respiratoryDiseasePeoplePM2 = people * (percentageMortalityPM10 * 0.01)
+}
+function mortalityPM10(PM10, people, id, preface) {
+    console.log("Entering Mortality")
+    var validPM10 = 20
+    var PM10inc = (PM10 - validPM10) / 10
+    percentageMortalityPM10 = 0.58 * PM10inc
+    console.log(percentageMortalityPM10)
+    mortalityOnPeoplePM10 = people * (percentageMortalityPM10 * 0.01)
+    console.log("Final Calculation: " + mortalityOnPeoplePM10)
+    human_display(people, mortalityOnPeoplePM10, id, preface)
+}
+
+function respiratoryDiseasePeoplePM2(PM2, people, id) {
+    var validPM2 = 15
+    var PM2inc = (PM2 - validPM2) / 10
+
+}
+
+function human_display(people, infected,  id, preface) {
     $(id).empty()
-    for (i = 0; i < good; i++) {
+    infected = Math.ceil(infected)
+    console.log("Infected people" + infected)
+    $(id).append("<p>" + preface + "</p>")
+    for (i = 0; i < (people-infected); i++) {
         $(id).append('<svg class="bi bi - person - fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" /></svg >')
     }
-    for (i = 0; i < bad; i++) {
+    for (i = 0; i < infected; i++) {
         $(id).append('<svg class="bi bi - person - fill" width="1em" height="1em" viewBox="0 0 16 16" fill="red" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" /></svg >')
     }
 }
@@ -68,22 +103,7 @@ function linkExist(id) {
         }
     })
 }
-function dangerBasedOnPM(PM10, PM2, people) {
-    var validPM10 = 20
-    var validPM2 = 15
-    people = 1000
-    var PM10inc = (PM10 - validPM10)/10
-    var PM2inc = (PM2 - validPM2)/10
-    
-    percentageMortalityPM10 = 0.58*PM10inc
-    percentageRespDiseasePM2 = 2.07 * PM2inc
-    lifespandecrease = 0.35 * PM2inc
-    console.log(percentageMortalityPM10)
-    console.log(percentageRespDiseasePM2)
-    console.log(lifespandecrease)
 
-
-}
 // Function that returns different phrase based on pollution 
 function colorForPollutionPhrase(pm10, pm2) {
     if (pm10 >= 20 && pm10 < 30 || pm2 >= 10 && pm2 < 15) {
@@ -181,8 +201,9 @@ $(document).ready(() => {
     
 
     // appends danger_level div with certain human displays
-    human_display(500, 0, "#danger_level")
-    human_display(250, 250, "#danger_level2")
+    mortalityPM10(60, 1000, "#mortality_pm10", "The current PM10 value is expected to cause the following increases in mortality over an average of 1000 people")
+    //human_display(500, 100, "#danger_level")
+    human_display(500, 100, "#danger_level2")
 
     var scatterChartPM2 = new Chart(pm2Chart, {
         type: 'scatter',
