@@ -30,15 +30,24 @@ function dangerBasedOnPM(PM10, PM2, people, id) {
     mortalityOnPeoplePM10 = people * (percentageMortalityPM10 * 0.01)
     respiratoryDiseasePeoplePM2 = people * (percentageMortalityPM10 * 0.01)
 }
-function mortalityPM10(PM10, people, id, preface) {
+function lifespandecrease(pm2, id) {
+    $(id).empty()
+    $(id).append("This in")
+
+}
+function mortality(PM10, PM2, people, id, preface) {
     console.log("Entering Mortality")
     var validPM10 = 20
+    var validPM2 = 15
     var PM10inc = (PM10 - validPM10) / 10
+    var PM2inc = (PM2 - validPM2) / 10
+    percentageMortalityPM2 = 2.8 * PM2inc
     percentageMortalityPM10 = 0.58 * PM10inc
     console.log(percentageMortalityPM10)
+    mortalityOnPeoplePM2 = people * (percentageMortalityPM2 * 0.01)
     mortalityOnPeoplePM10 = people * (percentageMortalityPM10 * 0.01)
     console.log("Final Calculation: " + mortalityOnPeoplePM10)
-    human_display(people, mortalityOnPeoplePM10, id, preface)
+    human_display(people, mortalityOnPeoplePM10 + mortalityOnPeoplePM2, id, preface)
 }
 
 function respiratoryDiseasePeoplePM2(PM2, people, id) {
@@ -52,6 +61,8 @@ function human_display(people, infected,  id, preface) {
     infected = Math.ceil(infected)
     console.log("Infected people" + infected)
     $(id).append("<p>" + preface + "</p>")
+    $(id).append("<p> Out of " + String(people*10) + " people, " + String(infected*10) + " who would not otherwise would sadly lose they're lives due to pollution.")
+
     for (i = 0; i < (people-infected); i++) {
         $(id).append('<svg class="bi bi - person - fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" /></svg >')
     }
@@ -200,8 +211,6 @@ $(document).ready(() => {
     // Currently not in use, date range picker for graphs
     
 
-    // appends danger_level div with certain human displays
-    mortalityPM10(60, 1000, "#mortality_pm10", "The current PM10 value is expected to cause the following increases in mortality over an average of 1000 people")
     //human_display(500, 100, "#danger_level")
     human_display(500, 100, "#danger_level2")
 
@@ -425,6 +434,9 @@ $(document).ready(() => {
         average_pm2 = (totalpm2 / counter)
         $('#pm10averagetotal').html("PM10 Average: " + Math.round(average_pm10) + " - " + colorForPollutionPhrase(average_pm10, 0))
         $('#pm2averagetotal').html("PM2.5 Average: " + Math.round(average_pm2) + " - " + colorForPollutionPhrase(0, average_pm2))
+        // appends danger_level div with certain human displays
+        mortality(Math.round(average_pm2), Math.round(average_pm10), 500, "#mortality_pm10", "The current PM10 value is expected to cause the following increases in mortality over an average of 1000 people")
+
         dangerBasedOnPM(Math.round(average_pm10), Math.round(average_pm2), 100)
         $('#pm10averagetotal').css("color", colorForPollution(average_pm10, 0))
         $('#pm2averagetotal').css("color", colorForPollution(0, average_pm2))
