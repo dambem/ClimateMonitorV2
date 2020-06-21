@@ -7,7 +7,9 @@ body {
 .navbar-brand {
     font-family: 'Bellota Text', cursive;
 }
-
+.td off {
+    background-color: red;
+}
 h2, h3 {
     font-family: 'Bellota Text', cursive;
 }

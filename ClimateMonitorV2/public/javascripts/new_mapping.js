@@ -14,13 +14,59 @@ var bigdanger = '#1a0006'
 var safe = '#6699CC'
 var average_pm2
 var average_pm10
+function dangerBasedOnPM(PM10, PM2, people, id) {
+    var validPM10 = 20
+    var validPM2 = 15
+    people = 1000
+    var PM10inc = (PM10 - validPM10) / 10
+    var PM2inc = (PM2 - validPM2) / 10
 
-function human_display(good, bad, id) {
+    percentageMortalityPM10 = 0.58 * PM10inc
+    percentageRespDiseasePM2 = 2.07 * PM2inc
+    lifespandecreasePM2 = 0.35 * PM2inc
+    console.log(percentageMortalityPM10)
+    console.log(percentageRespDiseasePM2)
+    console.log(lifespandecreasePM2)
+    mortalityOnPeoplePM10 = people * (percentageMortalityPM10 * 0.01)
+    respiratoryDiseasePeoplePM2 = people * (percentageMortalityPM10 * 0.01)
+}
+function lifespandecrease(pm2, id) {
     $(id).empty()
-    for (i = 0; i < good; i++) {
+    $(id).append("This in")
+
+}
+function mortality(PM10, PM2, people, id, preface) {
+    console.log("Entering Mortality")
+    var validPM10 = 20
+    var validPM2 = 15
+    var PM10inc = (PM10 - validPM10) / 10
+    var PM2inc = (PM2 - validPM2) / 10
+    percentageMortalityPM2 = 2.8 * PM2inc
+    percentageMortalityPM10 = 0.58 * PM10inc
+    console.log(percentageMortalityPM10)
+    mortalityOnPeoplePM2 = people * (percentageMortalityPM2 * 0.01)
+    mortalityOnPeoplePM10 = people * (percentageMortalityPM10 * 0.01)
+    console.log("Final Calculation: " + mortalityOnPeoplePM10)
+    human_display(people, mortalityOnPeoplePM10 + mortalityOnPeoplePM2, id, preface)
+}
+
+function respiratoryDiseasePeoplePM2(PM2, people, id) {
+    var validPM2 = 15
+    var PM2inc = (PM2 - validPM2) / 10
+
+}
+
+function human_display(people, infected,  id, preface) {
+    $(id).empty()
+    infected = Math.ceil(infected)
+    console.log("Infected people" + infected)
+    $(id).append("<p>" + preface + "</p>")
+    $(id).append("<p> Out of " + String(people*10) + " people, " + String(infected*10) + " who would not otherwise would sadly lose they're lives due to pollution.")
+
+    for (i = 0; i < (people-infected); i++) {
         $(id).append('<svg class="bi bi - person - fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" /></svg >')
     }
-    for (i = 0; i < bad; i++) {
+    for (i = 0; i < infected; i++) {
         $(id).append('<svg class="bi bi - person - fill" width="1em" height="1em" viewBox="0 0 16 16" fill="red" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" /></svg >')
     }
 }
@@ -49,10 +95,26 @@ function linkExist(id) {
                 console.log(error)
             }
         })
-
-        
-
 }
+
+function linkExist(id) {
+    jsonData = { 'id': id }
+    $.ajax({
+        url: '/checkdates',
+        data: JSON.stringify(jsonData),
+        contentType: 'application/json',
+        type: 'POST',
+        success: function (dataR) {
+            var ret = dataR;
+            console.log("Everything")
+            console.log(ret)
+        },
+        error: function (error) {
+            console.log(error)
+        }
+    })
+}
+
 // Function that returns different phrase based on pollution 
 function colorForPollutionPhrase(pm10, pm2) {
     if (pm10 >= 20 && pm10 < 30 || pm2 >= 10 && pm2 < 15) {
@@ -124,17 +186,10 @@ $(document).ready(() => {
     var pm2Chart = document.getElementById('pm2Chart').getContext('2d');
     var pm10Chart = document.getElementById('pm10Chart').getContext('2d');
     // Currently not in use, date range picker for graphs
-    $(function () {
-        $('input[name="daterange"]').daterangepicker({
-            opens: 'left'
-        }, function (start, end, label) {
-            console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
-        });
-    });
+    
 
-    // appends danger_level div with certain human displays
-    human_display(500, 0, "#danger_level")
-    human_display(250, 250, "#danger_level2")
+    //human_display(500, 100, "#danger_level")
+    human_display(500, 100, "#danger_level2")
 
     var scatterChartPM2 = new Chart(pm2Chart, {
         type: 'scatter',
@@ -225,10 +280,11 @@ $(document).ready(() => {
         link = build_link_from_date(current_date, sensor_id)
         getData(link)
     }
-
-
+    
+    var currentValidDates = []
     function findDates(id_chosen) {
-        jsonData = { id: id_chosen }
+        days_found = parseInt(document.getElementById("days").value)
+        jsonData = { id: id_chosen, days:days_found }
         $body = $("body");
 
         $.ajax({
@@ -238,8 +294,36 @@ $(document).ready(() => {
             type: 'POST',
             success: function (dataR) {
                 console.log(dataR)
-            },
+                $('input[name="daterange"]').daterangepicker({
+                    startDate: "06/07/2020",
+                    endDate: "06/13/2020",
+                    opens: 'left',
+                    isInvalidDate: function (date) {
+                        for (i = 0; i < dataR.length; i++){
+                            var invalid = true;
+                            var item = dataR[i]
+                            var dateObj = new Date(item[0])
+                            var dateMoment = moment(dateObj)
+                            if (item[1] && dateMoment.isSame(date, 'day')) {
+                                invalid = false
+                                currentValidDates.push(dateMoment)
+                            }
+                            for (j = 0; j < currentValidDates.length; j++) {
+                                if (currentValidDates[j].isSame(date, 'day')) {
+                                    invalid = false
+                                }
+                            }
+                        }
+                        return invalid
+                    }
+                }, function (start, end, label) {
+                    console.log(start)
+                    console.log(end)
+                    
+                })
+             },
             complete: function (data, res) {
+                
             },
             error: function (xhr, status, error) {
                 console.log(error.message)
@@ -325,8 +409,12 @@ $(document).ready(() => {
         });
         average_pm10 = (totalpm10 / counter)
         average_pm2 = (totalpm2 / counter)
-        $('#pm10averagetotal').html("PM10 Average: " + average_pm10 + " - " + colorForPollutionPhrase(average_pm10, 0))
-        $('#pm2averagetotal').html("PM2.5 Average: " + average_pm2 + " - " + colorForPollutionPhrase(0, average_pm2))
+        $('#pm10averagetotal').html("PM10 Average: " + Math.round(average_pm10) + " - " + colorForPollutionPhrase(average_pm10, 0))
+        $('#pm2averagetotal').html("PM2.5 Average: " + Math.round(average_pm2) + " - " + colorForPollutionPhrase(0, average_pm2))
+        // appends danger_level div with certain human displays
+        mortality(Math.round(average_pm2), Math.round(average_pm10), 500, "#mortality_pm10", "The current PM10 value is expected to cause the following increases in mortality over an average of 1000 people")
+
+        dangerBasedOnPM(Math.round(average_pm10), Math.round(average_pm2), 100)
         $('#pm10averagetotal').css("color", colorForPollution(average_pm10, 0))
         $('#pm2averagetotal').css("color", colorForPollution(0, average_pm2))
         $('#input[name="dates"]').daterangepicker();

@@ -47,11 +47,16 @@
     <Content Include="package.json" />
     <Content Include="public\stylesheets\main.css" />
     <Content Include="README.md" />
+    <Content Include="views\about.pug" />
     <Content Include="views\index.pug" />
     <Content Include="views\layout.pug" />
     <Content Include="views\error.pug" />
     <Content Include="views\footer.pug">
       <SubType>Code</SubType>
+    </Content>
+    <Content Include="views\Page1.pug">
+      <SubType>Code</SubType>
+      <Publish>False</Publish>
     </Content>
   </ItemGroup>
   <ItemGroup>
