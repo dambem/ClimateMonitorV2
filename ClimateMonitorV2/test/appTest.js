@@ -45,5 +45,25 @@ describe('new_mapping handler', function () {
         //expect(results[4]).to.equal('The pollution levels are <b> dangerously </b> above WHO guidelines for safe pollution, and can lead to long and short term health issues');
     }).timeout(0);
 
+    it('returns the correct link given a date', async () => {
+
+        const results = await page.evaluate(x => {
+            result_arr = [];
+
+            result_arr.push(build_link_from_date(new Date('January 1, 2019 12:00:00')));
+            result_arr.push(build_link_from_date(new Date('December 25, 2019 12:00:00')));
+
+
+            return result_arr;
+        }, 7);
+
+        console.log(results);
+
+        expect(results[0]).to.equal('http://archive.sensor.community/2019-01-01/2019-01-01_sds011_sensor_0.csv');
+        expect(results[1]).to.equal('http://archive.sensor.community/2019-12-25/2019-12-25_sds011_sensor_0.csv');
+
+
+    }).timeout(0);
+
 
 });
