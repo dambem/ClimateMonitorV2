@@ -14,3 +14,6 @@ npm install
 
 npm start
 ```
+## Running tests
+- First run the app using `npm start`
+- Run the tests using `npm t`
