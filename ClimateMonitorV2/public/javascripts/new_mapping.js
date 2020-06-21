@@ -128,11 +128,12 @@ function colorForPollution(pm10, pm2) {
 // This function builds the link to the sensor CSV given a certain date.
 function build_link_from_date(date) {
     year = date.getFullYear();
-    month = date.getMonth();
+    month = date.getMonth() + 1;
+
     if (month < 10) {
         month = "0" + month
     }
-    day = date.getDay();
+    day = date.getDate();
     if (day < 10) {
         day = "0" + day
     }
