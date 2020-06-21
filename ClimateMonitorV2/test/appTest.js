@@ -71,5 +71,33 @@ describe('new_mapping handler', function () {
 
     }).timeout(0);
 
+    it('returns the correct pollution level colour', async () => {
+
+        const results = await page.evaluate(x => {
+            result_arr = [];
+            result_arr.push(colorForPollution(0,0));
+            result_arr.push(colorForPollution(20,10));
+            result_arr.push(colorForPollution(30,15));
+            result_arr.push(colorForPollution(50,25));
+            result_arr.push(colorForPollution(70,35));
+            result_arr.push(colorForPollution(100,50));
+            result_arr.push(colorForPollution(150,75));
+            result_arr.push(colorForPollution(151,76));
+
+            return result_arr;
+        }, 7);
+
+        console.log(results);
+
+        expect(results[0]).to.equal('#6699CC');
+        expect(results[1]).to.equal('#FFF275');
+        expect(results[2]).to.equal('#FF8C42');
+        expect(results[3]).to.equal('#FF3C38');
+        expect(results[4]).to.equal('#d600a4');
+        expect(results[5]).to.equal('#a20049');
+        expect(results[6]).to.equal('#1a0006');
+        expect(results[6]).to.equal('#1a0006');
+    }).timeout(0);
+
 
 });

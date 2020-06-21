@@ -88,34 +88,10 @@ function colorForPollution(pm10, pm2) {
     else if (pm10 >= 50 && pm10 < 70 || pm2 >= 25 && pm2 < 35) {
         return high
     }
-    else if (pm10 >= 70 || pm2 >= 35) {
+    else if (pm10 >= 70 && pm10 < 100 || pm2 >= 35 && pm2 < 50) {
         return veryhigh
     }
-    else if (pm10 >= 100 || pm2 >= 50) {
-        return danger
-    }
-    else if (pm10 >= 150 || pm2 >= 75) {
-         return bigdanger
-    }
-    else {
-        return safe
-    }
-}
-// Function that returns different colours based on pollution 
-function colorForPollution(pm10, pm2) {
-    if (pm10 >= 20 && pm10 < 30 || pm2 >= 10 && pm2 < 15) {
-        return light
-    }
-    else if (pm10 >= 30 && pm10 < 50 || pm2 >= 15 && pm2 < 25) {
-        return medium
-    }
-    else if (pm10 >= 50 && pm10 < 70 || pm2 >= 25 && pm2 < 35) {
-        return high
-    }
-    else if (pm10 >= 70 || pm2 >= 35) {
-        return veryhigh
-    }
-    else if (pm10 >= 100 || pm2 >= 50) {
+    else if (pm10 >= 100 && pm10 < 150 || pm2 >= 50 && pm2 < 75) {
         return danger
     }
     else if (pm10 >= 150 || pm2 >= 75) {
@@ -385,6 +361,3 @@ $(document).ready(() => {
         }
     });
 });
-
-// exports the variables and functions above so that other modules can use them
-module.exports.colorForPollutionPhrase = colorForPollutionPhrase;
