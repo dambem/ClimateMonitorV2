@@ -64,10 +64,10 @@ function colorForPollutionPhrase(pm10, pm2) {
     else if (pm10 >= 50 && pm10 < 70 || pm2 >= 25 && pm2 < 35) {
         return "The pollution levels are above WHO guidelines for safe pollution, and can lead to long term health issues"
     }
-    else if (pm10 >= 70 || pm2 >= 35) {
+    else if (pm10 >= 70 && pm10 < 100 || pm2 >= 35 && pm2 < 50) {
         return "The pollution levels are above WHO guidelines for safe pollution, and can lead to long term health issues"
     }
-    else if (pm10 >= 100 || pm2 >= 50) {
+    else if (pm10 >= 100 && pm10 < 150 || pm2 >= 50 && pm2 < 75) {
         return "The pollution levels are dangerously above WHO guidelines for safe pollution, and can lead to long <b> and </b> short term health issues"
     }
     else if (pm10 >= 150 || pm2 >= 75) {
