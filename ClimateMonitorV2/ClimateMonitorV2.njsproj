@@ -48,6 +48,10 @@
     <Content Include="public\stylesheets\main.css" />
     <Content Include="README.md" />
     <Content Include="views\about.pug" />
+<<<<<<< Updated upstream
+=======
+    <Content Include="views\detailedstats.pug" />
+>>>>>>> Stashed changes
     <Content Include="views\index.pug" />
     <Content Include="views\layout.pug" />
     <Content Include="views\error.pug" />
