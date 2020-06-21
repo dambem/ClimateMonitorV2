@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "node app"
+    "start": "node app",
+    "test": "mocha --recursive test"
   },
   "description": "ClimateMonitorV2",
   "author": {
@@ -15,17 +16,24 @@
     "body-parser": "^1.15.0",
     "bootstrap-datepicker": "^1.9.0",
     "bulma": "^0.8.2",
+    "canvas": "^2.6.1",
+    "chartjs": "^0.3.24",
     "chartjs-plugin-zoom": "^0.7.7",
     "cookie-parser": "^1.4.5",
     "csv-stream": "^0.2.0",
+    "datepicker": "0.0.0",
     "debug": "^2.2.0",
     "express": "^4.14.0",
     "fs-extra": "^9.0.1",
     "http": "0.0.1-security",
+    "jquery": "^3.5.1",
+    "jquery-datepicker": "^1.12.3",
+    "jsdom": "^16.2.2",
     "morgan": "^1.10.0",
     "package.json": "^2.0.1",
     "papaparse": "^5.2.0",
     "pug": "^2.0.0-beta6",
+    "puppeteer": "^4.0.0",
     "request": "2.88.2",
     "request-progress": "^3.0.0",
     "request-promise": "^4.2.5",
@@ -35,5 +43,9 @@
     "stream": "0.0.2",
     "superagent": "^5.2.2",
     "xmlhttprequest": "^1.8.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^8.0.1"
   }
 }

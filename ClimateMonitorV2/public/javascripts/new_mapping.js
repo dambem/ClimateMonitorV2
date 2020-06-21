@@ -126,10 +126,10 @@ function colorForPollutionPhrase(pm10, pm2) {
     else if (pm10 >= 50 && pm10 < 70 || pm2 >= 25 && pm2 < 35) {
         return "The pollution levels are above WHO guidelines for safe pollution, and can lead to long term health issues"
     }
-    else if (pm10 >= 70 || pm2 >= 35) {
+    else if (pm10 >= 70 && pm10 < 100 || pm2 >= 35 && pm2 < 50) {
         return "The pollution levels are above WHO guidelines for safe pollution, and can lead to long term health issues"
     }
-    else if (pm10 >= 100 || pm2 >= 50) {
+    else if (pm10 >= 100 && pm10 < 150 || pm2 >= 50 && pm2 < 75) {
         return "The pollution levels are dangerously above WHO guidelines for safe pollution, and can lead to long <b> and </b> short term health issues"
     }
     else if (pm10 >= 150 || pm2 >= 75) {
@@ -150,34 +150,10 @@ function colorForPollution(pm10, pm2) {
     else if (pm10 >= 50 && pm10 < 70 || pm2 >= 25 && pm2 < 35) {
         return high
     }
-    else if (pm10 >= 70 || pm2 >= 35) {
+    else if (pm10 >= 70 && pm10 < 100 || pm2 >= 35 && pm2 < 50) {
         return veryhigh
     }
-    else if (pm10 >= 100 || pm2 >= 50) {
-        return danger
-    }
-    else if (pm10 >= 150 || pm2 >= 75) {
-         return bigdanger
-    }
-    else {
-        return safe
-    }
-}
-// Function that returns different colours based on pollution 
-function colorForPollution(pm10, pm2) {
-    if (pm10 >= 20 && pm10 < 30 || pm2 >= 10 && pm2 < 15) {
-        return light
-    }
-    else if (pm10 >= 30 && pm10 < 50 || pm2 >= 15 && pm2 < 25) {
-        return medium
-    }
-    else if (pm10 >= 50 && pm10 < 70 || pm2 >= 25 && pm2 < 35) {
-        return high
-    }
-    else if (pm10 >= 70 || pm2 >= 35) {
-        return veryhigh
-    }
-    else if (pm10 >= 100 || pm2 >= 50) {
+    else if (pm10 >= 100 && pm10 < 150 || pm2 >= 50 && pm2 < 75) {
         return danger
     }
     else if (pm10 >= 150 || pm2 >= 75) {
@@ -190,11 +166,12 @@ function colorForPollution(pm10, pm2) {
 // This function builds the link to the sensor CSV given a certain date.
 function build_link_from_date(date) {
     year = date.getFullYear();
-    month = date.getMonth();
+    month = date.getMonth() + 1;
+
     if (month < 10) {
         month = "0" + month
     }
-    day = date.getDay();
+    day = date.getDate();
     if (day < 10) {
         day = "0" + day
     }
