@@ -251,6 +251,7 @@ $(document).ready(() => {
     // Creates options for the initial sensor map
     var sensorMap = L.map('mapid', {
         minZoom: 12,
+        style: 'mapbox://styles/mapbox/dark-v10',
         fullscreenControl: true,
         fullscreenControlOptions: {
             position: 'topleft'
