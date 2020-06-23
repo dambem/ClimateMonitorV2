@@ -10,7 +10,6 @@ block content
   script(src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@0.7.7")
 
   body
-
      nav(class="navbar fixed-top navbar-expand-lg navbar-light bg-light" id="mainNavigator")
         img(class="img-fluid", id="headerimage", src="sheffsense.png") 
         a(class="navbar-brand") SheffSense: Sheffield Climate Monitor
@@ -21,5 +20,13 @@ block content
                 li(class="nav-item")
                     a(class="nav-link" href="/about") About
                 li(class="nav-item active")
-                    a(class="nav-link" href="/detailedstats") Detailed Statisticsextends layout
-     canvas(id='pollutionChart', height='600')
+                    a(class="nav-link" href="/detailedstats") Detailed Statistics
+     div(class='container-fluid' id="mainContainer")
+        div(class="row")
+            div(class="col-md-12")
+                div(id='mapid')
+                    div(class="loader")
+     script(type='text/javascript' src='/javascripts/config.js')
+     script(type='text/javascript', src='/javascripts/detailedstats.js')
+  script(src="https://d3js.org/d3.v5.min.js")
+  footer
