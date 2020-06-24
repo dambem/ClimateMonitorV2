@@ -150,6 +150,7 @@ function colorForPollutionPhrase(pm10, pm2) {
         return "The pollution levels are currently within WHO guidelines!"
     }
 }
+/*
 
 /*
 * Function that returns different colours based on pollution
@@ -245,6 +246,7 @@ $(document).ready(() => {
     // Create the pollution chart 
     var ctx = document.getElementById("pollutionChart").getContext('2d');
 
+
     var pollutionGuidelinesChart = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -278,6 +280,71 @@ $(document).ready(() => {
         }
     })
 
+    var noPollutionIcon = L.icon({
+        iconUrl: 'markers/no_pollution.png',
+        iconSize: [50, 50], // size of the icon
+        iconAnchor: [25, 50], // point of the icon which will correspond to marker's location
+        popupAnchor: [0, -50] // point from which the popup should open relative to the iconAnchor
+    })
+    var lightPollutionIcon = L.icon({
+        iconUrl: 'markers/light_pollution.png',
+        iconSize: [50, 50], // size of the icon
+        iconAnchor: [25, 50], // point of the icon which will correspond to marker's location
+        popupAnchor: [0, -50] // point from which the popup should open relative to the iconAnchor
+    })
+    var mediumPollutionIcon = L.icon({
+        iconUrl: 'markers/medium_pollution.png',
+        iconSize: [50, 50], // size of the icon
+        iconAnchor: [25, 50], // point of the icon which will correspond to marker's location
+        popupAnchor: [0, -50] // point from which the popup should open relative to the iconAnchor
+    })
+    var upperMedPollutionIcon = L.icon({
+        iconUrl: 'markers/high_med_pollution.png',
+        iconSize: [50, 50], // size of the icon
+        iconAnchor: [25, 50], // point of the icon which will correspond to marker's location
+        popupAnchor: [0, -50] // point from which the popup should open relative to the iconAnchor
+    })
+    var highPollutionIcon = L.icon({
+        iconUrl: 'markers/high_pollution.png',
+        iconSize: [50, 50], // size of the icon
+        iconAnchor: [25, 50], // point of the icon which will correspond to marker's location
+        popupAnchor: [0, -50] // point from which the popup should open relative to the iconAnchor
+    })
+    var veryHighPollutionIcon = L.icon({
+        iconUrl: 'markers/very_high_pollution.png',
+        iconSize: [50, 50], // size of the icon
+        iconAnchor: [25, 50], // point of the icon which will correspond to marker's location
+        popupAnchor: [0, -50] // point from which the popup should open relative to the iconAnchor
+    })
+    var maximumPollutionIcon = L.icon({
+        iconUrl: 'markers/too_high_pollution.png',
+        iconSize: [50, 50], // size of the icon
+        iconAnchor: [25, 50], // point of the icon which will correspond to marker's location
+        popupAnchor: [0, -50] // point from which the popup should open relative to the iconAnchor
+    })
+    function iconForPollution(pm10, pm2) {
+        if (pm10 >= 20 && pm10 < 30 || pm2 >= 10 && pm2 < 15) {
+            return lightPollutionIcon
+        }
+        else if (pm10 >= 30 && pm10 < 50 || pm2 >= 15 && pm2 < 25) {
+            return mediumPollutionIcon
+        }
+        else if (pm10 >= 50 && pm10 < 70 || pm2 >= 25 && pm2 < 35) {
+            return upperMedPollutionIcon
+        }
+        else if (pm10 >= 70 && pm10 < 100 || pm2 >= 35 && pm2 < 50) {
+            return highPollutionIcon
+        }
+        else if (pm10 >= 100 && pm10 < 150 || pm2 >= 50 && pm2 < 75) {
+            return veryHighPollutionIcon
+        }
+        else if (pm10 >= 150 || pm2 >= 75) {
+            return maximumPollutionIcon
+        }
+        else {
+            return noPollutionIcon
+        }
+    }
     // This builds the actual map.
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
         attribution: 'Sensor Data <a href="https://luftdaten.info/en/home-en/">Luftdaten</a> | Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -468,8 +535,10 @@ $(document).ready(() => {
 
         circles = []
         for (var i = 0; i < items.length; i++) {
+            var pm10 = parseFloat(items[i][3])
+            var pm2  = parseFloat(items[i][4])
             color = colorForPollution(items[i][3], items[i][4])
-            circles.push(L.circle([items[i][1], items[i][2]], {
+            var marker = L.circle([items[i][1], items[i][2]], {
                 color: 'black',
                 fillColor: color,
                 fillOpacity: 0.8,
@@ -478,7 +547,17 @@ $(document).ready(() => {
                 p2: [items[i][4]],
                 sensor_id: [items[i][5]],
                 choice_id: i
-            }).addTo(sensorMap));
+            })
+            var icon_poll = iconForPollution(pm10, pm2)
+            var marker = L.marker([items[i][1], items[i][2]], {
+                icon: icon_poll,
+                p10: pm10,
+                p2: pm2,
+                sensor_id: [items[i][5]],
+                choice_id: i
+            })
+            circles.push(marker.addTo(sensorMap));
+
         }
 
         for (var i = 0; i < circles.length; i++) {
