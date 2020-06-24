@@ -407,16 +407,33 @@ $(document).ready(() => {
             }
             
         });
-        average_pm10 = (totalpm10 / counter)
-        average_pm2 = (totalpm2 / counter)
-        $('#pm10averagetotal').html("PM10 Average: " + Math.round(average_pm10) + " - " + colorForPollutionPhrase(average_pm10, 0))
-        $('#pm2averagetotal').html("PM2.5 Average: " + Math.round(average_pm2) + " - " + colorForPollutionPhrase(0, average_pm2))
-        // appends danger_level div with certain human displays
-        mortality(Math.round(average_pm2), Math.round(average_pm10), 500, "#mortality_pm10", "The current PM10 value is expected to cause the following increases in mortality over an average of 1000 people")
+        average_pm10 = Math.round((totalpm10 / counter))
 
-        dangerBasedOnPM(Math.round(average_pm10), Math.round(average_pm2), 100)
-        $('#pm10averagetotal').css("color", colorForPollution(average_pm10, 0))
-        $('#pm2averagetotal').css("color", colorForPollution(0, average_pm2))
+        var currentpm10Colour = colorForPollution(average_pm10, 0)
+        $('#pm10averagetotal').html(`<u><strong>${average_pm10}</strong></u>`)
+        $('#pm10averagetotal').css("color", currentpm10Colour)
+
+        $('#pm10averageheader').html("PM10 Average")
+        $('#pm10averageheader').css("color", currentpm10Colour)
+        
+        $('#pm10averagedesc').html(colorForPollutionPhrase(average_pm10, 0))
+
+        average_pm2 = Math.round((totalpm2 / counter))
+
+        var currentpm2Colour = colorForPollution(0, average_pm2)
+        $('#pm2averagetotal').html(`<u><strong>${average_pm2}</strong></u>`)
+        $('#pm2averagetotal').css("color", currentpm2Colour)
+
+        $('#pm2averageheader').html("PM2.5 Average")
+        $('#pm2averageheader').css("color", currentpm2Colour)
+
+        $('#pm2averagedesc').html(colorForPollutionPhrase(0, average_pm2))
+
+        // appends danger_level div with certain human displays
+        mortality(average_pm2, average_pm10, 500, "#mortality_pm10", "The current PM10 value is expected to cause the following increases in mortality over an average of 1000 people")
+
+        dangerBasedOnPM(average_pm10, average_pm2, 100)
+
         $('#input[name="dates"]').daterangepicker();
         circles = []
         for (var i = 0; i < items.length; i++) {
