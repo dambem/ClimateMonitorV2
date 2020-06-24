@@ -14,6 +14,7 @@ var bigdanger = '#1a0006'
 var safe = '#6699CC'
 var average_pm2
 var average_pm10
+
 function dangerBasedOnPM(PM10, PM2, people, id) {
     var validPM10 = 20
     var validPM2 = 15
@@ -30,11 +31,13 @@ function dangerBasedOnPM(PM10, PM2, people, id) {
     mortalityOnPeoplePM10 = people * (percentageMortalityPM10 * 0.01)
     respiratoryDiseasePeoplePM2 = people * (percentageMortalityPM10 * 0.01)
 }
+
 function lifespandecrease(pm2, id) {
     $(id).empty()
     $(id).append("This in")
 
 }
+
 function mortality(PM10, PM2, people, id, preface) {
     console.log("Entering Mortality")
     var validPM10 = 20
@@ -57,19 +60,27 @@ function respiratoryDiseasePeoplePM2(PM2, people, id) {
 }
 
 function human_display(people, infected,  id, preface) {
+    if (preface == null) {
+        preface = "<p></p>"
+    } else {
+        preface = "<p>" + preface + "</p>"
+    }
+
     $(id).empty()
     infected = Math.ceil(infected)
     console.log("Infected people" + infected)
-    $(id).append("<p>" + preface + "</p>")
-    $(id).append("<p> Out of " + String(people*10) + " people, " + String(infected*10) + " who would not otherwise would sadly lose they're lives due to pollution.")
+    $(id).append(preface)
+    $(id).append("<p> Out of " + String(people*10) + " people, " + String(infected*10) + " would sadly lose their lives due to pollution.")
 
     for (i = 0; i < (people-infected); i++) {
         $(id).append('<svg class="bi bi - person - fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" /></svg >')
     }
+    
     for (i = 0; i < infected; i++) {
         $(id).append('<svg class="bi bi - person - fill" width="1em" height="1em" viewBox="0 0 16 16" fill="red" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" /></svg >')
     }
 }
+
 // Function for removing data from charts
 function removeData(chart) {
     chart.data.labels.pop();
@@ -139,7 +150,10 @@ function colorForPollutionPhrase(pm10, pm2) {
         return "The pollution levels are currently within WHO guidelines!"
     }
 }
-// Function that returns different colours based on pollution 
+
+/*
+* Function that returns different colours based on pollution
+*/ 
 function colorForPollution(pm10, pm2) {
     if (pm10 >= 20 && pm10 < 30 || pm2 >= 10 && pm2 < 15) {
         return light
@@ -163,7 +177,10 @@ function colorForPollution(pm10, pm2) {
         return safe
     }
 }
-// This function builds the link to the sensor CSV given a certain date.
+
+/* 
+* This function builds the link to the sensor CSV given a certain date.
+*/
 function build_link_from_date(date) {
     year = date.getFullYear();
     month = date.getMonth() + 1;
@@ -189,7 +206,7 @@ $(document).ready(() => {
     
 
     //human_display(500, 100, "#danger_level")
-    human_display(500, 100, "#danger_level2")
+    human_display(500, 100, "#danger_level2", null)
 
     var scatterChartPM2 = new Chart(pm2Chart, {
         type: 'scatter',
@@ -207,6 +224,7 @@ $(document).ready(() => {
             }
         },
     })
+
     var scatterChartPM10 = new Chart(pm10Chart, {
         type: 'scatter',
         data: {
@@ -223,8 +241,10 @@ $(document).ready(() => {
             }
         },
     })
+
     // Create the pollution chart 
     var ctx = document.getElementById("pollutionChart").getContext('2d');
+
     var pollutionGuidelinesChart = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -251,11 +271,13 @@ $(document).ready(() => {
     // Creates options for the initial sensor map
     var sensorMap = L.map('mapid', {
         minZoom: 12,
+        style: 'mapbox://styles/mapbox/dark-v10',
         fullscreenControl: true,
         fullscreenControlOptions: {
             position: 'topleft'
         }
     })
+
     // This builds the actual map.
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
         attribution: 'Sensor Data <a href="https://luftdaten.info/en/home-en/">Luftdaten</a> | Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -263,6 +285,7 @@ $(document).ready(() => {
         id: 'mapbox.streets',
         accessToken: config.MAP_KEY
     }).addTo(sensorMap);
+
     // Localises the view to go to Sheffield
     sensorMap.setView([53.382, -1.47], 13);
     var slider = document.getElementById("myRange")
@@ -274,6 +297,7 @@ $(document).ready(() => {
         current_date.setDate(current_date.getDate() + parseInt(this.value))
         output.innerHTML = current_date;
     }
+
     // Once slider is released, goes to the date chosen.
     slider.onmouseup = function () {
         chosen_date.setDate(current_date.getDate() + parseInt(this.value))
@@ -333,6 +357,7 @@ $(document).ready(() => {
             complete: function () { $body.removeClass("loading"); },     
         })
     }
+
     function getData(dateSent, sensorID) {
         jsonData = {date:dateSent, id:sensorID}
         $body = $("body");
@@ -368,6 +393,7 @@ $(document).ready(() => {
         var pm10Color = []
         scatterChartPM10.data.datasets = []
         scatterChartPM2.data.datasets = []
+
         if (data.length == 0) {
             alert("Sorry, the data wasn't found!")
         } else {
@@ -388,14 +414,17 @@ $(document).ready(() => {
         }
 
     }
+
     $('#available_dates').click(function () {
         findDates(sensor_id)
     });
+
     var json = $.getJSON('http://api.luftdaten.info/static/v2/data.24h.json', function (data) {
         console.log("Going To Luftdaten")
         var counter = 0
         var totalpm2 = 0
         var totalpm10 = 0
+
         $.each(data, function (key, val) {
             if ((val.location.longitude > -1.58) && (val.location.longitude < -1.34) && (val.location.latitude <= 53.468) && (val.location.latitude >= 53.29)) {
                 if (val.sensordatavalues[0].value_type == "P1") {
@@ -429,12 +458,14 @@ $(document).ready(() => {
 
         $('#pm2averagedesc').html(colorForPollutionPhrase(0, average_pm2))
 
+
         // appends danger_level div with certain human displays
         mortality(average_pm2, average_pm10, 500, "#mortality_pm10", "The current PM10 value is expected to cause the following increases in mortality over an average of 1000 people")
 
         dangerBasedOnPM(average_pm10, average_pm2, 100)
 
         $('#input[name="dates"]').daterangepicker();
+
         circles = []
         for (var i = 0; i < items.length; i++) {
             color = colorForPollution(items[i][3], items[i][4])
@@ -449,6 +480,7 @@ $(document).ready(() => {
                 choice_id: i
             }).addTo(sensorMap));
         }
+
         for (var i = 0; i < circles.length; i++) {
             colorPM10 = colorForPollution(parseFloat(items[i][3]), 0)
             colorPM2 = colorForPollution(0, parseFloat(items[i][4]))
@@ -464,5 +496,6 @@ $(document).ready(() => {
                 sensor_id = event.target.options.sensor_id
             })
         }
+        
     });
 });
