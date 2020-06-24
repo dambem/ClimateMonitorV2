@@ -198,9 +198,23 @@ function build_link_from_date(date) {
     return link
 }
 
+function currentWeatherDisplay() {
+    const weatherDataURL = "https://api.weather.com/v3/wx/forecast/hourly/2day?geocode=53.383331%2C-1.466667&format=json&units=e&language=en-US&apiKey=" + config.WEATHER_COMPANY_KEY
+    $.get(weatherDataURL,
+    function(weatherData){
+        const currentTemp = weatherData.temperature[0];
+        const currentTempCelcius = Math.floor((5/9) * (currentTemp - 32));
+        const currentWindSpeed = weatherData.windSpeed[0];
+        const currentIconCode = weatherData.iconCode[0];
+        $('#currentTemp').html(currentTempCelcius +'ºC');
+        $('#currentWind').html(currentWindSpeed + 'mph');
+        $('#weather-image').attr('src', '../files/weather-icons/' + currentIconCode + '.png');
+    });
+}
+
 // Everything required once loaded
 $(document).ready(() => {
-
+    currentWeatherDisplay();
     var pm2Chart = document.getElementById('pm2Chart').getContext('2d');
     var pm10Chart = document.getElementById('pm10Chart').getContext('2d');
     // Currently not in use, date range picker for graphs
