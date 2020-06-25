@@ -38,7 +38,7 @@
     "request-progress": "^3.0.0",
     "request-promise": "^4.2.5",
     "requestify": "^0.2.5",
-    "scramjet": "^4.30.1",
+    "scramjet": "^4.33.0",
     "serve-favicon": "^2.3.0",
     "stream": "0.0.2",
     "superagent": "^5.2.2",

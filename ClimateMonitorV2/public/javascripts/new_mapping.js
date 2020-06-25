@@ -108,24 +108,6 @@ function linkExist(id) {
         })
 }
 
-function linkExist(id) {
-    jsonData = { 'id': id }
-    $.ajax({
-        url: '/checkdates',
-        data: JSON.stringify(jsonData),
-        contentType: 'application/json',
-        type: 'POST',
-        success: function (dataR) {
-            var ret = dataR;
-            console.log("Everything")
-            console.log(ret)
-        },
-        error: function (error) {
-            console.log(error)
-        }
-    })
-}
-
 // Function that returns different phrase based on pollution 
 function colorForPollutionPhrase(pm10, pm2) {
     if (pm10 >= 20 && pm10 < 30 || pm2 >= 10 && pm2 < 15) {
@@ -199,6 +181,94 @@ function build_link_from_date(date) {
 
 // Everything required once loaded
 $(document).ready(() => {
+
+    // Activate Carousel
+    $('#pythongraphslideshow').carousel({ interval: 3000 });
+
+    $.ajax({
+        url: 'https://api.github.com/repos/dambem/ClimateMonitorV2/contents/ClimateMonitorV2/public/files',
+        type: 'GET',
+        contentType: 'application/json',
+        password: config.GITHUB_API_TOKEN,
+        success: function (files) {
+            var images = []
+
+            // Get image links
+            files.forEach(function (file) {
+
+                // Only extract images
+                if (file["name"].includes(".png", file["name"].length - 5)) {               
+                    
+                    console.log(`INFO: Importing ${file["name"]}...`)
+                    images.push(file['download_url'])
+
+                }
+
+            });
+
+            // Compile the indicators first
+            for (currentCount = 1; currentCount < images.length; ++currentCount) {
+                var listItemNode = document.createElement("LI")
+                listItemNode.setAttribute("data-target", "#pythongraphslideshow")
+                listItemNode.setAttribute("data-slide-to", currentCount)
+
+                document.getElementById("graph_carousel_indicators").appendChild(listItemNode)
+            }
+
+            // Populate the carosuel
+            var altText = "Graph unavailble. Please check your GITHUB_API_TOKEN"
+            var activeImage = false
+            var imageCount = 0
+
+            images.forEach( function (image) {
+
+                if (!activeImage) {
+                    $(`#carosuel_items`).append(
+                        `
+                        <div class="carousel-item active">
+                            <img
+                                src="${image}"
+                                alt="${altText}"
+                                width="1600"
+                                height="1200"
+                            >
+                            <div class="carousel-caption">
+                                <p style="color: blue">${image}</p>
+                            </div>
+                        </div>
+                        `
+                    )
+                    activeImage = true
+                    imageCount++
+
+                } else {
+                    // Use a counter to make each class unique
+                    $(`#carosuel_items`).append(
+                        `
+                        <div class="carousel-item ${imageCount}">
+                            <img
+                                src="${image}"
+                                alt="${altText}"
+                                width="1600"
+                                height="1200"
+                            >
+                            <div class="carousel-caption">
+                                <p style="color: blue">${image}</p>
+                            </div>
+                        </div>
+                        `
+                    )
+                    imageCount++
+
+                }
+                
+            });
+
+        },
+        error: function (error) {
+            console.log(error)
+        }
+    })
 
     var pm2Chart = document.getElementById('pm2Chart').getContext('2d');
     var pm10Chart = document.getElementById('pm10Chart').getContext('2d');
@@ -278,6 +348,82 @@ $(document).ready(() => {
         }
     })
 
+    var noPollutionIcon = L.icon({
+        iconUrl: 'markers/no_pollution.png',
+        iconSize: [50, 50], // size of the icon
+        iconAnchor: [25, 50], // point of the icon which will correspond to marker's location
+        popupAnchor: [0, -50] // point from which the popup should open relative to the iconAnchor
+    })
+
+    var lightPollutionIcon = L.icon({
+        iconUrl: 'markers/light_pollution.png',
+        iconSize: [50, 50], // size of the icon
+        iconAnchor: [25, 50], // point of the icon which will correspond to marker's location
+        popupAnchor: [0, -50] // point from which the popup should open relative to the iconAnchor
+    })
+
+    var mediumPollutionIcon = L.icon({
+        iconUrl: 'markers/medium_pollution.png',
+        iconSize: [50, 50], // size of the icon
+        iconAnchor: [25, 50], // point of the icon which will correspond to marker's location
+        popupAnchor: [0, -50] // point from which the popup should open relative to the iconAnchor
+    })
+
+    var upperMedPollutionIcon = L.icon({
+        iconUrl: 'markers/high_med_pollution.png',
+        iconSize: [50, 50], // size of the icon
+        iconAnchor: [25, 50], // point of the icon which will correspond to marker's location
+        popupAnchor: [0, -50] // point from which the popup should open relative to the iconAnchor
+    })
+
+    var highPollutionIcon = L.icon({
+        iconUrl: 'markers/high_pollution.png',
+        iconSize: [50, 50], // size of the icon
+        iconAnchor: [25, 50], // point of the icon which will correspond to marker's location
+        popupAnchor: [0, -50] // point from which the popup should open relative to the iconAnchor
+    })
+
+    var veryHighPollutionIcon = L.icon({
+        iconUrl: 'markers/very_high_pollution.png',
+        iconSize: [50, 50], // size of the icon
+        iconAnchor: [25, 50], // point of the icon which will correspond to marker's location
+        popupAnchor: [0, -50] // point from which the popup should open relative to the iconAnchor
+    })
+
+    var maximumPollutionIcon = L.icon({
+        iconUrl: 'markers/too_high_pollution.png',
+        iconSize: [50, 50], // size of the icon
+        iconAnchor: [25, 50], // point of the icon which will correspond to marker's location
+        popupAnchor: [0, -50] // point from which the popup should open relative to the iconAnchor
+    })
+
+    function iconForPollution(pm10, pm2) {
+        if (pm10 >= 20 && pm10 < 30 || pm2 >= 10 && pm2 < 15) {
+            return lightPollutionIcon
+        }
+        else if (pm10 >= 30 && pm10 < 50 || pm2 >= 15 && pm2 < 25) {
+            return mediumPollutionIcon
+        }
+        else if (pm10 >= 50 && pm10 < 70 || pm2 >= 25 && pm2 < 35) {
+            return upperMedPollutionIcon
+        }
+        else if (pm10 >= 70 && pm10 < 100 || pm2 >= 35 && pm2 < 50) {
+            return highPollutionIcon
+        }
+        else if (pm10 >= 100 && pm10 < 150 || pm2 >= 50 && pm2 < 75) {
+            return veryHighPollutionIcon
+        }
+        else if (pm10 >= 150 || pm2 >= 75) {
+            return maximumPollutionIcon
+        }
+        else {
+            return noPollutionIcon
+        }
+    }
+
+    if (config.GITHUB_API_TOKEN == "") {
+        alert("WARNING: GITHUB_API_TOKEN is not set\nSome carosuel images may not be present")
+    }
     // This builds the actual map.
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
         attribution: 'Sensor Data <a href="https://luftdaten.info/en/home-en/">Luftdaten</a> | Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',

@@ -339,3 +339,6 @@ ASALocalRun/
 # BeatPulse healthcheck temp database
 healthchecksdb
 ClimateMonitorV2/public/javascripts/config.js
+
+# Image csv files
+ClimateMonitorV2/public/files/20*

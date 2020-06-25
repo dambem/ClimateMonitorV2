@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import dateutil
 import numpy as np
+
 def date_getter(chosen_date, offset, n):
     previous_date = chosen_date - timedelta(days=n+offset)
     year = str(previous_date.year)
@@ -30,33 +31,31 @@ def csv_parser():
     daily_averages = []
     daily_dates = []
     for n in range(days):
-     date_chosen = date_getter(date.today(), 4, n)
-     #print(date_chosen)
-     pm10_list = []
-     pm2_list = []
-     try:
-        with open(date_chosen+'/sds011/31706.csv', 'rt') as csvfile:
-            spamreader = csv.reader(csvfile, delimiter=";", quotechar="|")
-            rowcount = 0
-            for row in spamreader:
-                if rowcount == 0:
-                    pass
-                else:
-                    time_and_date = row[5]
-                    pm10 = row[6]
-                    pm2 = row[9]
-                    hours = time_and_date[11:]
-                    dates.append(hours)
-                    pm10_list.append(float(pm10))
-                    pm2_list.append(float(pm2))
-                rowcount+=1
-            daily_dates.append(date_chosen)
-            #print(np.average(pm10_list))
-            daily_averages.append(np.average(pm2_list))
-    except error:
-        
-
-    real_dates = dates
+        date_chosen = date_getter(date.today(), 4, n)
+        #print(date_chosen)
+        pm10_list = []
+        pm2_list = []
+        try:
+            with open(date_chosen+'/sds011/31706.csv', 'rt') as csvfile:
+                spamreader = csv.reader(csvfile, delimiter=";", quotechar="|")
+                rowcount = 0
+                for row in spamreader:
+                    if rowcount == 0:
+                        pass
+                    else:
+                        time_and_date = row[5]
+                        pm10 = row[6]
+                        pm2 = row[9]
+                        hours = time_and_date[11:]
+                        dates.append(hours)
+                        pm10_list.append(float(pm10))
+                        pm2_list.append(float(pm2))
+                    rowcount+=1
+                daily_dates.append(date_chosen)
+                #print(np.average(pm10_list))
+                daily_averages.append(np.average(pm2_list))
+        except:
+            real_dates = dates
     
     daily_dates = [datetime.datetime.strptime(d, "%Y-%m-%d").date() for d in daily_dates]
     ax = plt.gca()
@@ -74,6 +73,7 @@ def csv_parser():
     plt.ylabel('Average Daily PM2 Value')
     plt.xlabel('Date')
     plt.plot(daily_dates, daily_averages)
-    plt.savefig("PM2Daily"+date_chosen+".png", dpi=100)
-    plt.show() 
+    plt.savefig("images/PM2Daily"+date_chosen+".png", dpi=100)
+    plt.show()
+
 csv_parser()
