@@ -286,42 +286,49 @@ $(document).ready(() => {
         iconAnchor: [25, 50], // point of the icon which will correspond to marker's location
         popupAnchor: [0, -50] // point from which the popup should open relative to the iconAnchor
     })
+
     var lightPollutionIcon = L.icon({
         iconUrl: 'markers/light_pollution.png',
         iconSize: [50, 50], // size of the icon
         iconAnchor: [25, 50], // point of the icon which will correspond to marker's location
         popupAnchor: [0, -50] // point from which the popup should open relative to the iconAnchor
     })
+
     var mediumPollutionIcon = L.icon({
         iconUrl: 'markers/medium_pollution.png',
         iconSize: [50, 50], // size of the icon
         iconAnchor: [25, 50], // point of the icon which will correspond to marker's location
         popupAnchor: [0, -50] // point from which the popup should open relative to the iconAnchor
     })
+
     var upperMedPollutionIcon = L.icon({
         iconUrl: 'markers/high_med_pollution.png',
         iconSize: [50, 50], // size of the icon
         iconAnchor: [25, 50], // point of the icon which will correspond to marker's location
         popupAnchor: [0, -50] // point from which the popup should open relative to the iconAnchor
     })
+
     var highPollutionIcon = L.icon({
         iconUrl: 'markers/high_pollution.png',
         iconSize: [50, 50], // size of the icon
         iconAnchor: [25, 50], // point of the icon which will correspond to marker's location
         popupAnchor: [0, -50] // point from which the popup should open relative to the iconAnchor
     })
+
     var veryHighPollutionIcon = L.icon({
         iconUrl: 'markers/very_high_pollution.png',
         iconSize: [50, 50], // size of the icon
         iconAnchor: [25, 50], // point of the icon which will correspond to marker's location
         popupAnchor: [0, -50] // point from which the popup should open relative to the iconAnchor
     })
+
     var maximumPollutionIcon = L.icon({
         iconUrl: 'markers/too_high_pollution.png',
         iconSize: [50, 50], // size of the icon
         iconAnchor: [25, 50], // point of the icon which will correspond to marker's location
         popupAnchor: [0, -50] // point from which the popup should open relative to the iconAnchor
     })
+
     function iconForPollution(pm10, pm2) {
         if (pm10 >= 20 && pm10 < 30 || pm2 >= 10 && pm2 < 15) {
             return lightPollutionIcon
@@ -345,7 +352,15 @@ $(document).ready(() => {
             return noPollutionIcon
         }
     }
+
     // This builds the actual map.
+    if (config.MAP_KEY == "") {
+        alert("WARNING: MAP_KEY is not set\nThe mapbox will likely appear as a grey void.")
+    }
+    if (config.WEATHER_COMPANY_KEY == "") {
+        alert("WARNING: WEATHER_COMPANY_KEY is not set\nWeather company infomation will be unavailable.")
+    }
+
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
         attribution: 'Sensor Data <a href="https://luftdaten.info/en/home-en/">Luftdaten</a> | Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         maxZoom: 18,
