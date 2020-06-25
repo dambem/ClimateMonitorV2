@@ -63,6 +63,19 @@ block content
                                 canvas(id='pollutionChart', height='400')
             div(class="col-md-8")
                 div(class="card")
+                    h2() Current Weather Conditions in Sheffield:
+                        div(class='weatherTable')
+                            table(style='width:100%', border='0')
+                                tr
+                                    th Temperature
+                                    th Wind Speed
+                                    th Conditions
+                                tr 
+                                    td(id="currentTemp")
+                                    td(id="currentWind")
+                                    td(id="currentCondition")
+                                        img(class="img-fluid", id="weather-image", src="../files/weather-icons/44.png", width='50px') 
+                div(class="card")
                     h2() Current Average Pollution Levels In Sheffield:
                         h4(id="pm10averageheader")
                             h6(id="pm10averagetotal")
