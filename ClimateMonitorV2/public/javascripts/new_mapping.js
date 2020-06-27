@@ -400,7 +400,16 @@ $(document).ready(() => {
     //    link = build_link_from_date(current_date, sensor_id)
     //    getData(link)
     //}
-
+    var picker = new Litepicker({
+        element: document.getElementById('litepicker'),
+        singleMode: false,
+        onSelect: function (date1, date2) {
+            console.log(date1, date2)
+            link = build_link_from_date(date1, sensor_id)
+            //getData(link)
+            multi_date_search(date1, date2, sensor_id)
+        },
+    });
     var currentValidDates = []
     function findDates(id_chosen) {
         days_found = parseInt(document.getElementById("days").value)
@@ -417,17 +426,7 @@ $(document).ready(() => {
                 var filteredDates = dataR.filter(function (el) {
                     return el != null;
                 })
-
-                var picker = new Litepicker({
-                    element: document.getElementById('litepicker'),
-                    lockDays: filteredDates,
-                    singleMode: false,
-                    onSelect: function (date1, date2) {
-                        console.log(date1, date2)
-                        link = build_link_from_date(date1, id_chosen)
-                        getData(link)
-                    },
-                });
+                picker.lockDays = filteredDates
                 $('#litepicker').show()
                 picker.show()
                 
@@ -443,7 +442,7 @@ $(document).ready(() => {
             complete: function () { $body.removeClass("loading"); },     
         })
     }
-
+    
     function getData(dateSent, sensorID) {
         jsonData = {date:dateSent, id:sensorID}
         $body = $("body");
@@ -469,8 +468,9 @@ $(document).ready(() => {
             beforeSend: function () { $body.addClass("loading");   },
         })
     }
-    function multi_date_search(fromDate, toDate, sensorID){
-        jsonData = { from: fromData, to: toDate, id: sensorID }
+    function multi_date_search(fromDate, toDate, sensorID) {
+        console.log("Going into multi-date-search")
+        jsonData = { from: fromDate, to: toDate, id: sensorID }
         $.ajax({
             url: '/fromto',
             data: JSON.stringify(jsonData),

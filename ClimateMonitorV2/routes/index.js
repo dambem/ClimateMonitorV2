@@ -87,14 +87,15 @@ router.post('/index', function (req, res, next) {
 
 router.post('/fromto', function (req, res, next) {
 
-    var sensor = req.body['sensor']
+    var sensor = req.body['id']
     var from = req.body['from']
     var to = req.body['to']
     var StartDate = new Date(from)
     var EndDate = new Date(to)
-    for (var d = new Date(StartDate); d <= EndDate; d.setDate(d.getDate() + 1)) {
+    for (var d = new Date(StartDate); d <= EndDate.getDate(); d.setDate(d.getDate() + 1)) {
         console.log(d)
     }
+    res.send("Done")
 
 })
 function getUrl(url, chosen_date, both) {
