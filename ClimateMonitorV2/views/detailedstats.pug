@@ -8,6 +8,7 @@ block content
   script(src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.min.js")
   script(src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8")
   script(src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@0.7.7")
+  script(src="https://cdn.jsdelivr.net/npm/litepicker/dist/js/main.js")
 
   body
      nav(class="navbar fixed-top navbar-expand-lg navbar-light bg-light" id="mainNavigator")
@@ -26,7 +27,12 @@ block content
             div(class="col-md-12")
                 div(id='mapid')
                     div(class="loader")
+        div(class="row")
+            div(class="col-md-12")
+                canvas(id="detailedstats" width="400" height="200")
      script(type='text/javascript' src='/javascripts/config.js')
      script(type='text/javascript', src='/javascripts/detailedstats.js')
-  script(src="https://d3js.org/d3.v5.min.js")
+  script(src="https://d3js.org/d3.v5.min.js")     
+  script(src="https://cdn.jsdelivr.net/npm/litepicker/dist/js/main.js")
+
   footer
