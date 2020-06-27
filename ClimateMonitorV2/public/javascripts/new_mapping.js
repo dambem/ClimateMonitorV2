@@ -384,23 +384,23 @@ $(document).ready(() => {
 
     // Localises the view to go to Sheffield
     sensorMap.setView([53.382, -1.47], 13);
-    var slider = document.getElementById("myRange")
-    var output = document.getElementById("value")
+    //var slider = document.getElementById("myRange")
+    //var output = document.getElementById("value")
 
     // Update the current slider value (each time you drag the slider handle)
-    slider.oninput = function () {
-        current_date = new Date();
-        current_date.setDate(current_date.getDate() + parseInt(this.value))
-        output.innerHTML = current_date;
-    }
+    //slider.oninput = function () {
+    //    current_date = new Date();
+    //    current_date.setDate(current_date.getDate() + parseInt(this.value))
+    //    output.innerHTML = current_date;
+    //}
 
     // Once slider is released, goes to the date chosen.
-    slider.onmouseup = function () {
-        chosen_date.setDate(current_date.getDate() + parseInt(this.value))
-        link = build_link_from_date(current_date, sensor_id)
-        getData(link)
-    }
-    
+    //slider.onmouseup = function () {
+    //    chosen_date.setDate(current_date.getDate() + parseInt(this.value))
+    //    link = build_link_from_date(current_date, sensor_id)
+    //    getData(link)
+    //}
+
     var currentValidDates = []
     function findDates(id_chosen) {
         days_found = parseInt(document.getElementById("days").value)
@@ -408,39 +408,29 @@ $(document).ready(() => {
         $body = $("body");
 
         $.ajax({
-            url: '/checkdates',
+            url: '/invaliddates',
             data: JSON.stringify(jsonData),
             contentType: 'application/json',
             type: 'POST',
             success: function (dataR) {
-                console.log(dataR)
-                $('input[name="daterange"]').daterangepicker({
-                    startDate: "06/07/2020",
-                    endDate: "06/13/2020",
-                    opens: 'left',
-                    isInvalidDate: function (date) {
-                        for (i = 0; i < dataR.length; i++){
-                            var invalid = true;
-                            var item = dataR[i]
-                            var dateObj = new Date(item[0])
-                            var dateMoment = moment(dateObj)
-                            if (item[1] && dateMoment.isSame(date, 'day')) {
-                                invalid = false
-                                currentValidDates.push(dateMoment)
-                            }
-                            for (j = 0; j < currentValidDates.length; j++) {
-                                if (currentValidDates[j].isSame(date, 'day')) {
-                                    invalid = false
-                                }
-                            }
-                        }
-                        return invalid
-                    }
-                }, function (start, end, label) {
-                    console.log(start)
-                    console.log(end)
-                    
+                
+                var filteredDates = dataR.filter(function (el) {
+                    return el != null;
                 })
+
+                var picker = new Litepicker({
+                    element: document.getElementById('litepicker'),
+                    lockDays: filteredDates,
+                    singleMode: false,
+                    onSelect: function (date1, date2) {
+                        console.log(date1, date2)
+                        link = build_link_from_date(date1, id_chosen)
+                        getData(link)
+                    },
+                });
+                $('#litepicker').show()
+                picker.show()
+                
              },
             complete: function (data, res) {
                 
@@ -479,7 +469,9 @@ $(document).ready(() => {
             beforeSend: function () { $body.addClass("loading");   },
         })
     }
+    function multi_date_search(from, to){
 
+    }
     function updateGraph(data) {
         var i;
         label2 = "PM2.5 Values"

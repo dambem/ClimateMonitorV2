@@ -97,14 +97,24 @@ router.post('/fromto', function (req, res, next) {
     }
 
 })
-function getUrl(url, chosen_date) {
+function getUrl(url, chosen_date, both) {
     return new Promise((resolve) => {
         requestify.get(url)
             .then(function (response) {
-                resolve([chosen_date, true])
+                if (both) {
+                    resolve([chosen_date, true])
+                }
+                else {
+                    resolve()
+                }
             })
             .fail(function (response) {
-                resolve([chosen_date, false])
+                if (both) {
+                    resolve([chosen_date, false])
+                }
+                else {
+                    resolve(chosen_date)
+                }
             })
     })
 
@@ -119,7 +129,7 @@ router.post('/checkdates', function (req, res, next) {
         var chosen_date = new Date();
         chosen_date.setDate(chosen_date.getDate() - i)
         var url = build_link_from_date(chosen_date, id)
-        promises.push(getUrl(url, chosen_date))
+        promises.push(getUrl(url, chosen_date, true))
     }
     Promise.all(promises)
         .then((results) => {
@@ -132,4 +142,26 @@ router.post('/checkdates', function (req, res, next) {
         });
 })
 
+router.post('/invaliddates', function (req, res, next) {
+    var i
+    var list_of_dates = []
+    var id = req.body['id']
+    var days = parseInt(req.body['days'])
+    var promises = []
+    for (i = 1; i < days; i++) {
+        var chosen_date = new Date();
+        chosen_date.setDate(chosen_date.getDate() - i)
+        var url = build_link_from_date(chosen_date, id)
+        promises.push(getUrl(url, chosen_date, false))
+    }
+    Promise.all(promises)
+        .then((results) => {
+
+            console.log(results)
+            res.send(results)
+        })
+        .catch((e) => {
+            console.log(e)
+        });
+})
 module.exports = router;
