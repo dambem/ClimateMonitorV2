@@ -44,16 +44,32 @@ function build_link_from_date(date, sensor_id) {
     var month
     var day
     var link
+    console.log(date)
+
     year = date.getFullYear();
+    console.log(year)
     month = date.getMonth();
     if (month < 10) {
         month = "0" + month
     }
+    console.log(month)
     day = date.getDay();
     if (day < 10) {
         day = "0" + day
     }
+    console.log(day)
     link = "http://archive.sensor.community/" + year + "-" + month + "-" + day + "/" + year + "-" + month + "-" + day + "_" + "sds011_sensor_" + sensor_id + ".csv"
+    return link
+}
+function build_link_from_date_manual(date, sensor_id) {
+    date = date.toISOString()
+    console.log(typeof (date))
+    var link
+    var year = date.substring(0, 4)
+    var month = date.substring(5, 7)
+    var day = date.substring(8, 10)
+    link = "http://archive.sensor.community/" + year + "-" + month + "-" + day + "/" + year + "-" + month + "-" + day + "_" + "sds011_sensor_" + sensor_id + ".csv"
+    console.log(link)
     return link
 }
 // Our post route for getting daily values
@@ -96,13 +112,12 @@ router.post('/fromto', function (req, res, next) {
     console.log(to)
     var dates = []
     for (var d = new Date(from); d <= new Date(to); d.setDate(d.getDate() + 1)) {
-        var link = build_link_from_date(d, sensor)
-        dates.push(link)
+        var link = build_link_from_date_manual(new Date(d), sensor)
         console.log(link)
+        dates.push(link)
         promises.push(csvParsing(link))
     }
     Promise.all(promises).then((results) => {
-        console.log(results)
         res.send(results)
 
     }).catch((e) => {

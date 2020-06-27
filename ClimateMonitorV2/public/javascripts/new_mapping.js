@@ -410,7 +410,7 @@ $(document).ready(() => {
                 getData(link)
             } else {
                 console.log("Dates not equal so going into big parsing")
-                multi_date_search(date1.setDate(date1.getDate() + 1), date2.setDate(date2.getDate() + 1), sensor_id)
+                multi_date_search(date1.setDate(date1.getDate()), date2.setDate(date2.getDate() + 1) , sensor_id)
             }
         },
     });
@@ -430,7 +430,9 @@ $(document).ready(() => {
                 var filteredDates = dataR.filter(function (el) {
                     return el != null;
                 })
-                picker.lockDays = filteredDates
+                console.log(filteredDates)
+                picker.setLockDays(filteredDates)
+
                 $('#litepicker').show()
                 picker.show()
                 
