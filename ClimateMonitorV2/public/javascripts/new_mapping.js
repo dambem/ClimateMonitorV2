@@ -469,8 +469,30 @@ $(document).ready(() => {
             beforeSend: function () { $body.addClass("loading");   },
         })
     }
-    function multi_date_search(from, to){
+    function multi_date_search(fromDate, toDate, sensorID){
+        jsonData = { from: fromData, to: toDate, id: sensorID }
+        $.ajax({
+            url: '/fromto',
+            data: JSON.stringify(jsonData),
+            contentType: 'application/json',
+            type: 'POST',
+            success: function (dataR) {
+                var ret = dataR
+                console.log("Success Hit")
+                updateGraph(ret)
+            },
+            complete: function (data, res) {
+                console.log("Complete Hit")
+                console.log(res)
+                $body.removeClass("loading");
+            },
+            error: function (xhr, status, error) {
+                console.log(error.message);
+            },
+            // shows the loader         
+            beforeSend: function () { $body.addClass("loading"); },
 
+        })
     }
     function updateGraph(data) {
         var i;
