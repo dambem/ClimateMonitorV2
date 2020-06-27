@@ -60,15 +60,20 @@ function build_link_from_date(date, sensor_id) {
 router.post('/index', function (req, res, next) {
     var full_link = req.body['date']
     var id = req.body['id']
+    csvParsing(full_link).then((successMessage) => {
+        res.send(successMessage)
+    })
+});
+function csvParsing(link) {
     var options = {
         delimiter: ';', // default is ,
         endLine: '\n', // default is \n,
         columns: ['sensor_id', 'sensor_type', 'location', 'lat', 'lon', 'timestamp', 'P1', 'durP1', 'ratioP1', 'P2', 'durP2', 'ratioP2'] // by default read the first line and use values found as columns
     }
     var full_data = []
-    let csvStreamPromise = new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         var csvStream = csv.createStream(options);
-        request(full_link).pipe(csvStream)
+        request(link).pipe(csvStream)
             .on('error', function (err) {
                 console.log(err);
             })
@@ -80,22 +85,30 @@ router.post('/index', function (req, res, next) {
                 resolve(full_data)
             });
     });
-    csvStreamPromise.then((successMessage) => {
-        res.send(successMessage)
-    })
-});
-
+}
 router.post('/fromto', function (req, res, next) {
+    var promises = []
 
     var sensor = req.body['id']
     var from = req.body['from']
     var to = req.body['to']
-    var StartDate = new Date(from)
-    var EndDate = new Date(to)
-    for (var d = new Date(StartDate); d <= EndDate.getDate(); d.setDate(d.getDate() + 1)) {
-        console.log(d)
+    console.log(from)
+    console.log(to)
+    var dates = []
+    for (var d = new Date(from); d <= new Date(to); d.setDate(d.getDate() + 1)) {
+        var link = build_link_from_date(d, sensor)
+        dates.push(link)
+        console.log(link)
+        promises.push(csvParsing(link))
     }
-    res.send("Done")
+    Promise.all(promises).then((results) => {
+        console.log(results)
+        res.send(results)
+
+    }).catch((e) => {
+            console.log(e)
+     });
+
 
 })
 function getUrl(url, chosen_date, both) {

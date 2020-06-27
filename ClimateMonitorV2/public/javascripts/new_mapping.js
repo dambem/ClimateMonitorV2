@@ -404,10 +404,14 @@ $(document).ready(() => {
         element: document.getElementById('litepicker'),
         singleMode: false,
         onSelect: function (date1, date2) {
-            console.log(date1, date2)
+            console.log(date1.getTime(), date2.getTime())
             link = build_link_from_date(date1, sensor_id)
-            //getData(link)
-            multi_date_search(date1, date2, sensor_id)
+            if (date1.getTime() == date2.getTime()) {
+                getData(link)
+            } else {
+                console.log("Dates not equal so going into big parsing")
+                multi_date_search(date1.setDate(date1.getDate() + 1), date2.setDate(date2.getDate() + 1), sensor_id)
+            }
         },
     });
     var currentValidDates = []
@@ -479,7 +483,7 @@ $(document).ready(() => {
             success: function (dataR) {
                 var ret = dataR
                 console.log("Success Hit")
-                updateGraph(ret)
+                updateGraphMultiDay(ret)
             },
             complete: function (data, res) {
                 console.log("Complete Hit")
@@ -494,7 +498,40 @@ $(document).ready(() => {
 
         })
     }
-    function updateGraph(data) {
+    function updateGraphMultiDay(data) {
+        var i;
+        label2 = "PM2.5 Values"
+        var pm2Data = []
+        var pm10Data = []
+        var pm2Color = []
+        var pm10Color = []
+        scatterChartPM10.data.datasets = []
+        scatterChartPM2.data.datasets = []
+        console.log(data)
+        if (data.length == 0) {
+            alert("Sorry, the data wasn't found!")
+        } else {
+            for (j = 1; j < data.length; j++) {
+                console.log(data[j])
+                new_data = data[j]
+                for (i = 1; i < new_data.length; i++) {
+                    date = new Date(new_data[i]['timestamp'])
+                    pm2 = { x: date, y: parseFloat(new_data[i]['P2']) }
+                    pm10 = { x: date, y: parseFloat(new_data[i]['P1']) }
+                    pm2Color.push('green')
+                    pm10Color.push('red')
+                    pm2Data.push(pm2)
+                    pm10Data.push(pm10)
+                }
+            }
+            scatterChartPM10.data.datasets.push({ label: "Pm10 Data", data: pm10Data, backgroundColor: 'red' })
+            scatterChartPM2.data.datasets.push({ label: "Pm2 Data", data: pm2Data, backgroundColor: 'blue' })
+            scatterChartPM10.update()
+            scatterChartPM2.update()
+        }
+
+    }
+    function updateGraph(data) {    
         var i;
         label2 = "PM2.5 Values"
         var pm2Data = []
