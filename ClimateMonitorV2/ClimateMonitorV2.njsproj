@@ -36,6 +36,9 @@
       <SubType>Code</SubType>
     </Content>
     <Content Include="public\files\graphmaker.py" />
+    <Content Include="public\javascripts\detailedstats.js">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="public\javascripts\new_mapping.js">
       <SubType>Code</SubType>
     </Content>

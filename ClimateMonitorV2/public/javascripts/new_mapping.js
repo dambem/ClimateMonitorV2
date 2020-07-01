@@ -132,6 +132,7 @@ function colorForPollutionPhrase(pm10, pm2) {
         return "The pollution levels are currently within WHO guidelines!"
     }
 }
+/*
 
 /*
 * Function that returns different colours based on pollution
@@ -177,6 +178,20 @@ function build_link_from_date(date) {
     link = "http://archive.sensor.community/" + year + "-" + month + "-" + day + "/" + year + "-" + month + "-" + day + "_" + "sds011_sensor_" + sensor_id + ".csv"
     console.log(link)
     return link
+}
+
+function currentWeatherDisplay() {
+    const weatherDataURL = "https://api.weather.com/v3/wx/forecast/hourly/2day?geocode=53.383331%2C-1.466667&format=json&units=e&language=en-US&apiKey=" + config.WEATHER_COMPANY_KEY
+    $.get(weatherDataURL,
+    function(weatherData){
+        const currentTemp = weatherData.temperature[0];
+        const currentTempCelcius = Math.floor((5/9) * (currentTemp - 32));
+        const currentWindSpeed = weatherData.windSpeed[0];
+        const currentIconCode = weatherData.iconCode[0];
+        $('#currentTemp').html(currentTempCelcius +'ºC');
+        $('#currentWind').html(currentWindSpeed + 'mph');
+        $('#weather-image').attr('src', '../files/weather-icons/' + currentIconCode + '.png');
+    });
 }
 
 // Everything required once loaded
@@ -269,7 +284,9 @@ $(document).ready(() => {
             console.log(error)
         }
     })
-
+  
+    currentWeatherDisplay();
+  
     var pm2Chart = document.getElementById('pm2Chart').getContext('2d');
     var pm10Chart = document.getElementById('pm10Chart').getContext('2d');
     // Currently not in use, date range picker for graphs
@@ -314,6 +331,7 @@ $(document).ready(() => {
 
     // Create the pollution chart 
     var ctx = document.getElementById("pollutionChart").getContext('2d');
+
 
     var pollutionGuidelinesChart = new Chart(ctx, {
         type: 'bar',
@@ -424,7 +442,13 @@ $(document).ready(() => {
     if (config.GITHUB_API_TOKEN == "") {
         alert("WARNING: GITHUB_API_TOKEN is not set\nSome carosuel images may not be present")
     }
-    // This builds the actual map.
+    if (config.MAP_KEY == "") {
+        alert("WARNING: MAP_KEY is not set\nThe mapbox will likely appear as a grey void.")
+    }
+    if (config.WEATHER_COMPANY_KEY == "") {
+        alert("WARNING: WEATHER_COMPANY_KEY is not set\nWeather company infomation will be unavailable.")
+    }
+
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
         attribution: 'Sensor Data <a href="https://luftdaten.info/en/home-en/">Luftdaten</a> | Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         maxZoom: 18,
@@ -614,8 +638,10 @@ $(document).ready(() => {
 
         circles = []
         for (var i = 0; i < items.length; i++) {
+            var pm10 = parseFloat(items[i][3])
+            var pm2  = parseFloat(items[i][4])
             color = colorForPollution(items[i][3], items[i][4])
-            circles.push(L.circle([items[i][1], items[i][2]], {
+            var marker = L.circle([items[i][1], items[i][2]], {
                 color: 'black',
                 fillColor: color,
                 fillOpacity: 0.8,
@@ -624,7 +650,17 @@ $(document).ready(() => {
                 p2: [items[i][4]],
                 sensor_id: [items[i][5]],
                 choice_id: i
-            }).addTo(sensorMap));
+            })
+            var icon_poll = iconForPollution(pm10, pm2)
+            var marker = L.marker([items[i][1], items[i][2]], {
+                icon: icon_poll,
+                p10: pm10,
+                p2: pm2,
+                sensor_id: [items[i][5]],
+                choice_id: i
+            })
+            circles.push(marker.addTo(sensorMap));
+
         }
 
         for (var i = 0; i < circles.length; i++) {

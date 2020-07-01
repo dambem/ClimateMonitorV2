@@ -1,3 +1,4 @@
+// PLEASE ASK DAMIAN FOR ANY KEYS YOU DON'T HAVE
 var config = {
     MAP_KEY: "",
     WEATHER_COMPANY_KEY: "",

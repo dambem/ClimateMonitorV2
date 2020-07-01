@@ -338,6 +338,8 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+
+# Config file containing api keys
 ClimateMonitorV2/public/javascripts/config.js
 
 # Image csv files
