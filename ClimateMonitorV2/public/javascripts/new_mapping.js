@@ -108,24 +108,6 @@ function linkExist(id) {
         })
 }
 
-function linkExist(id) {
-    jsonData = { 'id': id }
-    $.ajax({
-        url: '/checkdates',
-        data: JSON.stringify(jsonData),
-        contentType: 'application/json',
-        type: 'POST',
-        success: function (dataR) {
-            var ret = dataR;
-            console.log("Everything")
-            console.log(ret)
-        },
-        error: function (error) {
-            console.log(error)
-        }
-    })
-}
-
 // Function that returns different phrase based on pollution 
 function colorForPollutionPhrase(pm10, pm2) {
     if (pm10 >= 20 && pm10 < 30 || pm2 >= 10 && pm2 < 15) {
@@ -214,7 +196,97 @@ function currentWeatherDisplay() {
 
 // Everything required once loaded
 $(document).ready(() => {
+
+    // Activate Carousel
+    $('#pythongraphslideshow').carousel({ interval: 3000 });
+
+    $.ajax({
+        url: 'https://api.github.com/repos/dambem/ClimateMonitorV2/contents/ClimateMonitorV2/public/files',
+        type: 'GET',
+        contentType: 'application/json',
+        password: config.GITHUB_API_TOKEN,
+        success: function (files) {
+            var images = []
+
+            // Get image links
+            files.forEach(function (file) {
+
+                // Only extract images
+                if (file["name"].includes(".png", file["name"].length - 5)) {               
+                    
+                    console.log(`INFO: Importing ${file["name"]}...`)
+                    images.push(file['download_url'])
+
+                }
+
+            });
+
+            // Compile the indicators first
+            for (currentCount = 1; currentCount < images.length; ++currentCount) {
+                var listItemNode = document.createElement("LI")
+                listItemNode.setAttribute("data-target", "#pythongraphslideshow")
+                listItemNode.setAttribute("data-slide-to", currentCount)
+
+                document.getElementById("graph_carousel_indicators").appendChild(listItemNode)
+            }
+
+            // Populate the carosuel
+            var altText = "Graph unavailble. Please check your GITHUB_API_TOKEN"
+            var activeImage = false
+            var imageCount = 0
+
+            images.forEach( function (image) {
+
+                if (!activeImage) {
+                    $(`#carosuel_items`).append(
+                        `
+                        <div class="carousel-item active">
+                            <img
+                                src="${image}"
+                                alt="${altText}"
+                                width="1600"
+                                height="1200"
+                            >
+                            <div class="carousel-caption">
+                                <p style="color: blue">${image}</p>
+                            </div>
+                        </div>
+                        `
+                    )
+                    activeImage = true
+                    imageCount++
+
+                } else {
+                    // Use a counter to make each class unique
+                    $(`#carosuel_items`).append(
+                        `
+                        <div class="carousel-item ${imageCount}">
+                            <img
+                                src="${image}"
+                                alt="${altText}"
+                                width="1600"
+                                height="1200"
+                            >
+                            <div class="carousel-caption">
+                                <p style="color: blue">${image}</p>
+                            </div>
+                        </div>
+                        `
+                    )
+                    imageCount++
+
+                }
+                
+            });
+
+        },
+        error: function (error) {
+            console.log(error)
+        }
+    })
+  
     currentWeatherDisplay();
+  
     var pm2Chart = document.getElementById('pm2Chart').getContext('2d');
     var pm10Chart = document.getElementById('pm10Chart').getContext('2d');
     // Currently not in use, date range picker for graphs
@@ -367,7 +439,9 @@ $(document).ready(() => {
         }
     }
 
-    // This builds the actual map.
+    if (config.GITHUB_API_TOKEN == "") {
+        alert("WARNING: GITHUB_API_TOKEN is not set\nSome carosuel images may not be present")
+    }
     if (config.MAP_KEY == "") {
         alert("WARNING: MAP_KEY is not set\nThe mapbox will likely appear as a grey void.")
     }

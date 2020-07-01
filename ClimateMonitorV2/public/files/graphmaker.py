@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as md
 import dateutil
 import numpy as np
+
 def date_getter(chosen_date, offset, n):
     previous_date = chosen_date - timedelta(days=n+offset)
     year = str(previous_date.year)
@@ -55,4 +56,5 @@ def csv_parser():
     
     plt.plot(daily_dates, daily_averages)
     plt.show()
+
 csv_parser()

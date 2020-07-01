@@ -341,3 +341,6 @@ healthchecksdb
 
 # Config file containing api keys
 ClimateMonitorV2/public/javascripts/config.js
+
+# Image csv files
+ClimateMonitorV2/public/files/20*
