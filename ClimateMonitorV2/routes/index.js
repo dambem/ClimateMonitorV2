@@ -48,15 +48,33 @@ function build_link_from_date(date, sensor_id) {
     var month
     var day
     var link
+    console.log(date)
+
     year = date.getFullYear();
-
+    console.log(year)
     month = date.getMonth();
-    if (month < 10) { month = "0" + month }
-
+    if (month < 10) {
+        month = "0" + month
+    }
+    console.log(month)
     day = date.getDay();
-    if (day < 10) { day = "0" + day }
+    if (day < 10) {
+        day = "0" + day
+    }
+    console.log(day)
+    link = "http://archive.sensor.community/" + year + "-" + month + "-" + day + "/" + year + "-" + month + "-" + day + "_" + "sds011_sensor_" + sensor_id + ".csv"
+    return link
+}
+function build_link_from_date_manual(date, sensor_id) {
+    date = date.toISOString()
+    console.log(typeof (date))
+    var link
+    var year = date.substring(0, 4)
+    var month = date.substring(5, 7)
+    var day = date.substring(8, 10)
 
     link = "http://archive.sensor.community/" + year + "-" + month + "-" + day + "/" + year + "-" + month + "-" + day + "_" + "sds011_sensor_" + sensor_id + ".csv"
+    console.log(link)
     return link
 }
 
@@ -64,6 +82,11 @@ function build_link_from_date(date, sensor_id) {
 router.post('/index', function (req, res, next) {
     var full_link = req.body['date']
     var id = req.body['id']
+    csvParsing(full_link).then((successMessage) => {
+        res.send(successMessage)
+    })
+});
+function csvParsing(link) {
 
     var options = {
         delimiter: ';', // default is ,
@@ -72,9 +95,9 @@ router.post('/index', function (req, res, next) {
     }
 
     var full_data = []
-    let csvStreamPromise = new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         var csvStream = csv.createStream(options);
-        request(full_link).pipe(csvStream)
+        request(link).pipe(csvStream)
             .on('error', function (err) {
                 console.log(err);
             })
@@ -86,33 +109,51 @@ router.post('/index', function (req, res, next) {
                 resolve(full_data)
             });
     });
-
-    csvStreamPromise.then((successMessage) => {
-        res.send(successMessage)
-    })
-});
+}
 
 router.post('/fromto', function (req, res, next) {
+    var promises = []
 
-    var sensor = req.body['sensor']
+    var sensor = req.body['id']
     var from = req.body['from']
     var to = req.body['to']
+    console.log(from)
+    console.log(to)
+    var dates = []
+    for (var d = new Date(from); d <= new Date(to); d.setDate(d.getDate() + 1)) {
+        var link = build_link_from_date_manual(new Date(d), sensor)
+        console.log(link)
+        dates.push(link)
+        promises.push(csvParsing(link))
 
-    var StartDate = new Date(from)
-    var EndDate = new Date(to)
-    for (var d = new Date(StartDate); d <= EndDate; d.setDate(d.getDate() + 1)) {
-        console.log(d)
     }
+    Promise.all(promises).then((results) => {
+        res.send(results)
+
+    }).catch((e) => {
+            console.log(e)
+     });
+
 
 })
-function getUrl(url, chosen_date) {
+function getUrl(url, chosen_date, both) {
     return new Promise((resolve) => {
         requestify.get(url)
             .then(function (response) {
-                resolve([chosen_date, true])
+                if (both) {
+                    resolve([chosen_date, true])
+                }
+                else {
+                    resolve()
+                }
             })
             .fail(function (response) {
-                resolve([chosen_date, false])
+                if (both) {
+                    resolve([chosen_date, false])
+                }
+                else {
+                    resolve(chosen_date)
+                }
             })
     })
 
@@ -128,7 +169,7 @@ router.post('/checkdates', function (req, res, next) {
         var chosen_date = new Date();
         chosen_date.setDate(chosen_date.getDate() - i)
         var url = build_link_from_date(chosen_date, id)
-        promises.push(getUrl(url, chosen_date))
+        promises.push(getUrl(url, chosen_date, true))
     }
 
     Promise.all(promises)
@@ -141,4 +182,26 @@ router.post('/checkdates', function (req, res, next) {
         });
 })
 
+router.post('/invaliddates', function (req, res, next) {
+    var i
+    var list_of_dates = []
+    var id = req.body['id']
+    var days = parseInt(req.body['days'])
+    var promises = []
+    for (i = 1; i < days; i++) {
+        var chosen_date = new Date();
+        chosen_date.setDate(chosen_date.getDate() - i)
+        var url = build_link_from_date(chosen_date, id)
+        promises.push(getUrl(url, chosen_date, false))
+    }
+    Promise.all(promises)
+        .then((results) => {
+
+            console.log(results)
+            res.send(results)
+        })
+        .catch((e) => {
+            console.log(e)
+        });
+})
 module.exports = router;

@@ -462,23 +462,36 @@ $(document).ready(() => {
 
     // Localises the view to go to Sheffield
     sensorMap.setView([53.382, -1.47], 13);
-    var slider = document.getElementById("myRange")
-    var output = document.getElementById("value")
+    //var slider = document.getElementById("myRange")
+    //var output = document.getElementById("value")
 
     // Update the current slider value (each time you drag the slider handle)
-    slider.oninput = function () {
-        current_date = new Date();
-        current_date.setDate(current_date.getDate() + parseInt(this.value))
-        output.innerHTML = current_date;
-    }
+    //slider.oninput = function () {
+    //    current_date = new Date();
+    //    current_date.setDate(current_date.getDate() + parseInt(this.value))
+    //    output.innerHTML = current_date;
+    //}
 
     // Once slider is released, goes to the date chosen.
-    slider.onmouseup = function () {
-        chosen_date.setDate(current_date.getDate() + parseInt(this.value))
-        link = build_link_from_date(current_date, sensor_id)
-        getData(link)
-    }
-    
+    //slider.onmouseup = function () {
+    //    chosen_date.setDate(current_date.getDate() + parseInt(this.value))
+    //    link = build_link_from_date(current_date, sensor_id)
+    //    getData(link)
+    //}
+    var picker = new Litepicker({
+        element: document.getElementById('litepicker'),
+        singleMode: false,
+        onSelect: function (date1, date2) {
+            console.log(date1.getTime(), date2.getTime())
+            link = build_link_from_date(date1, sensor_id)
+            if (date1.getTime() == date2.getTime()) {
+                getData(link)
+            } else {
+                console.log("Dates not equal so going into big parsing")
+                multi_date_search(date1.setDate(date1.getDate()), date2.setDate(date2.getDate() + 1) , sensor_id)
+            }
+        },
+    });
     var currentValidDates = []
     function findDates(id_chosen) {
         days_found = parseInt(document.getElementById("days").value)
@@ -486,39 +499,21 @@ $(document).ready(() => {
         $body = $("body");
 
         $.ajax({
-            url: '/checkdates',
+            url: '/invaliddates',
             data: JSON.stringify(jsonData),
             contentType: 'application/json',
             type: 'POST',
             success: function (dataR) {
-                console.log(dataR)
-                $('input[name="daterange"]').daterangepicker({
-                    startDate: "06/07/2020",
-                    endDate: "06/13/2020",
-                    opens: 'left',
-                    isInvalidDate: function (date) {
-                        for (i = 0; i < dataR.length; i++){
-                            var invalid = true;
-                            var item = dataR[i]
-                            var dateObj = new Date(item[0])
-                            var dateMoment = moment(dateObj)
-                            if (item[1] && dateMoment.isSame(date, 'day')) {
-                                invalid = false
-                                currentValidDates.push(dateMoment)
-                            }
-                            for (j = 0; j < currentValidDates.length; j++) {
-                                if (currentValidDates[j].isSame(date, 'day')) {
-                                    invalid = false
-                                }
-                            }
-                        }
-                        return invalid
-                    }
-                }, function (start, end, label) {
-                    console.log(start)
-                    console.log(end)
-                    
+                
+                var filteredDates = dataR.filter(function (el) {
+                    return el != null;
                 })
+                console.log(filteredDates)
+                picker.setLockDays(filteredDates)
+
+                $('#litepicker').show()
+                picker.show()
+                
              },
             complete: function (data, res) {
                 
@@ -531,7 +526,7 @@ $(document).ready(() => {
             complete: function () { $body.removeClass("loading"); },     
         })
     }
-
+    
     function getData(dateSent, sensorID) {
         jsonData = {date:dateSent, id:sensorID}
         $body = $("body");
@@ -557,8 +552,66 @@ $(document).ready(() => {
             beforeSend: function () { $body.addClass("loading");   },
         })
     }
+    function multi_date_search(fromDate, toDate, sensorID) {
+        console.log("Going into multi-date-search")
+        jsonData = { from: fromDate, to: toDate, id: sensorID }
+        $.ajax({
+            url: '/fromto',
+            data: JSON.stringify(jsonData),
+            contentType: 'application/json',
+            type: 'POST',
+            success: function (dataR) {
+                var ret = dataR
+                console.log("Success Hit")
+                updateGraphMultiDay(ret)
+            },
+            complete: function (data, res) {
+                console.log("Complete Hit")
+                console.log(res)
+                $body.removeClass("loading");
+            },
+            error: function (xhr, status, error) {
+                console.log(error.message);
+            },
+            // shows the loader         
+            beforeSend: function () { $body.addClass("loading"); },
 
-    function updateGraph(data) {
+        })
+    }
+    function updateGraphMultiDay(data) {
+        var i;
+        label2 = "PM2.5 Values"
+        var pm2Data = []
+        var pm10Data = []
+        var pm2Color = []
+        var pm10Color = []
+        scatterChartPM10.data.datasets = []
+        scatterChartPM2.data.datasets = []
+        console.log(data)
+        if (data.length == 0) {
+            alert("Sorry, the data wasn't found!")
+        } else {
+            for (j = 1; j < data.length; j++) {
+                console.log(data[j])
+                new_data = data[j]
+                for (i = 1; i < new_data.length; i++) {
+                    date = new Date(new_data[i]['timestamp'])
+                    pm2 = { x: date, y: parseFloat(new_data[i]['P2']) }
+                    pm10 = { x: date, y: parseFloat(new_data[i]['P1']) }
+                    pm2Color.push('green')
+                    pm10Color.push('red')
+                    pm2Data.push(pm2)
+                    pm10Data.push(pm10)
+                }
+            }
+            scatterChartPM10.data.datasets.push({ label: "Pm10 Data", data: pm10Data, backgroundColor: 'red' })
+            scatterChartPM2.data.datasets.push({ label: "Pm2 Data", data: pm2Data, backgroundColor: 'blue' })
+            scatterChartPM10.update()
+            scatterChartPM2.update()
+        }
+
+    }
+    function updateGraph(data) {    
         var i;
         label2 = "PM2.5 Values"
         var pm2Data = []
