@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import dateutil
 import numpy as np
+
 def date_getter(chosen_date, offset, n):
     previous_date = chosen_date - timedelta(days=n+offset)
     year = str(previous_date.year)
@@ -33,7 +34,6 @@ def csv_parser():
     for n in range(days):
      date_chosen = date_getter(date.today(), 4, n)
      #print(date_chosen)
-
      with open(date_chosen+'/sds011/31706.csv', 'rt') as csvfile:
         spamreader = csv.reader(csvfile, delimiter=";", quotechar="|")
         rowcount = 0
@@ -68,5 +68,6 @@ def csv_parser():
     plt.ylabel('Average Daily PM2 Value')
     plt.xlabel('Date')
     plt.scatter(daily_dates, pm10_list)
-    plt.savefig("PM2Full"+date_chosen+".png", dpi=100)
+    plt.savefig("images/PM2Full"+date_chosen+".png", dpi=100)
+
 csv_parser()

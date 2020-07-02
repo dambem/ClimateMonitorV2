@@ -7,8 +7,7 @@ var router = express.Router();
 var csv = require('csv-stream');
 var request = require("request")
 var requestify = require('requestify')
-/* Pull Request Test */
-/* GET home page. */
+
 router.get('/test', function (req, res) {
     res.render("newtest", { title: "SheffSenseV2: Sheffield Climate Monitor" });
 });
@@ -24,6 +23,7 @@ router.get('/detailedstats', function (req, res) {
 router.get('/local', function (req, res) {
     res.render('index', { title: "Parsing Some Local Data" })
 });
+
 router.post('/link', function (req, res) {
     console.log(req.body)
     requestify.get(req.body['url']).then(function (response) {
@@ -31,14 +31,18 @@ router.post('/link', function (req, res) {
         res.send(response.code)
     })
 })
+
 const getMethods = (obj) => {
     let properties = new Set()
     let currentObj = obj
+
     do {
         Object.getOwnPropertyNames(currentObj).map(item => properties.add(item))
     } while ((currentObj = Object.getPrototypeOf(currentObj)))
+
     return [...properties.keys()].filter(item => typeof obj[item] === 'function')
 }
+
 function build_link_from_date(date, sensor_id) {
     var year
     var month
@@ -68,10 +72,12 @@ function build_link_from_date_manual(date, sensor_id) {
     var year = date.substring(0, 4)
     var month = date.substring(5, 7)
     var day = date.substring(8, 10)
+
     link = "http://archive.sensor.community/" + year + "-" + month + "-" + day + "/" + year + "-" + month + "-" + day + "_" + "sds011_sensor_" + sensor_id + ".csv"
     console.log(link)
     return link
 }
+
 // Our post route for getting daily values
 router.post('/index', function (req, res, next) {
     var full_link = req.body['date']
@@ -81,11 +87,13 @@ router.post('/index', function (req, res, next) {
     })
 });
 function csvParsing(link) {
+
     var options = {
         delimiter: ';', // default is ,
         endLine: '\n', // default is \n,
         columns: ['sensor_id', 'sensor_type', 'location', 'lat', 'lon', 'timestamp', 'P1', 'durP1', 'ratioP1', 'P2', 'durP2', 'ratioP2'] // by default read the first line and use values found as columns
     }
+
     var full_data = []
     return new Promise((resolve, reject) => {
         var csvStream = csv.createStream(options);
@@ -102,6 +110,7 @@ function csvParsing(link) {
             });
     });
 }
+
 router.post('/fromto', function (req, res, next) {
     var promises = []
 
@@ -116,6 +125,7 @@ router.post('/fromto', function (req, res, next) {
         console.log(link)
         dates.push(link)
         promises.push(csvParsing(link))
+
     }
     Promise.all(promises).then((results) => {
         res.send(results)
@@ -153,6 +163,7 @@ router.post('/checkdates', function (req, res, next) {
     var list_of_dates = []
     var id = req.body['id']
     var days = parseInt(req.body['days'])
+
     var promises = []
     for (i = 1; i < days; i++) {
         var chosen_date = new Date();
@@ -160,9 +171,9 @@ router.post('/checkdates', function (req, res, next) {
         var url = build_link_from_date(chosen_date, id)
         promises.push(getUrl(url, chosen_date, true))
     }
+
     Promise.all(promises)
         .then((results) => {
-            
             console.log(results)
             res.send(results)
         })
