@@ -201,7 +201,7 @@ $(document).ready(() => {
     $('#pythongraphslideshow').carousel({ interval: 3000 });
 
     $.ajax({
-        url: 'https://api.github.com/repos/dambem/ClimateMonitorV2/contents/ClimateMonitorV2/public/files',
+        url: 'https://api.github.com/repos/dambem/ClimateMonitorV2/contents/ClimateMonitorV2/public/files/images',
         type: 'GET',
         contentType: 'application/json',
         password: config.GITHUB_API_TOKEN,
@@ -220,7 +220,11 @@ $(document).ready(() => {
                 }
 
             });
-
+            
+            if (images.length == 0) {
+                alert("WARNING: No png images were found at ClimateMonitorV2/public/files/images\nGraph carosuel will be empty")
+            }
+            
             // Compile the indicators first
             for (currentCount = 1; currentCount < images.length; ++currentCount) {
                 var listItemNode = document.createElement("LI")
