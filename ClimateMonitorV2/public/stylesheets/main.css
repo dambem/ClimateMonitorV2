@@ -7,9 +7,11 @@ body {
 .navbar-brand {
     font-family: 'Bellota Text', cursive;
 }
+
 .td off {
     background-color: red;
 }
+
 h2, h3 {
     font-family: 'Bellota Text', cursive;
 }
@@ -17,15 +19,19 @@ h2, h3 {
 #mainContainer {
     margin-top: 1em;
 }
+
 a {
     color: #00B7FF;
 }
+
 #headerimage{
     width:50px;
 }
+
 #healtheffects {
     border-radius: 5px;
 }
+
 #mapid {
     height: 450px;
     margin-bottom: 1%;
@@ -79,6 +85,12 @@ a {
         transform: rotate(360deg);
     }
 }
+
+svg:hover {
+    fill: yellow;
+    transition: 0.3s;
+}
+
 div.card {
     padding-left:2%;
     padding-top:1%;
@@ -140,6 +152,7 @@ div.card {
 body.loading .loader {
     overflow: hidden;   
 }
+
 body.loading .loader {
     display: block;
 }
