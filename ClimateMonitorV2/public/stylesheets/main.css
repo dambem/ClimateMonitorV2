@@ -28,14 +28,16 @@ body {
 
 /* Sidebar setup */
 .sidebar {
+    font-family: 'Bellota Text', cursive;
     height: 100%;
     width: 160px;
     position: fixed;
     z-index: 1;
     top: 0;
     left: 0;
-    background-color: #111;
+    background-color: #9aafc5;
     overflow-x: hidden;
+    overflow-y: hidden;
     padding-top: 20px;
 }
   
