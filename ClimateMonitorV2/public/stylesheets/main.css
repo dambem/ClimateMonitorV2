@@ -4,9 +4,8 @@ REFERENCES
 */
 
 body {
-    padding: 2%;
+    padding: 0 1% 0 2% ;
     font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-    margin-top: 2em;
     margin-left: 140px; /* Same as the width as the sidebar*/
 }
 
@@ -28,36 +27,44 @@ body {
 
 /* Sidebar setup */
 .sidebar {
+    font-family: 'Bellota Text', cursive;
+    font-size: 1em;
+    font-weight: bold;
     height: 100%;
     width: 160px;
     position: fixed;
     z-index: 1;
     top: 0;
     left: 0;
-    background-color: #111;
+    background-color: #e3f4ff;
     overflow-x: hidden;
-    padding-top: 20px;
+    overflow-y: hidden;
+    padding-top: 1em;
+    border-right: 3px groove #ffffff;
 }
   
 .sidebar a {
     padding: 6px 8px 6px 16px;
     text-decoration: none;
-    font-size: 25px;
-    color: #818181;
+    font-size: 16px;
+    color: black;
     display: block;
 }
-  
-.sidebar a:hover {
-    color: darkgreen;
-}
 
+    .sidebar a:hover {
+        color: #828282;
+    }
+
+#sheffsenseImageHolder {
+    padding:0;
+}
 .sidebar-footer{
     height: 50px;
     position: absolute;
     width: 100%;
     bottom: 0;
     list-style-type: none;
-    padding-bottom: 100px;
+    padding-bottom: 150px;
 }
 
 @media screen and (max-height: 450px) {
