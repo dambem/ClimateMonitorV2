@@ -277,15 +277,17 @@ $(document).ready(() => {
                     $(`#carosuel_items`).append(
                         `
                         <div class="carousel-item active">
-                            <img
-                                src="${image}"
-                                alt="${altText}"
-                                width="1600"
-                                height="1200"
+                            <a 
+                                target="_blank"
+                                href="${image}"
                             >
-                            <div class="carousel-caption">
-                                <p style="color: blue">${image}</p>
-                            </div>
+                                <img
+                                    src="${image}"
+                                    alt="${altText}"
+                                    width="100%"
+                                    height="100%"
+                                >
+                            </a>
                         </div>
                         `
                     )
@@ -297,15 +299,17 @@ $(document).ready(() => {
                     $(`#carosuel_items`).append(
                         `
                         <div class="carousel-item ${imageCount}">
-                            <img
-                                src="${image}"
-                                alt="${altText}"
-                                width="1600"
-                                height="1200"
+                            <a 
+                                target="_blank"
+                                href="${image}"
                             >
-                            <div class="carousel-caption">
-                                <p style="color: blue">${image}</p>
-                            </div>
+                                <img
+                                    src="${image}"
+                                    alt="${altText}"
+                                    width="100%"
+                                    height="100%"
+                                >
+                            </a>
                         </div>
                         `
                     )

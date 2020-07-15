@@ -7,10 +7,72 @@ body {
     padding: 2%;
     font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
     margin-top: 2em;
+    margin-left: 140px; /* Same as the width as the sidebar*/
 }
 
-.navbar-brand {
+/* Page title */
+.page-header {
     font-family: 'Bellota Text', cursive;
+    font-size: x-large;
+    font-weight: bolder;
+}
+
+.nav-link {
+    font-weight: bold;
+}
+
+.nav-link-active {
+    font-weight: bold;
+    background-color: white;
+}
+
+/* Sidebar setup */
+.sidebar {
+    height: 100%;
+    width: 160px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    padding-top: 20px;
+}
+  
+.sidebar a {
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+}
+  
+.sidebar a:hover {
+    color: darkgreen;
+}
+
+.sidebar-footer{
+    height: 50px;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    list-style-type: none;
+    padding-bottom: 100px;
+}
+
+@media screen and (max-height: 450px) {
+    .sidebar {padding-top: 15px;}
+    .sidebar a {font-size: 18px;}
+}
+
+/* CSS for the PM10 and PM2.5 Values Of Sensor popup */
+#exampleModal {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%)
 }
 
 .td off {
@@ -29,8 +91,14 @@ a {
     color: #00B7FF;
 }
 
+/* Sidebar images */
 #headerimage{
-    width:50px;
+    width: 100px;
+}
+
+#githubImage{
+    width:100px;
+    bottom: 0;
 }
 
 #healtheffects {
@@ -169,7 +237,7 @@ div.card {
 .loader {
     display:    none;
     position:   fixed;
-    z-index:    1000;
+    z-index:    10000;
     top:        0;
     left:       0;
     height:     100%;
