@@ -1,5 +1,6 @@
 // Everything required once loaded
 $(document).ready(() => {
+    multi_date_search(new Date("2020-04-01"), new Date("2020-04-29"), 24239)
     function multi_date_search(fromDate, toDate, sensorID) {
         console.log("Going into multi-date-search")
         jsonData = { from: fromDate, to: toDate, id: sensorID }
@@ -61,8 +62,25 @@ $(document).ready(() => {
 
     }
     var pm2Chart = document.getElementById('detailedstats').getContext('2d');
+    var pm10Chart = document.getElementById('detailedstats2').getContext('2d');
 
     var scatterChartPM2 = new Chart(pm2Chart, {
+        type: 'scatter',
+        data: {
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                    type: 'time',
+                    position: 'bottom',
+                    time: {
+                        unit: 'day'
+                    }
+                }]
+            }
+        },
+    })
+    var scatterChartPM10 = new Chart(pm10Chart, {
         type: 'scatter',
         data: {
         },
