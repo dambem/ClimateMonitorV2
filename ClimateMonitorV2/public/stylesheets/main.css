@@ -31,7 +31,7 @@ body {
     font-size: 1em;
     font-weight: bold;
     height: 100%;
-    width: 160px;
+    width: 115px;
     position: fixed;
     z-index: 1;
     top: 0;
@@ -59,7 +59,7 @@ body {
     padding:0;
 }
 .sidebar-footer{
-    height: 50px;
+    height: 25px;
     position: absolute;
     width: 100%;
     bottom: 0;
