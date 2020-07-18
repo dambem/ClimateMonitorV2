@@ -226,6 +226,20 @@ function currentWeatherDisplay() {
     });
 }
 
+function currentAirQualityDisplay() {
+    const airQualityURL = "https://api.weather.com/v3/wx/globalAirQuality?geocode=53.383331,-1.466667&language=en-US&scale=DAQI&format=json&apiKey=" + config.WEATHER_COMPANY_KEY
+    $.get(airQualityURL,
+    function(airQuality){
+        const currentAQI = airQuality.globalairquality.airQualityIndex;
+        const currentCategory = airQuality.globalairquality.airQualityCategory;
+        const currentAQIColour = airQuality.globalairquality.airQualityCategoryIndexColor;
+        const currentMessage = airQuality.globalairquality.messages.General.text;
+        $('#aqi-header').css("color", '#' + currentAQIColour);
+        $('#currentAQI').html(`<u><strong>${currentAQI}</strong></u>`);
+        $('#currentCategory').html(currentCategory + ': ' + currentMessage);
+        $('#currentAQI').css("color", '#' + currentAQIColour);
+    });
+}
 // Everything required once loaded
 $(document).ready(() => {
 
@@ -326,6 +340,7 @@ $(document).ready(() => {
     })
   
     currentWeatherDisplay();
+    currentAirQualityDisplay();
   
     var pm2Chart = document.getElementById('pm2Chart').getContext('2d');
     var pm10Chart = document.getElementById('pm10Chart').getContext('2d');
@@ -721,6 +736,7 @@ $(document).ready(() => {
 
         $('#pm2averagedesc').html(colorForPollutionPhrase(0, average_pm2))
 
+        $('#aqi-header').html("Air Quality Index Average")
 
         // appends danger_level div with certain human displays
         mortality(average_pm2, average_pm10, 500, "#mortality_pm10", "The current PM10 value is expected to cause the following increases in mortality over an average of 1000 people")
