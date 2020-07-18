@@ -3,6 +3,8 @@ $(document).ready(() => {
     multi_date_search(new Date("2020-04-01"), new Date("2020-04-29"), 24239)
     function multi_date_search(fromDate, toDate, sensorID) {
         console.log("Going into multi-date-search")
+        $body = $("body");
+
         jsonData = { from: fromDate, to: toDate, id: sensorID }
         $.ajax({
             url: '/fromto',
@@ -17,13 +19,13 @@ $(document).ready(() => {
             complete: function (data, res) {
                 console.log("Complete Hit")
                 console.log(res)
-                //$body.removeClass("loading");
+                $body.removeClass("loading");
             },
             error: function (xhr, status, error) {
                 console.log(error.message);
             },
             // shows the loader         
-            beforeSend: function () { //$body.addClass("loading"); 
+            beforeSend: function () { $body.addClass("loading"); 
             },
 
         })
