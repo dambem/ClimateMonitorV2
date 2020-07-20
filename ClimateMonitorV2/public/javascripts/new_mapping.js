@@ -692,7 +692,7 @@ $(document).ready(() => {
         findDates(sensor_id)
     });
 
-    var json = $.getJSON('https://data.sensor.community/static/v2/data.json', function (data) {
+    var json = $.getJSON('https://data.sensor.community/static/v2/data.1h.json', function (data) {
         var counter = 0
         var totalpm2 = 0
         var totalpm10 = 0
