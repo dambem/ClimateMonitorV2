@@ -344,3 +344,7 @@ ClimateMonitorV2/public/javascripts/config.js
 
 # Image csv files
 ClimateMonitorV2/public/files/20*
+/.blackbox/pubring.gpg~
+/.blackbox/pubring.kbx~
+/.blackbox/secring.gpg
+/ClimateMonitorV2/public/javascripts/config.js
