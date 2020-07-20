@@ -130,7 +130,7 @@ describe('Front page tests', function () {
 
 });
 
-describe ('Front page tests', function () {
+describe ('About page tests', function () {
     let page;
 
     before (async function () {
@@ -179,9 +179,35 @@ describe ('Front page tests', function () {
 
         return true;
     }).timeout(0);
+
+    it('Checks sidebar footer', async () => {
+        var results = await page.evaluate(async() => {
+            results = document.getElementsByClassName('sidebar-footer')[0].innerHTML
+            return results;
+        });
+
+        console.log(results);
+
+        expect(results).to.equal('<a href="https://urbanflows.ac.uk/" target="_blank"><img class="img-fluid" id="urbanflowsimage" src="images/urbanlogo.png"></a>');
+
+        return true;
+    }).timeout(0);
+
+    it('Checks sidebar footer image', async () => {
+        var results = await page.evaluate(async() => {
+            results = document.getElementById('urbanflowsimage').src
+            return results;
+        });
+
+        console.log(results);
+
+        expect(results).to.equal('http://localhost:3000/images/urbanlogo.png');
+
+        return true;
+    }).timeout(0);
 });
 
-describe ('Front page tests', function () {
+describe ('Detailed Statistics page tests', function () {
     let page;
 
     before (async function () {
@@ -227,6 +253,32 @@ describe ('Front page tests', function () {
         console.log(results);
 
         expect(results).to.equal('Detailed Statistics');
+
+        return true;
+    }).timeout(0);
+
+    it('Checks sidebar footer', async () => {
+        var results = await page.evaluate(async() => {
+            results = document.getElementsByClassName('sidebar-footer')[0].innerHTML
+            return results;
+        });
+
+        console.log(results);
+
+        expect(results).to.equal('<a href="https://urbanflows.ac.uk/" target="_blank"><img class="img-fluid" id="urbanflowsimage" src="images/urbanlogo.png"></a>');
+
+        return true;
+    }).timeout(0);
+
+    it('Checks sidebar footer image', async () => {
+        var results = await page.evaluate(async() => {
+            results = document.getElementById('urbanflowsimage').src
+            return results;
+        });
+
+        console.log(results);
+
+        expect(results).to.equal('http://localhost:3000/images/urbanlogo.png');
 
         return true;
     }).timeout(0);
