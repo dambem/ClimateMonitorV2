@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node app",
-    "test": "mocha --recursive test"
+    "test": "mocha --recursive test --timeout 10000"
   },
   "description": "ClimateMonitorV2",
   "author": {
