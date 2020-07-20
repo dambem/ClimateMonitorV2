@@ -59,6 +59,13 @@ function respiratoryDiseasePeoplePM2(PM2, people, id) {
 
 }
 
+function fractionalreducer(numerator, denominator) {
+    var gcd = function gcd(a, b) {
+        return (b ? gcd(b,a%b) : a)
+    }
+    gcd = gcd(numerator, denominator)
+    return [numerator/gcd, denominator/gcd]
+}
 function human_display(people, infected,  id, preface) {
     if (preface == null) {
         preface = "<p></p>"
@@ -67,10 +74,14 @@ function human_display(people, infected,  id, preface) {
     }
 
     $(id).empty()
-    infected = Math.ceil(infected)
     console.log("Infected people" + infected)
+    console.log("Healthy people:" + people)
     $(id).append(preface)
-    $(id).append("<p> Out of " + String(people*10) + " people, " + String(infected*10) + " would sadly lose their lives due to pollution.")
+    //fractions = fractionalreducer(people, infected)
+
+    //healthy = fractions[0]
+    //infected = fractions[1]
+    $(id).append("<p> Out of " + String(people) + " people, " + String(infected) + " would sadly lose their lives due to pollution.")
 
     for (i = 0; i < (people-infected); i++) {
         $(id).append(`
@@ -345,10 +356,7 @@ $(document).ready(() => {
     var pm2Chart = document.getElementById('pm2Chart').getContext('2d');
     var pm10Chart = document.getElementById('pm10Chart').getContext('2d');
     // Currently not in use, date range picker for graphs
-    
-
-    //human_display(500, 100, "#danger_level")
-    human_display(500, 100, "#danger_level2", null)
+   
 
     var scatterChartPM2 = new Chart(pm2Chart, {
         type: 'scatter',
@@ -629,6 +637,8 @@ $(document).ready(() => {
 
         })
     }
+
+
     function updateGraphMultiDay(data) {
         var i;
         label2 = "PM2.5 Values"
@@ -697,14 +707,15 @@ $(document).ready(() => {
         findDates(sensor_id)
     });
 
-    var json = $.getJSON('http://api.luftdaten.info/static/v2/data.24h.json', function (data) {
-        console.log("Going To Luftdaten")
+    var json = $.getJSON('https://data.sensor.community/static/v2/data.1h.json', function (data) {
         var counter = 0
         var totalpm2 = 0
         var totalpm10 = 0
-
+        console.log("Let's ty this again")
         $.each(data, function (key, val) {
             if ((val.location.longitude > -1.58) && (val.location.longitude < -1.34) && (val.location.latitude <= 53.468) && (val.location.latitude >= 53.29)) {
+                console.log("Found one in the correct location")
+
                 if (val.sensordatavalues[0].value_type == "P1") {
                     counter++;
                     totalpm10 += parseFloat(val.sensordatavalues[0].value)
