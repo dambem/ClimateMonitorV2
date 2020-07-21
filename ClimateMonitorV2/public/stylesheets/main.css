@@ -262,3 +262,28 @@ body.loading .loader {
 body.loading .loader {
     display: block;
 }
+
+#currentAQI {
+    text-align: center;
+}
+
+#power-gauge {
+    height: 160px;
+    text-align: center;
+}
+
+#power-gauge g.arc {
+    fill: steelblue;
+}
+
+#power-gauge g.pointer {
+    fill: #e85116;
+    stroke: #b64011;
+}
+
+#power-gauge g.label text {
+    text-anchor: middle;
+    font-size: 14px;
+    font-weight: bold;
+    fill: #666;
+}

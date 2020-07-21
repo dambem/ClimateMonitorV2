@@ -14,6 +14,7 @@ var bigdanger = '#1a0006'
 var safe = '#6699CC'
 var average_pm2
 var average_pm10
+import gauge from "./gauge.js"
 
 function dangerBasedOnPM(PM10, PM2, people, id) {
     var validPM10 = 20
@@ -22,14 +23,14 @@ function dangerBasedOnPM(PM10, PM2, people, id) {
     var PM10inc = (PM10 - validPM10) / 10
     var PM2inc = (PM2 - validPM2) / 10
 
-    percentageMortalityPM10 = 0.58 * PM10inc
-    percentageRespDiseasePM2 = 2.07 * PM2inc
-    lifespandecreasePM2 = 0.35 * PM2inc
+    var percentageMortalityPM10 = 0.58 * PM10inc
+    var percentageRespDiseasePM2 = 2.07 * PM2inc
+    var lifespandecreasePM2 = 0.35 * PM2inc
     console.log(percentageMortalityPM10)
     console.log(percentageRespDiseasePM2)
     console.log(lifespandecreasePM2)
-    mortalityOnPeoplePM10 = people * (percentageMortalityPM10 * 0.01)
-    respiratoryDiseasePeoplePM2 = people * (percentageMortalityPM10 * 0.01)
+    var mortalityOnPeoplePM10 = people * (percentageMortalityPM10 * 0.01)
+    var respiratoryDiseasePeoplePM2 = people * (percentageMortalityPM10 * 0.01)
 }
 
 function lifespandecrease(pm2, id) {
@@ -44,11 +45,11 @@ function mortality(PM10, PM2, people, id, preface) {
     var validPM2 = 15
     var PM10inc = (PM10 - validPM10) / 10
     var PM2inc = (PM2 - validPM2) / 10
-    percentageMortalityPM2 = 2.8 * PM2inc
-    percentageMortalityPM10 = 0.58 * PM10inc
+    var percentageMortalityPM2 = 2.8 * PM2inc
+    var percentageMortalityPM10 = 0.58 * PM10inc
     console.log(percentageMortalityPM10)
-    mortalityOnPeoplePM2 = people * (percentageMortalityPM2 * 0.01)
-    mortalityOnPeoplePM10 = people * (percentageMortalityPM10 * 0.01)
+    var mortalityOnPeoplePM2 = people * (percentageMortalityPM2 * 0.01)
+    var mortalityOnPeoplePM10 = people * (percentageMortalityPM10 * 0.01)
     console.log("Final Calculation: " + mortalityOnPeoplePM10)
     human_display(people, mortalityOnPeoplePM10 + mortalityOnPeoplePM2, id, preface)
 }
@@ -59,6 +60,13 @@ function respiratoryDiseasePeoplePM2(PM2, people, id) {
 
 }
 
+function fractionalreducer(numerator, denominator) {
+    var gcd = function gcd(a, b) {
+        return (b ? gcd(b,a%b) : a)
+    }
+    gcd = gcd(numerator, denominator)
+    return [numerator/gcd, denominator/gcd]
+}
 function human_display(people, infected,  id, preface) {
     if (preface == null) {
         preface = "<p></p>"
@@ -67,12 +75,16 @@ function human_display(people, infected,  id, preface) {
     }
 
     $(id).empty()
-    infected = Math.ceil(infected)
     console.log("Infected people" + infected)
+    console.log("Healthy people:" + people)
     $(id).append(preface)
-    $(id).append("<p> Out of " + String(people*10) + " people, " + String(infected*10) + " would sadly lose their lives due to pollution.")
+    //fractions = fractionalreducer(people, infected)
 
-    for (i = 0; i < (people-infected); i++) {
+    //healthy = fractions[0]
+    //infected = fractions[1]
+    $(id).append("<p> Out of " + String(people) + " people, " + String(infected) + " would sadly lose their lives due to pollution.")
+
+    for (var i = 0; i < (people-infected); i++) {
         $(id).append(`
             <svg
                 id="healthy_person"
@@ -223,6 +235,42 @@ function currentWeatherDisplay() {
         $('#currentTemp').html(currentTempCelcius +'ºC');
         $('#currentWind').html(currentWindSpeed + 'mph');
         $('#weather-image').attr('src', '../files/weather-icons/' + currentIconCode + '.png');
+        $('#weather-image').attr('alt', 'A forecast-style weather icon for the current weather conditions');
+    });
+}
+
+function currentAirQualityDisplay() {
+    // get air quality data from weather company API
+    const airQualityURL = "https://api.weather.com/v3/wx/globalAirQuality?geocode=53.383331,-1.466667&language=en-US&scale=DAQI&format=json&apiKey=" + config.WEATHER_COMPANY_KEY
+    $.get(airQualityURL,
+    function(airQuality){
+        const currentAQI = airQuality.globalairquality.airQualityIndex;
+        const currentCategory = airQuality.globalairquality.airQualityCategory;
+        const currentMessage = airQuality.globalairquality.messages.General.text;
+
+        // Set values for HTML attributes
+        $('#aqi-header').html("Air Quality Index Average")
+        $('#currentAQI').html(`<b><strong>${currentAQI}</strong></b>`);
+        $('#currentCategory').html(currentCategory + ': ' + currentMessage);
+
+        // Set up gauge for AQI
+        var powerGauge = gauge("#power-gauge", {
+            size: 300,
+            clipWidth: 300,
+            clipHeight: 300,
+            ringWidth: 60,
+            maxValue: 500,
+            transitionMs: 4000, // changed
+        });
+            // Render gauge
+            powerGauge.render();
+        
+            // Set gauge reading to current AQI
+            function updateReadings(currentAQI) {
+                powerGauge.update(currentAQI);
+            }
+        
+        updateReadings(currentAQI);
     });
 }
 
@@ -258,7 +306,7 @@ $(document).ready(() => {
             }
             
             // Compile the indicators first
-            for (currentCount = 1; currentCount < images.length; ++currentCount) {
+            for (var currentCount = 1; currentCount < images.length; ++currentCount) {
                 var listItemNode = document.createElement("LI")
                 listItemNode.setAttribute("data-target", "#pythongraphslideshow")
                 listItemNode.setAttribute("data-slide-to", currentCount)
@@ -326,14 +374,12 @@ $(document).ready(() => {
     })
   
     currentWeatherDisplay();
+    currentAirQualityDisplay();
   
     var pm2Chart = document.getElementById('pm2Chart').getContext('2d');
     var pm10Chart = document.getElementById('pm10Chart').getContext('2d');
     // Currently not in use, date range picker for graphs
-    
-
-    //human_display(500, 100, "#danger_level")
-    human_display(500, 100, "#danger_level2", null)
+   
 
     var scatterChartPM2 = new Chart(pm2Chart, {
         type: 'scatter',
@@ -410,49 +456,56 @@ $(document).ready(() => {
         iconUrl: 'markers/no_pollution.png',
         iconSize: [50, 50], // size of the icon
         iconAnchor: [25, 50], // point of the icon which will correspond to marker's location
-        popupAnchor: [0, -50] // point from which the popup should open relative to the iconAnchor
+        popupAnchor: [0, -50],// point from which the popup should open relative to the iconAnchor
+        altText: "A marker representing no pollution"
     })
 
     var lightPollutionIcon = L.icon({
         iconUrl: 'markers/light_pollution.png',
         iconSize: [50, 50], // size of the icon
         iconAnchor: [25, 50], // point of the icon which will correspond to marker's location
-        popupAnchor: [0, -50] // point from which the popup should open relative to the iconAnchor
+        popupAnchor: [0, -50], // point from which the popup should open relative to the iconAnchor
+        altText: "A marker representing light pollution"
     })
 
     var mediumPollutionIcon = L.icon({
         iconUrl: 'markers/medium_pollution.png',
         iconSize: [50, 50], // size of the icon
         iconAnchor: [25, 50], // point of the icon which will correspond to marker's location
-        popupAnchor: [0, -50] // point from which the popup should open relative to the iconAnchor
+        popupAnchor: [0, -50], // point from which the popup should open relative to the iconAnchor
+        altText: "A marker representing medium pollution"
     })
 
     var upperMedPollutionIcon = L.icon({
         iconUrl: 'markers/high_med_pollution.png',
         iconSize: [50, 50], // size of the icon
         iconAnchor: [25, 50], // point of the icon which will correspond to marker's location
-        popupAnchor: [0, -50] // point from which the popup should open relative to the iconAnchor
+        popupAnchor: [0, -50], // point from which the popup should open relative to the iconAnchor
+        altText: "A marker representing high-to-medium pollution"
     })
 
     var highPollutionIcon = L.icon({
         iconUrl: 'markers/high_pollution.png',
         iconSize: [50, 50], // size of the icon
         iconAnchor: [25, 50], // point of the icon which will correspond to marker's location
-        popupAnchor: [0, -50] // point from which the popup should open relative to the iconAnchor
+        popupAnchor: [0, -50], // point from which the popup should open relative to the iconAnchor
+        altText: "A marker representing high pollution"
     })
 
     var veryHighPollutionIcon = L.icon({
         iconUrl: 'markers/very_high_pollution.png',
         iconSize: [50, 50], // size of the icon
         iconAnchor: [25, 50], // point of the icon which will correspond to marker's location
-        popupAnchor: [0, -50] // point from which the popup should open relative to the iconAnchor
+        popupAnchor: [0, -50], // point from which the popup should open relative to the iconAnchor
+        altText: "A marker representing very high pollution"
     })
 
     var maximumPollutionIcon = L.icon({
         iconUrl: 'markers/too_high_pollution.png',
         iconSize: [50, 50], // size of the icon
         iconAnchor: [25, 50], // point of the icon which will correspond to marker's location
-        popupAnchor: [0, -50] // point from which the popup should open relative to the iconAnchor
+        popupAnchor: [0, -50], // point from which the popup should open relative to the iconAnchor
+        altText: "A marker representing pollution levels that are too high"
     })
 
     function iconForPollution(pm10, pm2) {
@@ -614,6 +667,8 @@ $(document).ready(() => {
 
         })
     }
+
+
     function updateGraphMultiDay(data) {
         var i;
         label2 = "PM2.5 Values"
@@ -682,14 +737,15 @@ $(document).ready(() => {
         findDates(sensor_id)
     });
 
-    var json = $.getJSON('http://api.luftdaten.info/static/v2/data.24h.json', function (data) {
-        console.log("Going To Luftdaten")
+    var json = $.getJSON('https://data.sensor.community/static/v2/data.1h.json', function (data) {
         var counter = 0
         var totalpm2 = 0
         var totalpm10 = 0
-
+        console.log("Let's ty this again")
         $.each(data, function (key, val) {
             if ((val.location.longitude > -1.58) && (val.location.longitude < -1.34) && (val.location.latitude <= 53.468) && (val.location.latitude >= 53.29)) {
+                console.log("Found one in the correct location")
+
                 if (val.sensordatavalues[0].value_type == "P1") {
                     counter++;
                     totalpm10 += parseFloat(val.sensordatavalues[0].value)
@@ -721,7 +777,6 @@ $(document).ready(() => {
 
         $('#pm2averagedesc').html(colorForPollutionPhrase(0, average_pm2))
 
-
         // appends danger_level div with certain human displays
         mortality(average_pm2, average_pm10, 500, "#mortality_pm10", "The current PM10 value is expected to cause the following increases in mortality over an average of 1000 people")
 
@@ -729,11 +784,11 @@ $(document).ready(() => {
 
         $('#input[name="dates"]').daterangepicker();
 
-        circles = []
+        var circles = []
         for (var i = 0; i < items.length; i++) {
             var pm10 = parseFloat(items[i][3])
             var pm2  = parseFloat(items[i][4])
-            color = colorForPollution(items[i][3], items[i][4])
+            var color = colorForPollution(items[i][3], items[i][4])
             var marker = L.circle([items[i][1], items[i][2]], {
                 color: 'black',
                 fillColor: color,
@@ -757,10 +812,10 @@ $(document).ready(() => {
         }
 
         for (var i = 0; i < circles.length; i++) {
-            colorPM10 = colorForPollution(parseFloat(items[i][3]), 0)
-            colorPM2 = colorForPollution(0, parseFloat(items[i][4]))
-            iconPM10 = '<svg class="bi bi-heart-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="'+colorPM10+'" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" /> </svg>'
-            iconPM2 = '<svg class="bi bi-heart-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="'+colorPM2+'" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" /> </svg>'
+            var colorPM10 = colorForPollution(parseFloat(items[i][3]), 0)
+            var colorPM2 = colorForPollution(0, parseFloat(items[i][4]))
+            var iconPM10 = '<svg class="bi bi-heart-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="'+colorPM10+'" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" /> </svg>'
+            var iconPM2 = '<svg class="bi bi-heart-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="'+colorPM2+'" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" /> </svg>'
 
             circles[i].bindPopup("<h4><b>Past 24 Hour Average</b></h4><h4>pm10: " + items[i][3] + " " + iconPM10 + "</h4><p>" + colorForPollutionPhrase(parseFloat(items[i][3]), 0) + "</p><h4>pm2.5: " + items[i][4] + " " + iconPM2+ "</h4><p>" + colorForPollutionPhrase(0,parseFloat(items[i][4]))+ "</p><br> <button class='btn btn-primary' type='button' data-toggle='modal' data-target='#exampleModal'>Get Detailed Information And Statistics</button>");
             data_values.push([items[i][0], items[i][1]]);
