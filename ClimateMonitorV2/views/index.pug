@@ -9,9 +9,12 @@ block content
     script(src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8")
     script(src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@0.7.7")
     script(src="https://cdn.jsdelivr.net/npm/litepicker/dist/js/main.js")
+    
 
     
     body
+        script(src="https://d3js.org/d3.v2.min.js")
+        script(type='module', src="/javascripts/gauge.js")
 
         div(class="sidebar")
             div(class="sidebar-header")
@@ -94,8 +97,10 @@ block content
                                 p1(id="pm2averagedesc") 
                             hr
                             h4(id="aqi-header")
-                                h6(id="currentAQI")
-                                p1(id="currentCategory") 
+                            div(id="air-quality")
+                                div(id="power-gauge")
+                                h4(id="currentAQI")
+                                h6(id="currentCategory")
                             div(class="col-md-12" id = "healtheffects")
                     div(class="card")
                         div(class="card-body")
@@ -124,12 +129,9 @@ block content
                                 a(class="carousel-control-next" href="#pythongraphslideshow" role="button" data-slide="next")
                                     span(class="carousel-control-next-icon" aria-hidden="true" style="background-color: blue")
                                     span(class="sr-only") Next
-
         script(type='text/javascript' src='/javascripts/config.js')
-        script(type='text/javascript', src='/javascripts/new_mapping.js')
-    script(src="https://d3js.org/d3.v5.min.js")
+        script(type='module', src='/javascripts/new_mapping.js')
     script(src="https://cdn.jsdelivr.net/npm/litepicker/dist/js/main.js")
-
     footer(id = "sticky-footer" class="py-4 bg-light text-white-50")
         div(class="container text-center")
             a(href="https://urbanflows.ac.uk/")
