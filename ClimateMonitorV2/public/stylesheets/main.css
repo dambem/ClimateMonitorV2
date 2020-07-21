@@ -4,9 +4,9 @@ REFERENCES
 */
 
 body {
-    padding: 0 1% 0 2% ;
+    padding: 0 1% 0 1% ;
     font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-    margin-left: 140px; /* Same as the width as the sidebar*/
+    margin-left: 7%; /* Same as the width as the sidebar*/
 }
 
 /* Page title */
@@ -31,7 +31,7 @@ body {
     font-size: 1em;
     font-weight: bold;
     height: 100%;
-    width: 115px;
+    width: 7%;
     position: fixed;
     z-index: 1;
     top: 0;
@@ -40,7 +40,7 @@ body {
     overflow-x: hidden;
     overflow-y: hidden;
     padding-top: 1em;
-    border-right: 3px groove #ffffff;
+    border-right: 1px groove #ffffff;
 }
   
 .sidebar a {
