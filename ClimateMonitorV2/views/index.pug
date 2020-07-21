@@ -16,14 +16,14 @@ block content
         div(class="sidebar")
             div(class="sidebar-header")
                 a(href="https://github.com/dambem/ClimateMonitorV2", id="sheffsenseImageHolder", target="_blank")
-                    img(class="img-fluid", id="sheffsenseImage", src="sheffsense.png")
+                    img(class="img-fluid", id="sheffsenseImage", src="sheffsense.png", alt="The Sheffsense logo: A colourful mosaic circle on a blurred landscape background")
 
             a(class="nav-link-active" href="/") Home
             a(class="nav-link" href="/about") About
             a(class="nav-link" href="/detailedstats") Detailed Statistics
             div(class="sidebar-footer")
                 a(href="https://urbanflows.ac.uk/" target="_blank")
-                    img(class="img-fluid", id="urbanflowsimage", src="images/urbanlogo.png")
+                    img(class="img-fluid", id="urbanflowsimage", src="images/urbanlogo.png", alt="The Urban Flows logo: A ring of navy, lilac & green dots interlaced with a star made of purple dots")
 
         #exampleModal.modal.fade.modal-lg(tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true')
             .modal-dialog.modal-lg(role='document')
@@ -82,7 +82,7 @@ block content
                                         td(id="currentTemp")
                                         td(id="currentWind")
                                         td(id="currentCondition")
-                                            img(class="img-fluid", id="weather-image", src="../files/weather-icons/44.png", width='50px') 
+                                            img(class="img-fluid", id="weather-image", src="../files/weather-icons/44.png", width='50px',alt="A forecast-style weather icon for the current weather conditions") 
                     div(class="card")
                         h2() Current Average Pollution Levels In Sheffield:
                             h4(id="pm10averageheader")
@@ -133,4 +133,4 @@ block content
     footer(id = "sticky-footer" class="py-4 bg-light text-white-50")
         div(class="container text-center")
             a(href="https://urbanflows.ac.uk/")
-                img(class="img-fluid", src="images/urbanflows.png", href="https://urbanflows.ac.uk/") 
+                img(class="img-fluid", src="images/urbanflows.png", href="https://urbanflows.ac.uk/", alt="The Urban Flows logo (A ring of navy, lilac, purple & green dots) with navy text reading: Urban Flows Observatory") 
