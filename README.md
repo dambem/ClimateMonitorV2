@@ -30,7 +30,8 @@ blackbox_addadmin tal@example.com
 ```
 When the command completes successfully, instructions on how to commit these changes will be output. Run the command as given to commit the changes. It will look like this:
 ```
-git commit -m 'NEW ADMIN: tal@example.com' .blackbox/pubring.gpg .blackbox/trustdb.gpg .blackbox/blackbox-admins.txt
+git add .blackbox/*
+git commit -m 'NEW ADMIN: tal@example.com'
 ```
 5. Push it to the repo
 ```
@@ -56,7 +57,7 @@ gpg --homedir=.blackbox --list-keys   # Assuming that you're in the root directo
 ```
 2. Import the keychain into your personal keychain and re-encrypt
 ```
-gpg --import .blackbox/pubring.gpg    # OR gpg --import .blackbox/pubring.kbx
+gpg --import .blackbox/pubring.kbx    # OR gpg --import .blackbox/pubring.gpg if that doesn't work
 blackbox_update_all_files
 ```
 3. Push the re-encrypted files back to the requester
