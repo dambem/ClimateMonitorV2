@@ -234,6 +234,7 @@ function currentWeatherDisplay() {
         $('#currentTemp').html(currentTempCelcius +'ºC');
         $('#currentWind').html(currentWindSpeed + 'mph');
         $('#weather-image').attr('src', '../files/weather-icons/' + currentIconCode + '.png');
+        $('#weather-image').attr('alt', 'A forecast-style weather icon for the current weather conditions');
     });
 }
 
@@ -433,49 +434,56 @@ $(document).ready(() => {
         iconUrl: 'markers/no_pollution.png',
         iconSize: [50, 50], // size of the icon
         iconAnchor: [25, 50], // point of the icon which will correspond to marker's location
-        popupAnchor: [0, -50] // point from which the popup should open relative to the iconAnchor
+        popupAnchor: [0, -50],// point from which the popup should open relative to the iconAnchor
+        altText: "A marker representing no pollution"
     })
 
     var lightPollutionIcon = L.icon({
         iconUrl: 'markers/light_pollution.png',
         iconSize: [50, 50], // size of the icon
         iconAnchor: [25, 50], // point of the icon which will correspond to marker's location
-        popupAnchor: [0, -50] // point from which the popup should open relative to the iconAnchor
+        popupAnchor: [0, -50], // point from which the popup should open relative to the iconAnchor
+        altText: "A marker representing light pollution"
     })
 
     var mediumPollutionIcon = L.icon({
         iconUrl: 'markers/medium_pollution.png',
         iconSize: [50, 50], // size of the icon
         iconAnchor: [25, 50], // point of the icon which will correspond to marker's location
-        popupAnchor: [0, -50] // point from which the popup should open relative to the iconAnchor
+        popupAnchor: [0, -50], // point from which the popup should open relative to the iconAnchor
+        altText: "A marker representing medium pollution"
     })
 
     var upperMedPollutionIcon = L.icon({
         iconUrl: 'markers/high_med_pollution.png',
         iconSize: [50, 50], // size of the icon
         iconAnchor: [25, 50], // point of the icon which will correspond to marker's location
-        popupAnchor: [0, -50] // point from which the popup should open relative to the iconAnchor
+        popupAnchor: [0, -50], // point from which the popup should open relative to the iconAnchor
+        altText: "A marker representing high-to-medium pollution"
     })
 
     var highPollutionIcon = L.icon({
         iconUrl: 'markers/high_pollution.png',
         iconSize: [50, 50], // size of the icon
         iconAnchor: [25, 50], // point of the icon which will correspond to marker's location
-        popupAnchor: [0, -50] // point from which the popup should open relative to the iconAnchor
+        popupAnchor: [0, -50], // point from which the popup should open relative to the iconAnchor
+        altText: "A marker representing high pollution"
     })
 
     var veryHighPollutionIcon = L.icon({
         iconUrl: 'markers/very_high_pollution.png',
         iconSize: [50, 50], // size of the icon
         iconAnchor: [25, 50], // point of the icon which will correspond to marker's location
-        popupAnchor: [0, -50] // point from which the popup should open relative to the iconAnchor
+        popupAnchor: [0, -50], // point from which the popup should open relative to the iconAnchor
+        altText: "A marker representing very high pollution"
     })
 
     var maximumPollutionIcon = L.icon({
         iconUrl: 'markers/too_high_pollution.png',
         iconSize: [50, 50], // size of the icon
         iconAnchor: [25, 50], // point of the icon which will correspond to marker's location
-        popupAnchor: [0, -50] // point from which the popup should open relative to the iconAnchor
+        popupAnchor: [0, -50], // point from which the popup should open relative to the iconAnchor
+        altText: "A marker representing pollution levels that are too high"
     })
 
     function iconForPollution(pm10, pm2) {
