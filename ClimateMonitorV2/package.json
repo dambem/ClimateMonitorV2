@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "start": "node app",
-    "test": "mocha --recursive test --timeout 10000"
+    "test": "mocha --recursive test",
+    "encrypt": "cd $(git rev-parse --show-toplevel) && blackbox_edit_end ClimateMonitorV2/public/javascripts/config.js",
+    "decrypt": "cd $(git rev-parse --show-toplevel) && blackbox_edit_start ClimateMonitorV2/public/javascripts/config.js.gpg"
   },
   "description": "ClimateMonitorV2",
   "author": {
