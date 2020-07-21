@@ -88,5 +88,5 @@ npm install
 npm start
 ```
 ## Running tests
-- First run the app using `npm start`
-- Run the tests using `npm t`
+1. First run the app using `npm start`
+2. Run the tests using `npm t`
