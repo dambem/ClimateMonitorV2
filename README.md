@@ -42,8 +42,8 @@ git push origin <branch-name>
 7. Once an admin has approved your request, pull in their approval and verify that you can decrypt and encrypt the file. 
 ```
 git pull origin <branchname>
-blackbox_edit_start <path-to-config.js>   # Decrypt
-blackbox_edit_end <path-to-config.js>     # Encrypt
+blackbox_edit_start <path-to-config.js>   # OR npm run decrypt
+blackbox_edit_end <path-to-config.js>     # OR npm run encrypt
 ```
 
 If you can, you're all setup! Inform the approver that all looks well and they will solidify the approval by merging it into master.
@@ -69,14 +69,14 @@ git push origin <requesters-branchname>
 
 Assuming you're now all setup with blackbox and have verified that you can encrypt/decrypt files, decrypt the `config.js` file:
 ```
-blackbox_edit_start <path-to-config.js>
+npm run decrypt
 ```
 Now the file should be in plaintext format, ready for you to make changes or run the website! 
 
 When you're done editing, encrypt the file again so it can't be read
 **MAKE SURE YOU DO THIS BEFORE PUSHING ANY CHANGES YOU MAKE TO THE PUBLIC REPO!!!**
 ```
-blackbox_edit_end <path-to-config.js>
+npm run encrypt
 ```
 
 *Run these commands once `config.js` has been decrypted*
