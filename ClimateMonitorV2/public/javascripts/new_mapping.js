@@ -48,6 +48,8 @@ function dangerBasedOnPM(PM10, PM2, people, id) {
  */
 function mortality(PM10, PM2, people, id, preface) {
     console.log("Entering Mortality")
+    console.log(PM10);
+    console.log(PM2);
     var validPM10 = 20
     var validPM2 = 15
     var PM10inc = (PM10 - validPM10) / 10
@@ -258,6 +260,7 @@ function currentAirQualityDisplay() {
         $('#aqi-header').html("Air Quality Index Average")
         $('#currentAQI').html(`<b><strong>${currentAQI}</strong></b>`);
         $('#currentCategory').html(currentCategory + ': ' + currentMessage);
+        console.log(airQuality);
 
         // Set up gauge for AQI
         var powerGauge = gauge("#power-gauge", {
@@ -277,6 +280,32 @@ function currentAirQualityDisplay() {
             }
         
         updateReadings(currentAQI);
+
+        // Get average values of PM10 and PM2.5 for Sheffield
+        var average_pm10 = airQuality.globalairquality.pollutants.PM10.amount;
+        var average_pm2 = airQuality.globalairquality.pollutants["PM2.5"].amount;
+
+        // Set values for average PM10 levels
+        $('#pm10averagetotal').html(`<u><strong>${average_pm10}</strong></u>`)
+        var currentpm10Colour = colorForPollution(average_pm10, 0)
+        $('#pm10averagetotal').css("color", currentpm10Colour)
+        $('#pm10averageheader').html("PM10 Average")
+        $('#pm10averageheader').css("color", currentpm10Colour)
+        $('#pm10averagedesc').html(colorForPollutionPhrase(average_pm10, 0))
+
+        // Set values for avergae PM2.5 levels
+        $('#pm2averagetotal').html(`<u><strong>${average_pm2}</strong></u>`)
+        var currentpm2Colour = colorForPollution(average_pm2, 0)
+        $('#pm2averagetotal').css("color", currentpm2Colour)
+        $('#pm2averageheader').html("PM2.5 Average")
+        $('#pm2averageheader').css("color", currentpm2Colour)
+        $('#pm2averagedesc').html(colorForPollutionPhrase(0, average_pm2))
+
+        console.log("Here");
+        // appends danger_level div with certain human displays
+        mortality(average_pm10, average_pm2, 500, "#mortality_pm10", "The current PM10 value is expected to cause the following increases in mortality over an average of 1000 people")
+        console.log("here again");
+        dangerBasedOnPM(average_pm10, average_pm2, 100)
     });
 }
 
@@ -761,32 +790,7 @@ $(document).ready(() => {
             }
             
         });
-        average_pm10 = Math.round((totalpm10 / counter))
 
-        var currentpm10Colour = colorForPollution(average_pm10, 0)
-        $('#pm10averagetotal').html(`<u><strong>${average_pm10}</strong></u>`)
-        $('#pm10averagetotal').css("color", currentpm10Colour)
-
-        $('#pm10averageheader').html("PM10 Average")
-        $('#pm10averageheader').css("color", currentpm10Colour)
-        
-        $('#pm10averagedesc').html(colorForPollutionPhrase(average_pm10, 0))
-
-        average_pm2 = Math.round((totalpm2 / counter))
-
-        var currentpm2Colour = colorForPollution(0, average_pm2)
-        $('#pm2averagetotal').html(`<u><strong>${average_pm2}</strong></u>`)
-        $('#pm2averagetotal').css("color", currentpm2Colour)
-
-        $('#pm2averageheader').html("PM2.5 Average")
-        $('#pm2averageheader').css("color", currentpm2Colour)
-
-        $('#pm2averagedesc').html(colorForPollutionPhrase(0, average_pm2))
-
-        // appends danger_level div with certain human displays
-        mortality(average_pm2, average_pm10, 500, "#mortality_pm10", "The current PM10 value is expected to cause the following increases in mortality over an average of 1000 people")
-
-        dangerBasedOnPM(average_pm10, average_pm2, 100)
 
         $('#input[name="dates"]').daterangepicker();
 
