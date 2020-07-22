@@ -1,4 +1,32 @@
-// This is the main file for the mapping, and sensor information
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: new_mapping.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: new_mapping.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>// This is the main file for the mapping, and sensor information
 const data_values = [];
 var items = [];
 var date = new Date();
@@ -75,9 +103,9 @@ function fractionalreducer(numerator, denominator) {
 
 function human_display(people, infected,  id, preface) {
     if (preface == null) {
-        preface = "<p></p>"
+        preface = "&lt;p>&lt;/p>"
     } else {
-        preface = "<p>" + preface + "</p>"
+        preface = "&lt;p>" + preface + "&lt;/p>"
     }
 
     $(id).empty()
@@ -88,11 +116,11 @@ function human_display(people, infected,  id, preface) {
 
     //healthy = fractions[0]
     //infected = fractions[1]
-    $(id).append("<p> Out of " + String(people) + " people, " + String(infected) + " would sadly lose their lives due to pollution.")
+    $(id).append("&lt;p> Out of " + String(people) + " people, " + String(infected) + " would sadly lose their lives due to pollution.")
 
-    for (var i = 0; i < (people-infected); i++) {
+    for (var i = 0; i &lt; (people-infected); i++) {
         $(id).append(`
-            <svg
+            &lt;svg
                 id="healthy_person"
                 class="bi bi - person - fill"
                 width="2em"
@@ -101,17 +129,17 @@ function human_display(people, infected,  id, preface) {
                 fill="currentColor"
                 xmlns="http://www.w3.org/2000/svg"
             >
-                <path
+                &lt;path
                     fill-rule="evenodd"
                     d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"
                 />
-            </svg >
+            &lt;/svg >
         `)
     }
     
-    for (i = 0; i < infected; i++) {
+    for (i = 0; i &lt; infected; i++) {
         $(id).append(`
-            <svg
+            &lt;svg
                 id="infected_person"
                 class="hvr-pulse-shrink"
                 width="2em"
@@ -120,11 +148,11 @@ function human_display(people, infected,  id, preface) {
                 fill="red"
                 xmlns="http://www.w3.org/2000/svg"
             >
-                <path
+                &lt;path
                     fill-rule="evenodd"
                     d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"
                 />
-            </svg >
+            &lt;/svg >
         `)
     }
     
@@ -160,23 +188,23 @@ function linkExist(id) {
 
 // Function that returns different phrase based on pollution 
 function colorForPollutionPhrase(pm10, pm2) {
-    if (pm10 >= 20 && pm10 < 30 || pm2 >= 10 && pm2 < 15) {
+    if (pm10 >= 20 &amp;&amp; pm10 &lt; 30 || pm2 >= 10 &amp;&amp; pm2 &lt; 15) {
         return "The pollution levels are just above WHO guidelines for safe pollution, and can lead to long term health issues"
     }
-    else if (pm10 >= 30 && pm10 < 50 || pm2 >= 15 && pm2 < 25) {
+    else if (pm10 >= 30 &amp;&amp; pm10 &lt; 50 || pm2 >= 15 &amp;&amp; pm2 &lt; 25) {
         return "The pollution levels are above WHO guidelines for safe pollution, and can lead to long term health issues"
     }
-    else if (pm10 >= 50 && pm10 < 70 || pm2 >= 25 && pm2 < 35) {
+    else if (pm10 >= 50 &amp;&amp; pm10 &lt; 70 || pm2 >= 25 &amp;&amp; pm2 &lt; 35) {
         return "The pollution levels are above WHO guidelines for safe pollution, and can lead to long term health issues"
     }
-    else if (pm10 >= 70 && pm10 < 100 || pm2 >= 35 && pm2 < 50) {
+    else if (pm10 >= 70 &amp;&amp; pm10 &lt; 100 || pm2 >= 35 &amp;&amp; pm2 &lt; 50) {
         return "The pollution levels are above WHO guidelines for safe pollution, and can lead to long term health issues"
     }
-    else if (pm10 >= 100 && pm10 < 150 || pm2 >= 50 && pm2 < 75) {
-        return "The pollution levels are dangerously above WHO guidelines for safe pollution, and can lead to long <b> and </b> short term health issues"
+    else if (pm10 >= 100 &amp;&amp; pm10 &lt; 150 || pm2 >= 50 &amp;&amp; pm2 &lt; 75) {
+        return "The pollution levels are dangerously above WHO guidelines for safe pollution, and can lead to long &lt;b> and &lt;/b> short term health issues"
     }
     else if (pm10 >= 150 || pm2 >= 75) {
-        return "The pollution levels are <b> dangerously </b> above WHO guidelines for safe pollution, and can lead to long and short term health issues"
+        return "The pollution levels are &lt;b> dangerously &lt;/b> above WHO guidelines for safe pollution, and can lead to long and short term health issues"
     }
     else {
         return "The pollution levels are currently within WHO guidelines!"
@@ -188,19 +216,19 @@ function colorForPollutionPhrase(pm10, pm2) {
 * Function that returns different colours based on pollution
 */ 
 function colorForPollution(pm10, pm2) {
-    if (pm10 >= 20 && pm10 < 30 || pm2 >= 10 && pm2 < 15) {
+    if (pm10 >= 20 &amp;&amp; pm10 &lt; 30 || pm2 >= 10 &amp;&amp; pm2 &lt; 15) {
         return light
     }
-    else if (pm10 >= 30 && pm10 < 50 || pm2 >= 15 && pm2 < 25) {
+    else if (pm10 >= 30 &amp;&amp; pm10 &lt; 50 || pm2 >= 15 &amp;&amp; pm2 &lt; 25) {
         return medium
     }
-    else if (pm10 >= 50 && pm10 < 70 || pm2 >= 25 && pm2 < 35) {
+    else if (pm10 >= 50 &amp;&amp; pm10 &lt; 70 || pm2 >= 25 &amp;&amp; pm2 &lt; 35) {
         return high
     }
-    else if (pm10 >= 70 && pm10 < 100 || pm2 >= 35 && pm2 < 50) {
+    else if (pm10 >= 70 &amp;&amp; pm10 &lt; 100 || pm2 >= 35 &amp;&amp; pm2 &lt; 50) {
         return veryhigh
     }
-    else if (pm10 >= 100 && pm10 < 150 || pm2 >= 50 && pm2 < 75) {
+    else if (pm10 >= 100 &amp;&amp; pm10 &lt; 150 || pm2 >= 50 &amp;&amp; pm2 &lt; 75) {
         return danger
     }
     else if (pm10 >= 150 || pm2 >= 75) {
@@ -218,11 +246,11 @@ function build_link_from_date(date) {
     year = date.getFullYear();
     month = date.getMonth() + 1;
 
-    if (month < 10) {
+    if (month &lt; 10) {
         month = "0" + month
     }
     day = date.getDate();
-    if (day < 10) {
+    if (day &lt; 10) {
         day = "0" + day
     }
     link = "http://archive.sensor.community/" + year + "-" + month + "-" + day + "/" + year + "-" + month + "-" + day + "_" + "sds011_sensor_" + sensor_id + ".csv"
@@ -231,7 +259,7 @@ function build_link_from_date(date) {
 }
 
 function currentWeatherDisplay() {
-    const weatherDataURL = "https://api.weather.com/v3/wx/forecast/hourly/2day?geocode=53.383331%2C-1.466667&format=json&units=e&language=en-US&apiKey=" + config.WEATHER_COMPANY_KEY
+    const weatherDataURL = "https://api.weather.com/v3/wx/forecast/hourly/2day?geocode=53.383331%2C-1.466667&amp;format=json&amp;units=e&amp;language=en-US&amp;apiKey=" + config.WEATHER_COMPANY_KEY
     $.get(weatherDataURL,
     function(weatherData){
         const currentTemp = weatherData.temperature[0];
@@ -247,7 +275,7 @@ function currentWeatherDisplay() {
 
 function currentAirQualityDisplay() {
     // get air quality data from weather company API
-    const airQualityURL = "https://api.weather.com/v3/wx/globalAirQuality?geocode=53.383331,-1.466667&language=en-US&scale=DAQI&format=json&apiKey=" + config.WEATHER_COMPANY_KEY
+    const airQualityURL = "https://api.weather.com/v3/wx/globalAirQuality?geocode=53.383331,-1.466667&amp;language=en-US&amp;scale=DAQI&amp;format=json&amp;apiKey=" + config.WEATHER_COMPANY_KEY
     $.get(airQualityURL,
     function(airQuality){
         const currentAQI = airQuality.globalairquality.airQualityIndex;
@@ -256,7 +284,7 @@ function currentAirQualityDisplay() {
 
         // Set values for HTML attributes
         $('#aqi-header').html("Air Quality Index Average")
-        $('#currentAQI').html(`<b><strong>${currentAQI}</strong></b>`);
+        $('#currentAQI').html(`&lt;b>&lt;strong>${currentAQI}&lt;/strong>&lt;/b>`);
         $('#currentCategory').html(currentCategory + ': ' + currentMessage);
 
         // Set up gauge for AQI
@@ -312,7 +340,7 @@ $(document).ready(() => {
             }
             
             // Compile the indicators first
-            for (var currentCount = 1; currentCount < images.length; ++currentCount) {
+            for (var currentCount = 1; currentCount &lt; images.length; ++currentCount) {
                 var listItemNode = document.createElement("LI")
                 listItemNode.setAttribute("data-target", "#pythongraphslideshow")
                 listItemNode.setAttribute("data-slide-to", currentCount)
@@ -330,19 +358,19 @@ $(document).ready(() => {
                 if (!activeImage) {
                     $(`#carosuel_items`).append(
                         `
-                        <div class="carousel-item active">
-                            <a 
+                        &lt;div class="carousel-item active">
+                            &lt;a 
                                 target="_blank"
                                 href="${image}"
                             >
-                                <img
+                                &lt;img
                                     src="${image}"
                                     alt="${altText}"
                                     width="100%"
                                     height="100%"
                                 >
-                            </a>
-                        </div>
+                            &lt;/a>
+                        &lt;/div>
                         `
                     )
                     activeImage = true
@@ -352,19 +380,19 @@ $(document).ready(() => {
                     // Use a counter to make each class unique
                     $(`#carosuel_items`).append(
                         `
-                        <div class="carousel-item ${imageCount}">
-                            <a 
+                        &lt;div class="carousel-item ${imageCount}">
+                            &lt;a 
                                 target="_blank"
                                 href="${image}"
                             >
-                                <img
+                                &lt;img
                                     src="${image}"
                                     alt="${altText}"
                                     width="100%"
                                     height="100%"
                                 >
-                            </a>
-                        </div>
+                            &lt;/a>
+                        &lt;/div>
                         `
                     )
                     imageCount++
@@ -515,19 +543,19 @@ $(document).ready(() => {
     })
 
     function iconForPollution(pm10, pm2) {
-        if (pm10 >= 20 && pm10 < 30 || pm2 >= 10 && pm2 < 15) {
+        if (pm10 >= 20 &amp;&amp; pm10 &lt; 30 || pm2 >= 10 &amp;&amp; pm2 &lt; 15) {
             return lightPollutionIcon
         }
-        else if (pm10 >= 30 && pm10 < 50 || pm2 >= 15 && pm2 < 25) {
+        else if (pm10 >= 30 &amp;&amp; pm10 &lt; 50 || pm2 >= 15 &amp;&amp; pm2 &lt; 25) {
             return mediumPollutionIcon
         }
-        else if (pm10 >= 50 && pm10 < 70 || pm2 >= 25 && pm2 < 35) {
+        else if (pm10 >= 50 &amp;&amp; pm10 &lt; 70 || pm2 >= 25 &amp;&amp; pm2 &lt; 35) {
             return upperMedPollutionIcon
         }
-        else if (pm10 >= 70 && pm10 < 100 || pm2 >= 35 && pm2 < 50) {
+        else if (pm10 >= 70 &amp;&amp; pm10 &lt; 100 || pm2 >= 35 &amp;&amp; pm2 &lt; 50) {
             return highPollutionIcon
         }
-        else if (pm10 >= 100 && pm10 < 150 || pm2 >= 50 && pm2 < 75) {
+        else if (pm10 >= 100 &amp;&amp; pm10 &lt; 150 || pm2 >= 50 &amp;&amp; pm2 &lt; 75) {
             return veryHighPollutionIcon
         }
         else if (pm10 >= 150 || pm2 >= 75) {
@@ -549,7 +577,7 @@ $(document).ready(() => {
     }
 
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-        attribution: 'Sensor Data <a href="https://luftdaten.info/en/home-en/">Luftdaten</a> | Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        attribution: 'Sensor Data &lt;a href="https://luftdaten.info/en/home-en/">Luftdaten&lt;/a> | Map data &amp;copy; &lt;a href="https://www.openstreetmap.org/">OpenStreetMap&lt;/a> contributors, &lt;a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA&lt;/a>, Imagery © &lt;a href="https://www.mapbox.com/">Mapbox&lt;/a>',
         maxZoom: 18,
         id: 'mapbox.streets',
         accessToken: config.MAP_KEY
@@ -688,10 +716,10 @@ $(document).ready(() => {
         if (data.length == 0) {
             alert("Sorry, the data wasn't found!")
         } else {
-            for (j = 1; j < data.length; j++) {
+            for (j = 1; j &lt; data.length; j++) {
                 console.log(data[j])
                 new_data = data[j]
-                for (i = 1; i < new_data.length; i++) {
+                for (i = 1; i &lt; new_data.length; i++) {
                     date = new Date(new_data[i]['timestamp'])
                     pm2 = { x: date, y: parseFloat(new_data[i]['P2']) }
                     pm10 = { x: date, y: parseFloat(new_data[i]['P1']) }
@@ -721,7 +749,7 @@ $(document).ready(() => {
         if (data.length == 0) {
             alert("Sorry, the data wasn't found!")
         } else {
-            for (i = 1; i < data.length; i++) {
+            for (i = 1; i &lt; data.length; i++) {
                 date = new Date(data[i]['timestamp'])
                 pm2 = { x: date, y: parseFloat(data[i]['P2']) }
                 pm10 = { x: date, y: parseFloat(data[i]['P1']) }
@@ -749,7 +777,7 @@ $(document).ready(() => {
         var totalpm10 = 0
         console.log("Let's ty this again")
         $.each(data, function (key, val) {
-            if ((val.location.longitude > -1.58) && (val.location.longitude < -1.34) && (val.location.latitude <= 53.468) && (val.location.latitude >= 53.29)) {
+            if ((val.location.longitude > -1.58) &amp;&amp; (val.location.longitude &lt; -1.34) &amp;&amp; (val.location.latitude &lt;= 53.468) &amp;&amp; (val.location.latitude >= 53.29)) {
                 console.log("Found one in the correct location")
 
                 if (val.sensordatavalues[0].value_type == "P1") {
@@ -764,7 +792,7 @@ $(document).ready(() => {
         average_pm10 = Math.round((totalpm10 / counter))
 
         var currentpm10Colour = colorForPollution(average_pm10, 0)
-        $('#pm10averagetotal').html(`<u><strong>${average_pm10}</strong></u>`)
+        $('#pm10averagetotal').html(`&lt;u>&lt;strong>${average_pm10}&lt;/strong>&lt;/u>`)
         $('#pm10averagetotal').css("color", currentpm10Colour)
 
         $('#pm10averageheader').html("PM10 Average")
@@ -775,7 +803,7 @@ $(document).ready(() => {
         average_pm2 = Math.round((totalpm2 / counter))
 
         var currentpm2Colour = colorForPollution(0, average_pm2)
-        $('#pm2averagetotal').html(`<u><strong>${average_pm2}</strong></u>`)
+        $('#pm2averagetotal').html(`&lt;u>&lt;strong>${average_pm2}&lt;/strong>&lt;/u>`)
         $('#pm2averagetotal').css("color", currentpm2Colour)
 
         $('#pm2averageheader').html("PM2.5 Average")
@@ -791,7 +819,7 @@ $(document).ready(() => {
         $('#input[name="dates"]').daterangepicker();
 
         var circles = []
-        for (var i = 0; i < items.length; i++) {
+        for (var i = 0; i &lt; items.length; i++) {
             var pm10 = parseFloat(items[i][3])
             var pm2  = parseFloat(items[i][4])
             var color = colorForPollution(items[i][3], items[i][4])
@@ -817,13 +845,13 @@ $(document).ready(() => {
 
         }
 
-        for (var i = 0; i < circles.length; i++) {
+        for (var i = 0; i &lt; circles.length; i++) {
             var colorPM10 = colorForPollution(parseFloat(items[i][3]), 0)
             var colorPM2 = colorForPollution(0, parseFloat(items[i][4]))
-            var iconPM10 = '<svg class="bi bi-heart-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="'+colorPM10+'" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" /> </svg>'
-            var iconPM2 = '<svg class="bi bi-heart-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="'+colorPM2+'" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" /> </svg>'
+            var iconPM10 = '&lt;svg class="bi bi-heart-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="'+colorPM10+'" xmlns="http://www.w3.org/2000/svg">&lt;path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" /> &lt;/svg>'
+            var iconPM2 = '&lt;svg class="bi bi-heart-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="'+colorPM2+'" xmlns="http://www.w3.org/2000/svg">&lt;path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" /> &lt;/svg>'
 
-            circles[i].bindPopup("<h4><b>Past 24 Hour Average</b></h4><h4>pm10: " + items[i][3] + " " + iconPM10 + "</h4><p>" + colorForPollutionPhrase(parseFloat(items[i][3]), 0) + "</p><h4>pm2.5: " + items[i][4] + " " + iconPM2+ "</h4><p>" + colorForPollutionPhrase(0,parseFloat(items[i][4]))+ "</p><br> <button class='btn btn-primary' type='button' data-toggle='modal' data-target='#exampleModal'>Get Detailed Information And Statistics</button>");
+            circles[i].bindPopup("&lt;h4>&lt;b>Past 24 Hour Average&lt;/b>&lt;/h4>&lt;h4>pm10: " + items[i][3] + " " + iconPM10 + "&lt;/h4>&lt;p>" + colorForPollutionPhrase(parseFloat(items[i][3]), 0) + "&lt;/p>&lt;h4>pm2.5: " + items[i][4] + " " + iconPM2+ "&lt;/h4>&lt;p>" + colorForPollutionPhrase(0,parseFloat(items[i][4]))+ "&lt;/p>&lt;br> &lt;button class='btn btn-primary' type='button' data-toggle='modal' data-target='#exampleModal'>Get Detailed Information And Statistics&lt;/button>");
             data_values.push([items[i][0], items[i][1]]);
             circles[i].on('click', function (event) {
                 //link = build_link_from_date(chosen_date, sensor_id)
@@ -836,3 +864,26 @@ $(document).ready(() => {
     });
     
 });
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#dangerBasedOnPM">dangerBasedOnPM</a></li><li><a href="global.html#fractionalreducer">fractionalreducer</a></li><li><a href="global.html#mortality">mortality</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Wed Jul 22 2020 14:09:03 GMT+0100 (British Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
