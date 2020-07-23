@@ -48,16 +48,22 @@ function dangerBasedOnPM(PM10, PM2, people, id) {
  */
 function mortality(PM10, PM2, people, id, preface) {
     console.log("Entering Mortality")
-    console.log(PM10);
-    console.log(PM2);
     var validPM10 = 20
     var validPM2 = 15
     var PM10inc = (PM10 - validPM10) / 10
     var PM2inc = (PM2 - validPM2) / 10
-    var percentageMortalityPM2 = 2.8 * PM2inc
-    var percentageMortalityPM10 = 0.58 * PM10inc
-    var mortalityOnPeoplePM2 = people * (percentageMortalityPM2 * 0.01)
-    var mortalityOnPeoplePM10 = people * (percentageMortalityPM10 * 0.01)
+    if ( PM10inc <= 0 ) {
+        var mortalityOnPeoplePM10 = 0
+    } else {
+        var percentageMortalityPM10 = 0.58 * PM10inc
+        var mortalityOnPeoplePM10 = people * (percentageMortalityPM10 * 0.01)
+    }
+    if (PM2inc <= 0 ) {
+        var mortalityOnPeoplePM2 = 0
+    } else {
+        var percentageMortalityPM2 = 2.8 * PM2inc
+        var mortalityOnPeoplePM2 = people * (percentageMortalityPM2 * 0.01)
+    }
     human_display(people, mortalityOnPeoplePM10 + mortalityOnPeoplePM2, id, preface)
 }
 
