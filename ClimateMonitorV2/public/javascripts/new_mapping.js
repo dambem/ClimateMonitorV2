@@ -353,7 +353,7 @@ $(document).ready(() => {
             }
 
             // Populate the carosuel
-            var altText = "Graph unavailble. Please check your GITHUB_API_TOKEN"
+            var altText = "Graph unavailable. Please check your GITHUB_API_TOKEN"
             var activeImage = false
             var imageCount = 0
 
@@ -455,7 +455,6 @@ $(document).ready(() => {
 
     // Create the pollution chart 
     var ctx = document.getElementById("pollutionChart").getContext('2d');
-
 
     var pollutionGuidelinesChart = new Chart(ctx, {
         type: 'bar',
