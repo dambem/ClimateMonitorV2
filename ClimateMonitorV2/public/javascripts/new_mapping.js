@@ -266,7 +266,6 @@ function currentAirQualityDisplay() {
         $('#aqi-header').html("Air Quality Index Average")
         $('#currentAQI').html(`<b><strong>${currentAQI}</strong></b>`);
         $('#currentCategory').html(currentCategory + ': ' + currentMessage);
-        console.log(airQuality);
 
         // Set up gauge for AQI
         var powerGauge = gauge("#power-gauge", {
@@ -307,10 +306,8 @@ function currentAirQualityDisplay() {
         $('#pm2averageheader').css("color", currentpm2Colour)
         $('#pm2averagedesc').html(colorForPollutionPhrase(0, average_pm2))
 
-        console.log("Here");
         // appends danger_level div with certain human displays
         mortality(average_pm10, average_pm2, 500, "#mortality_pm10", "The current PM10 value is expected to cause the following increases in mortality over an average of 1000 people")
-        console.log("here again");
         dangerBasedOnPM(average_pm10, average_pm2, 100)
     });
 }
@@ -780,8 +777,6 @@ $(document).ready(() => {
 
     var json = $.getJSON('https://data.sensor.community/static/v2/data.1h.json', function (data) {
         var counter = 0
-        var totalpm2 = 0
-        var totalpm10 = 0
         console.log("Let's ty this again")
         $.each(data, function (key, val) {
             if ((val.location.longitude > -1.58) && (val.location.longitude < -1.34) && (val.location.latitude <= 53.468) && (val.location.latitude >= 53.29)) {
@@ -789,8 +784,6 @@ $(document).ready(() => {
 
                 if (val.sensordatavalues[0].value_type == "P1") {
                     counter++;
-                    totalpm10 += parseFloat(val.sensordatavalues[0].value)
-                    totalpm2 += parseFloat(val.sensordatavalues[1].value)
                     items.push([key, val.location.latitude, val.location.longitude, val.sensordatavalues[0].value, val.sensordatavalues[1].value, val.sensor.id, val.sensor.sensor_type.name]);
                 }
             }
