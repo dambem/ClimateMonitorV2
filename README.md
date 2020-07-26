@@ -53,11 +53,13 @@ If you can, you're all setup! Inform the approver that all looks well and they w
 ```
 git fetch
 git checkout <requesters-branchname>
+git pull origin <requesters-branchname>
 gpg --homedir=.blackbox --list-keys   # Assuming that you're in the root directory of the repository
 ```
 2. Import the keychain into your personal keychain and re-encrypt
 ```
-gpg --import .blackbox/pubring.kbx    # OR gpg --import .blackbox/pubring.gpg if that doesn't work
+gpg --import .blackbox/pubring.kbx    
+# OR gpg --no-default-keyring --keyring .blackbox/pubring.kbx  --export -a | gpg --import if that doesn't work
 blackbox_update_all_files
 ```
 3. Push the re-encrypted files back to the requester
