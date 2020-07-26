@@ -1,0 +1,154 @@
+extends layout
+
+block content
+    head
+    script(src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js", integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==", crossorigin="")
+    script(src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js')
+    link(href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet')
+
+    link(rel='stylesheet' href='https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css')
+
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.min.js")
+    script(src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8")
+    script(src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@0.7.7")
+
+    style
+        include stylesheets/style.css
+
+    body
+        div(class="sidebar")
+            div(class="sidebar-header")
+                a(href="https://github.com/dambem/ClimateMonitorV2", id="sheffsenseImageHolder", target="_blank")
+                    img(class="img-fluid", id="sheffsenseImage", src="sheffsense.png", alt="The Sheffsense logo: A colourful mosaic circle on a blurred landscape background")
+            a(class="nav-link" href="/") Home
+            a(class="nav-link" href="/about") About
+            a(class="nav-link" href="/detailedstats") Detailed Statistics
+            a(class="nav-link-active" href="/our-team") Our Team
+            div(class="sidebar-footer")
+                a(href="https://urbanflows.ac.uk/" target="_blank")
+                    img(class="img-fluid", id="urbanflowsimage", src="images/urbanlogo.png", alt="The Urban Flows logo: A ring of navy, lilac & green dots interlaced with a star made of purple dots")
+
+        div(id='the-team')
+        section.our-webcoderskull.padding-lg
+          .container
+            .row.heading.heading-icon
+              h2 Our Team
+            ul.row
+              li.col-12.col-md-6.col-lg-3
+                .cnt-block.equal-hight(style='height: 349px;')
+                  figure
+                    img.img-responsive(src='images/akshat.png' alt='')
+                  h3
+                    a Akshat Shah
+                  p Web Designer &amp; Documentation
+                  ul.follow-us.clearfix
+                    li
+                      a(href='https://github.com/au-shah')
+                        i.fa.fa-github(aria-hidden='true')
+                    li
+                      a(href='https://www.linkedin.com/in/akshatshah09/')
+                        i.fa.fa-linkedin(aria-hidden='true')
+              li.col-12.col-md-6.col-lg-3
+                .cnt-block.equal-hight(style='height: 349px;')
+                  figure
+                    img.img-responsive(src='images/alvaro.png' alt='')
+                  h3
+                    a Alvaro Rausell 
+                  p LEAP Motion Developer
+                  ul.follow-us.clearfix
+                    li
+                      a(href='https://github.com/AlvaroRausell')
+                        i.fa.fa-github(aria-hidden='true')
+                    li
+                      a(href='https://www.linkedin.com/in/alvarorausell/')
+                        i.fa.fa-linkedin(aria-hidden='true')
+              li.col-12.col-md-6.col-lg-3
+                .cnt-block.equal-hight(style='height: 349px;')
+                  figure
+                    img.img-responsive(src='images/damian.png' alt='')
+                  h3
+                    a Damian Bemben
+                  p Organiser &amp; POC
+                  ul.follow-us.clearfix
+                    li
+                      a(href='https://github.com/dambem')
+                        i.fa.fa-github(aria-hidden='true')
+                    li
+                      a(href='https://www.linkedin.com/in/damian-b-737951102/')
+                        i.fa.fa-linkedin(aria-hidden='true')
+              li.col-12.col-md-6.col-lg-3
+                .cnt-block.equal-hight(style='height: 349px;')
+                  figure
+                    img.img-responsive(src='images/harley.png' alt='')
+                  h3
+                    a Harley Everett
+                  p Tester &amp; Developer
+                  ul.follow-us.clearfix
+                    li
+                      a(href='https://github.com/Heverett94')
+                        i.fa.fa-github(aria-hidden='true')
+                    li
+                      a(href='https://www.linkedin.com/in/harley-e/')
+                        i.fa.fa-linkedin(aria-hidden='true')
+            ul.row
+              li.col-12.col-md-6.col-lg-3
+                .cnt-block.equal-hight(style='height: 349px;')
+                  figure
+                    img.img-responsive(src='images/jonah.png' alt='')
+                  h3
+                    a Jonah Luckett
+                  p Design
+                  ul.follow-us.clearfix
+                    li
+                      a(href='https://github.com/JonahIBM')
+                        i.fa.fa-github(aria-hidden='true')
+                    li
+                      a(href='https://www.linkedin.com/in/jonah-luckett/')
+                        i.fa.fa-linkedin(aria-hidden='true')
+              li.col-12.col-md-6.col-lg-3
+                .cnt-block.equal-hight(style='height: 349px;')
+                  figure
+                    img.img-responsive(src='images/megan.png' alt='')
+                  h3
+                    a Megan Wright
+                  p Front/Backend Developer
+                  ul.follow-us.clearfix
+                    li
+                      a(href='https://github.com/Megan-Wright')
+                        i.fa.fa-github(aria-hidden='true')
+                    li
+                      a(href='https://www.linkedin.com/in/megan-wright-4a9215181/')
+                        i.fa.fa-linkedin(aria-hidden='true')
+              li.col-12.col-md-6.col-lg-3
+                .cnt-block.equal-hight(style='height: 349px;')
+                  figure
+                    img.img-responsive(src='images/morgan.png' alt='')
+                  h3
+                    a Morgan Davies
+                  p Web Designer &amp; Developer
+                  ul.follow-us.clearfix
+                    li
+                      a(href='https://github.com/M-Davies')
+                        i.fa.fa-github(aria-hidden='true')
+                    li
+                      a(href='https://www.linkedin.com/in/morgan-davies-482428152/')
+                        i.fa.fa-linkedin(aria-hidden='true')
+              li.col-12.col-md-6.col-lg-3
+                .cnt-block.equal-hight(style='height: 349px;')
+                  figure
+                    img.img-responsive(src='http://www.webcoderskull.com/img/team4.png' alt='')
+                  h3
+                    a(href='http://www.webcoderskull.com/') Web coder skull
+                  p Freelance Web Developer
+                  ul.follow-us.clearfix
+                    li
+                      a(href='#')
+                        i.fa.fa-facebook(aria-hidden='true')
+                    li
+                      a(href='#')
+                        i.fa.fa-twitter(aria-hidden='true')
+                    li
+                      a(href='#')
+                        i.fa.fa-linkedin(aria-hidden='true')
+        
+    footer

@@ -20,6 +20,9 @@ router.get('/about', function (req, res) {
 router.get('/detailedstats', function (req, res) {
     res.render('detailedstats', { title: 'SheffSenseV2: Detailed Statistics' });
 });
+router.get('/our-team', function (req, res) {
+    res.render('our-team', { title: 'Our team' });
+});
 router.get('/local', function (req, res) {
     res.render('index', { title: "Parsing Some Local Data" })
 });
