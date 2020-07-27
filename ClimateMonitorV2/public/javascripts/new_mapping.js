@@ -780,14 +780,12 @@ $(document).ready(() => {
         findDates(sensor_id)
     });
 
-    var json = $.getJSON('https://data.sensor.community/static/v2/data.1h.json', function (data) {
+    var json = $.getJSON('http://data.sensor.community/static/v2/data.1h.json', function (data) {
         var counter = 0
-        console.log("Let's ty this again")
         $.each(data, function (key, val) {
             if ((val.location.longitude > -1.58) && (val.location.longitude < -1.34) && (val.location.latitude <= 53.468) && (val.location.latitude >= 53.29)) {
-                console.log("Found one in the correct location")
-
-                if (val.sensordatavalues[0].value_type == "P1") {
+                console.log(val)
+                if (val.sensordatavalues[0].value_type == "P1" && val.sensordatavalues.length > 1) {
                     counter++;
                     items.push([key, val.location.latitude, val.location.longitude, val.sensordatavalues[0].value, val.sensordatavalues[1].value, val.sensor.id, val.sensor.sensor_type.name]);
                 }
