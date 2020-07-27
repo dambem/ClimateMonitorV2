@@ -20,6 +20,7 @@ var cigarette_svg = "<img src='images/cigarette3.svg' style='height:100px;max-wi
 var average_pm10
 var $body
 import gauge from "./gauge.js"
+import addressValues from "./addressValues.js"
 
 /**
  * Currently inactive function to calculate percentage danger based on PM2/PM10 (different than mortality as this is respiratory disease)
@@ -350,6 +351,17 @@ function currentAirQualityDisplay() {
     });
 }
 
+function heatMapDisplay(addressValues) {
+    addressValues.forEach(value => {
+        const airQualityURL = "https://api.weather.com/v3/wx/globalAirQuality?geocode=" + value[0] + "," + value[1] + "&language=en-US&scale=DAQI&format=json&apiKey=" + config.WEATHER_COMPANY_KEY
+        $.get(airQualityURL,
+        function(airQuality) {
+            value[2] = airQuality.globalairquality.pollutants.PM10.amount;
+        }); 
+    });
+    return addressValues;
+}
+
 // Everything required once loaded
 $(document).ready(() => {
     // Activate Carousel
@@ -454,8 +466,8 @@ $(document).ready(() => {
     var pm2Chart = document.getElementById('pm2Chart').getContext('2d');
     var pm10Chart = document.getElementById('pm10Chart').getContext('2d');
     // Currently not in use, date range picker for graphs
-   
 
+   
     var scatterChartPM2 = new Chart(pm2Chart, {
         type: 'scatter',
         data: {
@@ -525,6 +537,23 @@ $(document).ready(() => {
             position: 'topleft'
         }
     })
+
+    var newAddressValues = heatMapDisplay(addressValues);
+    console.log(newAddressValues);
+
+    var heat = L.heatLayer(newAddressValues).addTo(sensorMap);
+    // var draw = true;
+
+    // // add points on mouse move (except when interacting with the map)
+    // sensorMap.on({
+    //     movestart: function () { draw = false; },
+    //     moveend:   function () { draw = true; },
+    //     mousemove: function (e) {
+    //         if (draw) {
+    //             heat.addLatLng(e.latlng);
+    //         }
+    //     }
+    // })
 
     var noPollutionIcon = L.icon({
         iconUrl: 'markers/no_pollution.png',
