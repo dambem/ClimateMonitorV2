@@ -16,15 +16,6 @@ body {
     font-weight: bolder;
 }
 
-.nav-link {
-    font-weight: bold;
-}
-
-.nav-link-active {
-    font-weight: bold;
-    background-color: white;
-}
-
 /* Sidebar setup */
 .sidebar {
     font-family: 'Bellota Text', cursive;
@@ -44,16 +35,24 @@ body {
 }
   
 .sidebar a {
-    padding: 6px 8px 6px 16px;
+    padding-top: 2%;
+    padding-right: 3%;
+    padding-bottom: 5%;
+    padding-left: 20%;
     text-decoration: none;
     font-size: 16px;
     color: black;
-    display: block;
+    display: inline-block;
+    font-weight: bold;
 }
 
     .sidebar a:hover {
         color: #828282;
     }
+
+#urbanflowsimage {
+    margin-left: -10%;
+}
 
 #sheffsenseImageHolder {
     padding:0;
@@ -65,8 +64,17 @@ body {
 }
 
 .sidebar-icon {
-    padding-left: 10%;
-    vertical-align: center;
+    padding-top: 2%;
+    padding-left: 5%;
+    padding-bottom: 5%;
+}
+
+.sidebar > img, .sidebar > a {
+    display: inline-block;
+}
+
+.nav-link-active {
+    box-shadow: 3px 0px 3px teal;
 }
 
 .sidebar-footer{
@@ -219,6 +227,11 @@ div.card {
     border-radius: 5%;
     border-color: rgba(43, 43, 216, 0.438);
     box-shadow: 0px 0px 10px lightblue;
+}
+
+#accordionInfo {
+    margin-top: 2%;
+    margin-left: 4%;
 }
 
 /* CSS for the carousel indicators*/
