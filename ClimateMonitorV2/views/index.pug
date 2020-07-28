@@ -20,11 +20,18 @@ block content
             div(class="sidebar-header")
                 a(href="https://github.com/dambem/ClimateMonitorV2", id="sheffsenseImageHolder", target="_blank")
                     img(class="img-fluid", id="sheffsenseImage", src="sheffsense.png", alt="The Sheffsense logo: A colourful mosaic circle on a blurred landscape background")
-
-            a(class="nav-link-active" href="/") Home
-            a(class="nav-link" href="/about") About
-            a(class="nav-link" href="/detailedstats") Detailed Statistics
-            a(class="nav-link" href='/our-team') Our Team
+            div(class="sidebar-section-active")
+                img(class="sidebar-icon" src="https://img.icons8.com/ios/20/000000/home.png")
+                a(class="nav-link" href="/") Home
+            div(class="sidebar-section")
+                img(class="sidebar-icon" src="https://img.icons8.com/ios/20/000000/about.png")
+                a(class="nav-link" href="/about") About
+            div(class="sidebar-section")
+                img(class="sidebar-icon" src="https://img.icons8.com/ios/20/000000/statistics.png")
+                a(class="nav-link" href="/detailedstats") Statistics
+            div(class="sidebar-section")
+                img(class="sidebar-icon" src="https://img.icons8.com/ios/20/000000/statistics.png")
+                a(class="nav-link" href="/our-team") Our Team
             div(class="sidebar-footer")
                 a(href="https://urbanflows.ac.uk/" target="_blank")
                     img(class="img-fluid", id="urbanflowsimage", src="images/urbanlogo.png", alt="The Urban Flows logo: A ring of navy, lilac & green dots interlaced with a star made of purple dots")
@@ -72,23 +79,24 @@ block content
                             div(class="card-body")
                                 h3() PM10 and PM2.5 Pollution Guidelines
                                 div(class='pollutionChart')
-                                    canvas(id='pollutionChart', height='400')
+                                    canvas(id='pollutionChart' height="400")
+                        div(class="card")
+                            h2() Current Weather Conditions in Sheffield
+                            div(class="card-body")
+                                div(class='weatherTable')
+                                    table(style='width:100%', border='0')
+                                        tr
+                                            th Temperature
+                                            th Wind Speed
+                                            th Conditions
+                                        tr 
+                                            td(id="currentTemp")
+                                            td(id="currentWind")
+                                            td(id="currentCondition")
+                                                img(class="img-fluid", id="weather-image", src="../files/weather-icons/44.png", width='50px',alt="A forecast-style weather icon for the current weather conditions") 
                 div(class="col-md-8")
                     div(class="card")
-                        h2() Current Weather Conditions in Sheffield:
-                            div(class='weatherTable')
-                                table(style='width:100%', border='0')
-                                    tr
-                                        th Temperature
-                                        th Wind Speed
-                                        th Conditions
-                                    tr 
-                                        td(id="currentTemp")
-                                        td(id="currentWind")
-                                        td(id="currentCondition")
-                                            img(class="img-fluid", id="weather-image", src="../files/weather-icons/44.png", width='50px',alt="A forecast-style weather icon for the current weather conditions") 
-                    div(class="card")
-                        h2() Current Average Pollution Levels In Sheffield:
+                        h2() Current Average Pollution Levels In Sheffield
                             h4(id="pm10averageheader")
                                 h6(id="pm10averagetotal")
                                 p1(id="pm10averagedesc")
@@ -114,21 +122,21 @@ block content
                             div(class="col-md-12")
                                 br
                                 div(id="danger_level2")
-                div(class="col")
+                div(class="col", style="margin-left:2%;")
                     div(class="card")
                         div(class="card-title")
                             h2() Here are some nice graphs of daily and average readings of PM2.5 & PM10
                         div(class="card-body")
                             div(id="pythongraphslideshow" class="carousel slide" data-ride="carousel")
-                                ol(class="carousel-indicators" id="graph_carousel_indicators" style="background-color: darkviolet")
+                                ol(class="carousel-indicators" id="graph_carousel_indicators")
                                     li(data-target="#pythongraphslideshow" data-slide-to="0" class="active")
                                 div(class="carousel-inner")
                                     div(id="carosuel_items")
                                 a(class="carousel-control-prev" href="#pythongraphslideshow" role="button" data-slide="prev")
-                                    span(class="carousel-control-prev-icon" aria-hidden="true" style="background-color: blue")
+                                    span(class="carousel-control-prev-icon" aria-hidden="true")
                                     span(class="sr-only") Previous
                                 a(class="carousel-control-next" href="#pythongraphslideshow" role="button" data-slide="next")
-                                    span(class="carousel-control-next-icon" aria-hidden="true" style="background-color: blue")
+                                    span(class="carousel-control-next-icon" aria-hidden="true")
                                     span(class="sr-only") Next
         script(type='text/javascript' src='/javascripts/config.js')
         script(type='module', src='/javascripts/new_mapping.js')

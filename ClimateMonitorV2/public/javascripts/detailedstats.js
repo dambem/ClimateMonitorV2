@@ -1,41 +1,43 @@
 // Everything required once loaded
-/**
-* Multi_date_search, throws a call to the backend to search through multiple dates for sensor details given a sensor id.
-* @param {Date} fromDate - Average PM10 Value
-* @param {Date} toDate - Average PM2 Value
-* @param {int} sensorID - Amount of people this is for
-*/
-function multi_date_search(fromDate, toDate, sensorID) {
-    console.log("Going into multi-date-search")
-    $body = $("body");
 
-    jsonData = { from: fromDate, to: toDate, id: sensorID }
-    $.ajax({
-        url: '/fromto',
-        data: JSON.stringify(jsonData),
-        contentType: 'application/json',
-        type: 'POST',
-        success: function (dataR) {
-            var ret = dataR
-            console.log("Success Hit")
-            updateGraphMultiDay(ret)
-        },
-        complete: function (data, res) {
-            console.log("Complete Hit")
-            console.log(res)
-            $body.removeClass("loading");
-        },
-        error: function (xhr, status, error) {
-            console.log(error.message);
-        },
-        // shows the loader         
-        beforeSend: function () {
-            $body.addClass("loading");
-        },
 
-    })
-}
 $(document).ready(() => {
+    /**
+    * Multi_date_search, throws a call to the backend to search through multiple dates for sensor details given a sensor id.
+    * @param {Date} fromDate - Average PM10 Value
+    * @param {Date} toDate - Average PM2 Value
+    * @param {int} sensorID - Amount of people this is for
+    */
+    function multi_date_search(fromDate, toDate, sensorID) {
+        console.log("Going into multi-date-search")
+        $body = $("body");
+
+        jsonData = { from: fromDate, to: toDate, id: sensorID }
+        $.ajax({
+            url: '/fromto',
+            data: JSON.stringify(jsonData),
+            contentType: 'application/json',
+            type: 'POST',
+            success: function (dataR) {
+                var ret = dataR
+                console.log("Success Hit")
+                updateGraphMultiDay(ret)
+            },
+            complete: function (data, res) {
+                console.log("Complete Hit")
+                console.log(res)
+                $body.removeClass("loading");
+            },
+            error: function (xhr, status, error) {
+                console.log(error.message);
+            },
+            // shows the loader         
+            beforeSend: function () {
+                $body.addClass("loading");
+            },
+
+        })
+    }
     multi_date_search(new Date("2020-04-01"), new Date("2020-04-29"), 24239)
 
     function updateGraphMultiDay(data) {

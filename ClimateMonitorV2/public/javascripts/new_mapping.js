@@ -13,7 +13,11 @@ var danger = '#a20049'
 var bigdanger = '#1a0006'
 var safe = '#6699CC'
 var average_pm2
+var days_found
+var jsonData
+var circle_chosen
 var average_pm10
+var $body
 import gauge from "./gauge.js"
 /**
  * Currently inactive function to calculate percentage danger based on PM2/PM10 (different than mortality as this is respiratory disease)
@@ -223,17 +227,17 @@ function colorForPollution(pm10, pm2) {
 * This function builds the link to the sensor CSV given a certain date.
 */
 function build_link_from_date(date) {
-    year = date.getFullYear();
-    month = date.getMonth() + 1;
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
 
     if (month < 10) {
         month = "0" + month
     }
-    day = date.getDate();
+    var day = date.getDate();
     if (day < 10) {
         day = "0" + day
     }
-    link = "http://archive.sensor.community/" + year + "-" + month + "-" + day + "/" + year + "-" + month + "-" + day + "_" + "sds011_sensor_" + sensor_id + ".csv"
+    var link = "http://archive.sensor.community/" + year + "-" + month + "-" + day + "/" + year + "-" + month + "-" + day + "_" + "sds011_sensor_" + sensor_id + ".csv"
     console.log(link)
     return link
 }
@@ -314,7 +318,6 @@ function currentAirQualityDisplay() {
 
 // Everything required once loaded
 $(document).ready(() => {
-
     // Activate Carousel
     $('#pythongraphslideshow').carousel({ interval: 3000 });
 
@@ -353,7 +356,7 @@ $(document).ready(() => {
             }
 
             // Populate the carosuel
-            var altText = "Graph unavailble. Please check your GITHUB_API_TOKEN"
+            var altText = "Graph unavailable. Please check your GITHUB_API_TOKEN"
             var activeImage = false
             var imageCount = 0
 
@@ -455,7 +458,6 @@ $(document).ready(() => {
 
     // Create the pollution chart 
     var ctx = document.getElementById("pollutionChart").getContext('2d');
-
 
     var pollutionGuidelinesChart = new Chart(ctx, {
         type: 'bar',
@@ -610,7 +612,7 @@ $(document).ready(() => {
         singleMode: false,
         onSelect: function (date1, date2) {
             console.log(date1.getTime(), date2.getTime())
-            link = build_link_from_date(date1, sensor_id)
+            var link = build_link_from_date(date1, sensor_id)
             if (date1.getTime() == date2.getTime()) {
                 getData(link)
             } else {
@@ -622,8 +624,9 @@ $(document).ready(() => {
     var currentValidDates = []
     function findDates(id_chosen) {
         days_found = parseInt(document.getElementById("days").value)
-        jsonData = { id: id_chosen, days:days_found }
-        $body = $("body");
+        jsonData = { id: id_chosen, days: days_found }
+        console.log(jsonData)
+        $body = $("body")
 
         $.ajax({
             url: '/invaliddates',
@@ -649,14 +652,13 @@ $(document).ready(() => {
                 console.log(error.message)
             },
             // shows the loader         
-            beforeSend: function () { $body.addClass("loading"); },
-            complete: function () { $body.removeClass("loading"); },     
+            beforeSend: function () {  },
+            complete: function () {  },     
         })
     }
     
     function getData(dateSent, sensorID) {
         jsonData = {date:dateSent, id:sensorID}
-        $body = $("body");
         $.ajax({
             url: '/index',
             data: JSON.stringify(jsonData),
@@ -670,13 +672,13 @@ $(document).ready(() => {
             complete: function (data, res) {
                 console.log("Complete Hit")
                 console.log(res)
-                $body.removeClass("loading");
             },
             error: function (xhr, status, error) {
                 console.log(error.message);
             },
              // shows the loader         
-            beforeSend: function () { $body.addClass("loading");   },
+            beforeSend: function () { 
+            },
         })
     }
     function multi_date_search(fromDate, toDate, sensorID) {
@@ -709,7 +711,7 @@ $(document).ready(() => {
 
     function updateGraphMultiDay(data) {
         var i;
-        label2 = "PM2.5 Values"
+        var label2 = "PM2.5 Values"
         var pm2Data = []
         var pm10Data = []
         var pm2Color = []
@@ -720,13 +722,13 @@ $(document).ready(() => {
         if (data.length == 0) {
             alert("Sorry, the data wasn't found!")
         } else {
-            for (j = 1; j < data.length; j++) {
+            for (var j = 1; j < data.length; j++) {
                 console.log(data[j])
-                new_data = data[j]
+                var new_data = data[j]
                 for (i = 1; i < new_data.length; i++) {
-                    date = new Date(new_data[i]['timestamp'])
-                    pm2 = { x: date, y: parseFloat(new_data[i]['P2']) }
-                    pm10 = { x: date, y: parseFloat(new_data[i]['P1']) }
+                    var date = new Date(new_data[i]['timestamp'])
+                    var pm2 = { x: date, y: parseFloat(new_data[i]['P2']) }
+                    var pm10 = { x: date, y: parseFloat(new_data[i]['P1']) }
                     pm2Color.push('green')
                     pm10Color.push('red')
                     pm2Data.push(pm2)
@@ -753,10 +755,10 @@ $(document).ready(() => {
         if (data.length == 0) {
             alert("Sorry, the data wasn't found!")
         } else {
-            for (i = 1; i < data.length; i++) {
-                date = new Date(data[i]['timestamp'])
-                pm2 = { x: date, y: parseFloat(data[i]['P2']) }
-                pm10 = { x: date, y: parseFloat(data[i]['P1']) }
+            for (var i = 1; i < data.length; i++) {
+                var date = new Date(data[i]['timestamp'])
+                var pm2 = { x: date, y: parseFloat(data[i]['P2']) }
+                var pm10 = { x: date, y: parseFloat(data[i]['P1']) }
                 pm2Color.push('green')
                 pm10Color.push('red')
                 pm2Data.push(pm2)
@@ -775,14 +777,12 @@ $(document).ready(() => {
         findDates(sensor_id)
     });
 
-    var json = $.getJSON('https://data.sensor.community/static/v2/data.1h.json', function (data) {
+    var json = $.getJSON('http://data.sensor.community/static/v2/data.1h.json', function (data) {
         var counter = 0
-        console.log("Let's ty this again")
         $.each(data, function (key, val) {
             if ((val.location.longitude > -1.58) && (val.location.longitude < -1.34) && (val.location.latitude <= 53.468) && (val.location.latitude >= 53.29)) {
-                console.log("Found one in the correct location")
-
-                if (val.sensordatavalues[0].value_type == "P1") {
+                console.log(val)
+                if (val.sensordatavalues[0].value_type == "P1" && val.sensordatavalues.length > 1) {
                     counter++;
                     items.push([key, val.location.latitude, val.location.longitude, val.sensordatavalues[0].value, val.sensordatavalues[1].value, val.sensor.id, val.sensor.sensor_type.name]);
                 }
