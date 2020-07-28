@@ -31,6 +31,7 @@
     "http": "0.0.1-security",
     "jquery": "^3.5.1",
     "jquery-datepicker": "^1.12.3",
+    "jsdoc": "^3.6.4",
     "jsdom": "^16.2.2",
     "litepicker": "^1.5.7",
     "morgan": "^1.10.0",
