@@ -660,7 +660,6 @@ $(document).ready(() => {
     
     function getData(dateSent, sensorID) {
         jsonData = {date:dateSent, id:sensorID}
-        //$body = $("body");
         $.ajax({
             url: '/index',
             data: JSON.stringify(jsonData),
@@ -674,13 +673,12 @@ $(document).ready(() => {
             complete: function (data, res) {
                 console.log("Complete Hit")
                 console.log(res)
-                //$body.removeClass("loading");
             },
             error: function (xhr, status, error) {
                 console.log(error.message);
             },
              // shows the loader         
-            beforeSend: function () { //$body.addClass("loading");  
+            beforeSend: function () { 
             },
         })
     }

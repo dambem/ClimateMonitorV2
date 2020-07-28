@@ -1,13 +1,13 @@
 // Everything required once loaded
-/**
-* Multi_date_search, throws a call to the backend to search through multiple dates for sensor details given a sensor id.
-* @param {Date} fromDate - Average PM10 Value
-* @param {Date} toDate - Average PM2 Value
-* @param {int} sensorID - Amount of people this is for
-*/
+
 
 $(document).ready(() => {
-    multi_date_search(new Date("2020-04-01"), new Date("2020-04-29"), 24239)
+    /**
+    * Multi_date_search, throws a call to the backend to search through multiple dates for sensor details given a sensor id.
+    * @param {Date} fromDate - Average PM10 Value
+    * @param {Date} toDate - Average PM2 Value
+    * @param {int} sensorID - Amount of people this is for
+    */
     function multi_date_search(fromDate, toDate, sensorID) {
         console.log("Going into multi-date-search")
         $body = $("body");
@@ -38,6 +38,8 @@ $(document).ready(() => {
 
         })
     }
+    multi_date_search(new Date("2020-04-01"), new Date("2020-04-29"), 24239)
+
     function updateGraphMultiDay(data) {
         var i;
         label2 = "PM2.5 Values"
