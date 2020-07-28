@@ -246,12 +246,12 @@ div.card {
     cursor: pointer;
     border: none;
     border-radius: 80%;
-    background-color: blue;
-    margin-bottom: -10%;  
+    background-color: #532c77;
+    margin-bottom: -10%;
 }
 
 .carousel-indicators .active {
-    background-color: green;
+    background-color: #30b6ac;
 }
 
 /* CSS for the carousel arrows */
