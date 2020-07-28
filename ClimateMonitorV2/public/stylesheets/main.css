@@ -73,8 +73,8 @@ body {
     display: inline-block;
 }
 
-.nav-link-active {
-    box-shadow: 3px 0px 3px teal;
+.sidebar-section-active {
+    background-color: white;
 }
 
 .sidebar-footer{
