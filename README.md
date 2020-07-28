@@ -11,7 +11,7 @@ The majority of this repo is a bog-standard nodeJS express installation, however
 ## How can I help?
 We accept any contributors to this project, just contact Damian Bemben (dbemben1@sheffield.ac.uk) or, if you'd rather use our foundations, just make a fork and start working on it yourself! 
 ## Getting Started
-To get started, you will need access to the `ClimateMonitorV2/ClimateMonitorV2/public/javascripts/config.js` file. This contains our map box and weather company api keys which are not for prying eyes, hence we have encrypted them using StackExchanges [BlackBox](https://github.com/StackExchange/blackbox) Secret Management System. If the file isn't encrypted, the website will not work properly so to gain access to the keys, please follow these steps:
+To get started, you will need access to the `ClimateMonitorV2/ClimateMonitorV2/public/javascripts/config.js` file. This contains our map box and weather company api keys which are not for prying eyes, hence we have encrypted the file using StackExchanges [BlackBox](https://github.com/StackExchange/blackbox) Secret Management System. If the file isn't decrypted, the website will not work properly so to gain access to the keys, please follow these steps:
 
 *Steps to request access to blackbox*
 1. If you don't have one already, [generate a gpg key](https://docs.github.com/en/github/authenticating-to-github/generating-a-new-gpg-key). Ensure you use a keylength of at least 4096 bits and that the email you use to set it up is the same one you use to commit to this repository.
@@ -30,7 +30,9 @@ blackbox_addadmin tal@example.com
 ```
 When the command completes successfully, instructions on how to commit these changes will be output. Run the command as given to commit the changes. It will look like this:
 ```
-git add .blackbox/*
+git add .blackbox/blackbox-admins.txt
+git add .blackbox/pubring.kbx
+git add .blackbox/trustdb.gpg # If it exists, not necessarily needed
 git commit -m 'NEW ADMIN: tal@example.com'
 ```
 5. Push it to the repo
@@ -53,11 +55,13 @@ If you can, you're all setup! Inform the approver that all looks well and they w
 ```
 git fetch
 git checkout <requesters-branchname>
+git pull origin <requesters-branchname>
 gpg --homedir=.blackbox --list-keys   # Assuming that you're in the root directory of the repository
 ```
 2. Import the keychain into your personal keychain and re-encrypt
 ```
-gpg --import .blackbox/pubring.kbx    # OR gpg --import .blackbox/pubring.gpg if that doesn't work
+gpg --import .blackbox/pubring.kbx    
+# OR gpg --no-default-keyring --keyring .blackbox/pubring.kbx  --export -a | gpg --import if that doesn't work
 blackbox_update_all_files
 ```
 3. Push the re-encrypted files back to the requester
@@ -67,13 +71,13 @@ git push origin <requesters-branchname>
 ```
 4. Remind requester to do step 7 to verify they can encrypt/decrypt files
 
-Assuming you're now all setup with blackbox and have verified that you can encrypt/decrypt files, decrypt the `config.js` file:
+Assuming you're now all setup with blackbox and have verified that you can encrypt/decrypt files, decrypt the `config.js` file from the `ClimateMonitorV2/ClimateMonitorV2` directory:
 ```
 npm run decrypt
 ```
 Now the file should be in plaintext format, ready for you to make changes or run the website! 
 
-When you're done editing, encrypt the file again so it can't be read
+When you're done editing, encrypt the file again from the `ClimateMonitorV2/ClimateMonitorV2` directory so it can't be read
 **MAKE SURE YOU DO THIS BEFORE PUSHING ANY CHANGES YOU MAKE TO THE PUBLIC REPO!!!**
 ```
 npm run encrypt
