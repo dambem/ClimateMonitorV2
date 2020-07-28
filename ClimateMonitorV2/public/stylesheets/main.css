@@ -26,7 +26,7 @@ body {
     font-size: 1em;
     font-weight: bold;
     height: 100%;
-    width: 7%;
+    width: 8%;
     position: fixed;
     z-index: 1;
     top: 0;
@@ -44,7 +44,7 @@ body {
     padding-top: 2%;
     padding-right: 3%;
     padding-bottom: 5%;
-    padding-left: 20%;
+    padding-left: 10%;
     text-decoration: none;
     font-size: 16px;
     color: black;
@@ -57,11 +57,12 @@ body {
     }
 
 #urbanflowsimage {
-    margin-left: -10%;
+    position: center;
 }
 
 #sheffsenseImageHolder {
-    padding:0;
+    margin-top: 7%;
+    padding: 0;
 }
 
 .sidebar-header {
@@ -89,8 +90,12 @@ body {
     width: 100%;
     bottom: 0;
     list-style-type: none;
-    padding-bottom: 150px;
-    margin-bottom: -40%;
+    padding-bottom: 160px;
+    margin-bottom: -25%;
+}
+
+.icon {
+    font-size: 16px !important
 }
 
 @media screen and (max-height: 450px) {
@@ -100,11 +105,12 @@ body {
 
 /* CSS for the mapbox itself */
 #mapid {
+    border-radius: 10px;
     height: 450px;
-    margin-top: -0.5%;
+    margin-top: 1%;
     margin-bottom: 1%;
-    margin-left: -2%;
-    margin-right: -2%;
+    margin-left: 0.3%;
+    margin-right: -0.1%;
     box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
 }
 
