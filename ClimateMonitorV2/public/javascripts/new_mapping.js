@@ -16,6 +16,7 @@ var average_pm2
 var days_found
 var jsonData
 var circle_chosen
+
 var average_pm10
 var $body
 import gauge from "./gauge.js"
@@ -318,6 +319,7 @@ function currentAirQualityDisplay() {
 
 // Everything required once loaded
 $(document).ready(() => {
+
     // Activate Carousel
     $('#pythongraphslideshow').carousel({ interval: 3000 });
 
@@ -718,12 +720,10 @@ $(document).ready(() => {
         var pm10Color = []
         scatterChartPM10.data.datasets = []
         scatterChartPM2.data.datasets = []
-        console.log(data)
         if (data.length == 0) {
             alert("Sorry, the data wasn't found!")
         } else {
             for (var j = 1; j < data.length; j++) {
-                console.log(data[j])
                 var new_data = data[j]
                 for (i = 1; i < new_data.length; i++) {
                     var date = new Date(new_data[i]['timestamp'])
@@ -764,7 +764,6 @@ $(document).ready(() => {
                 pm2Data.push(pm2)
                 pm10Data.push(pm10)
             }
-            console.log(scatterChartPM10.data)
             scatterChartPM10.data.datasets.push({ label: "Pm10 Data", data: pm10Data, backgroundColor: 'red' })
             scatterChartPM2.data.datasets.push({ label: "Pm2 Data", data: pm2Data, backgroundColor: 'blue' })
             scatterChartPM10.update()
@@ -781,7 +780,6 @@ $(document).ready(() => {
         var counter = 0
         $.each(data, function (key, val) {
             if ((val.location.longitude > -1.58) && (val.location.longitude < -1.34) && (val.location.latitude <= 53.468) && (val.location.latitude >= 53.29)) {
-                console.log(val)
                 if (val.sensordatavalues[0].value_type == "P1" && val.sensordatavalues.length > 1) {
                     counter++;
                     items.push([key, val.location.latitude, val.location.longitude, val.sensordatavalues[0].value, val.sensordatavalues[1].value, val.sensor.id, val.sensor.sensor_type.name]);
@@ -789,10 +787,7 @@ $(document).ready(() => {
             }
             
         });
-
-
         $('#input[name="dates"]').daterangepicker();
-
         var circles = []
         for (var i = 0; i < items.length; i++) {
             var pm10 = parseFloat(items[i][3])
@@ -817,9 +812,7 @@ $(document).ready(() => {
                 choice_id: i
             })
             circles.push(marker.addTo(sensorMap));
-
         }
-
         for (var i = 0; i < circles.length; i++) {
             var colorPM10 = colorForPollution(parseFloat(items[i][3]), 0)
             var colorPM2 = colorForPollution(0, parseFloat(items[i][4]))
@@ -835,7 +828,53 @@ $(document).ready(() => {
                 sensor_id = event.target.options.sensor_id
             })
         }
-        
+    })
+        .fail(function () {
+            var counter = 0
+            console.log("Failing, using backup")
+            console.log(backup_data)
+            var items = backup_data
+            $('#input[name="dates"]').daterangepicker();
+            var circles = []
+            for (var i = 0; i < items.length; i++) {
+                var pm10 = parseFloat(items[i][3])
+                var pm2 = parseFloat(items[i][4])
+                var color = colorForPollution(items[i][3], items[i][4])
+                var marker = L.circle([items[i][1], items[i][2]], {
+                    color: 'black',
+                    fillColor: color,
+                    fillOpacity: 0.8,
+                    radius: 100,
+                    p10: [items[i][3]],
+                    p2: [items[i][4]],
+                    sensor_id: [items[i][5]],
+                    choice_id: i
+                })
+                var icon_poll = iconForPollution(pm10, pm2)
+                var marker = L.marker([items[i][1], items[i][2]], {
+                    icon: icon_poll,
+                    p10: pm10,
+                    p2: pm2,
+                    sensor_id: [items[i][5]],
+                    choice_id: i
+                })
+                circles.push(marker.addTo(sensorMap));
+            }
+            for (var i = 0; i < circles.length; i++) {
+                var colorPM10 = colorForPollution(parseFloat(items[i][3]), 0)
+                var colorPM2 = colorForPollution(0, parseFloat(items[i][4]))
+                var iconPM10 = '<svg class="bi bi-heart-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="' + colorPM10 + '" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" /> </svg>'
+                var iconPM2 = '<svg class="bi bi-heart-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="' + colorPM2 + '" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" /> </svg>'
+
+                circles[i].bindPopup("<h4><b>Past 24 Hour Average</b></h4><h4>pm10: " + items[i][3] + " " + iconPM10 + "</h4><p>" + colorForPollutionPhrase(parseFloat(items[i][3]), 0) + "</p><h4>pm2.5: " + items[i][4] + " " + iconPM2 + "</h4><p>" + colorForPollutionPhrase(0, parseFloat(items[i][4])) + "</p><br> <button class='btn btn-primary' type='button' data-toggle='modal' data-target='#exampleModal'>Get Detailed Information And Statistics</button>");
+                data_values.push([items[i][0], items[i][1]]);
+                circles[i].on('click', function (event) {
+                    //link = build_link_from_date(chosen_date, sensor_id)
+                    //getData(link)
+                    circle_chosen = event.target.options.choice_id
+                    sensor_id = event.target.options.sensor_id
+                })
+            }
     });
     
 });
