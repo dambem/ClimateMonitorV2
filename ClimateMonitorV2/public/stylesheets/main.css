@@ -20,12 +20,6 @@ body {
     font-weight: bold;
 }
 
-.nav-link-active {
-    font-weight: bold;
-    background-color: white;
-
-}
-
 /* Sidebar setup */
 .sidebar {
     font-family: 'Bellota Text', cursive;
@@ -130,10 +124,6 @@ body {
 
 h2, h3 {
     font-family: 'Bellota Text', cursive;
-}
-
-#mainContainer {
-   
 }
 
 a {
