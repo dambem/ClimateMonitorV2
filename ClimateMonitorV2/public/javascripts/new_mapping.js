@@ -816,8 +816,12 @@ $(document).ready(() => {
                 sensor_id: [items[i][5]],
                 choice_id: i
             })
-            circles.push(marker.addTo(sensorMap));
-
+            if (pm10 >= 1990) {
+                continue;
+            }
+            else {
+                circles.push(marker.addTo(sensorMap));
+            }
         }
 
         for (var i = 0; i < circles.length; i++) {
