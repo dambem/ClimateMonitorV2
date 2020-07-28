@@ -20,7 +20,7 @@ var average_pm10
 var $body
 import gauge from "./gauge.js"
 /**
- * Currently inactive function to calculate percentage danger based on PM2/PM10 (different than mortality as this is respiratory disease)circl
+ * Currently inactive function to calculate percentage danger based on PM2/PM10 (different than mortality as this is respiratory disease)
  * @param {float} PM10 - Average PM10 Value
  * @param {float} PM2 - Average PM2 Value
  * @param {int} people - Amount of people this is for
