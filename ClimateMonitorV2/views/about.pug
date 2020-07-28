@@ -1,6 +1,7 @@
 extends layout
 
 block content
+  head
     script(src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js", integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==", crossorigin="")
     script(src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js')
     link(href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet')
@@ -9,6 +10,11 @@ block content
     script(src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8")
     script(src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@0.7.7")
 
+    link(rel='stylesheet' href='https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css')
+
+    style
+      include stylesheets/style.css
+
     body
 
         div(class="sidebar")
@@ -16,32 +22,57 @@ block content
                 a(href="https://github.com/dambem/ClimateMonitorV2", id="sheffsenseImageHolder", target="_blank")
                     img(class="img-fluid", id="sheffsenseImage", src="sheffsense.png", alt="The Sheffsense logo: A colourful mosaic circle on a blurred landscape background")
             div(class="sidebar-section")
-                img(class="sidebar-icon" src="https://img.icons8.com/ios/20/000000/home.png")
+                img(class="sidebar-icon" src="icons/home.svg")
                 a(class="nav-link" href="/") Home
             div(class="sidebar-section-active")
-                img(class="sidebar-icon" src="https://img.icons8.com/ios/20/000000/about.png")
+                img(class="sidebar-icon" src="icons/info.svg")
                 a(class="nav-link" href="/about") About
             div(class="sidebar-section")
-                img(class="sidebar-icon" src="https://img.icons8.com/ios/20/000000/statistics.png")
+                img(class="sidebar-icon" src="icons/statistics.svg")
                 a(class="nav-link" href="/detailedstats") Statistics
+            div(class="sidebar-section")
+                img(class="sidebar-icon" src="icons/group.svg")
+                a(class="nav-link" href="/our-team") Our Team
             div(class="sidebar-footer")
                 a(href="https://urbanflows.ac.uk/" target="_blank")
                     img(class="img-fluid", id="urbanflowsimage", src="images/urbanlogo.png", alt="The Urban Flows logo: A ring of navy, lilac & green dots interlaced with a star made of purple dots")
-        div(class="row")
-            div(class="accordion" id="accordionInfo")
-                div(class="card")
-                    div(class="card-header" id="headerWhatIs")
-                        h2(class="mb-0")
-                            button(class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseWhatIs" aria-expanded="true" aria-controls="collapseWhatIs")
-                                h3() What is PM10 and PM2.5?
-                    div(class="collapse show" id="collapseWhatIs" aria-labelledby="headerWhatIs" data-parent="#accordionInfo")
-                        div(class="card-body")
-                            p PM is a generic term used to describe mixtures of solids and liquids in varying size. The main source of man-made PM is through the combustion of fuels (E.g, Vehicles and Industry)
-                            p <b>PM10</b> Refers to course particles that are less than 10 microns (?m) in diameter
-                            p <b>PM2.5</b> Refers to particles that are less than 2.5 (?m) in diameter.
-                            p There is an extensive body of evidence that <b>long-term exposure to PM increases mortality and morbidity from cardiovascular and respiratory diseases. </b> It has also been classified by the International Agency for Research on Cancer as <b>carcinogenic to humans (a Group 1 carcinogen) and a cause of lung cancer. </b> 
-                            img(class="img-fluid", src="https://assets.publishing.service.gov.uk/government/uploads/system/uploads/image_data/file/81099/sources-100.jpg")
-                            img(class="img-fluid", src="https://assets.publishing.service.gov.uk/government/uploads/system/uploads/image_data/file/81010/Infographic_on_the_scale_of_the_problem_with_air_pollution.jpg")
-    footer
-        a(href="https://www.gov.uk/government/publications/health-matters-air-pollution/health-matters-air-pollution?fbclid=IwAR1WCj4WuVHtGuDehhsQZ682MUpF4MIdM2AL8i4Z6UvyjnIkOiePaYjrQks") Information and images from Gov.UK
+        
+        div
+            div(id="project-info" class="project-info")
+                h1() The Project 
+                div(id="project-intro" class='project-intro')
+                    p This project focuses on air pollution in Sheffield by using various maps and data charts to show which areas are prone to the most pollution.
+                div(id="pollution-info")
+                    h2() What is pollution?
+                    div(class='pollution-def')
+                        p In simple words, pollution is the when the environment is contaminated by waste, harmful chemicals/particles. The two types of pollution particulates we will be concentrating on are PM2.5 and PM10. So, what exactly is PM? PM stands for “Particulate Matter” and it is a term used to describe solid and liquid particulates in the air. To group these particulates, we have a number after the “PM”. For example, particulates in the PM2.5 group must have a diameter below 2.5 µm.
+                    
+                    table.table.table-sm.table-dark.table-hover.table-bordered(style={width: '50%', 'text-align': 'center', 'margin-left': 'auto', 'margin-right': 'auto'})
+                      thead
+                        tr
+                          th(scope='col', width='50%') PM₂.₅
+                          th(scope='col', width='50%') PM₁₀
+                      tbody
+                        tr
+                          td Combustion Particles
+                          td Dust
+                        tr
+                          td Organic Compounds
+                          td Pollen
+                        tr
+                          td Metals
+                          td Mould
 
+                div(class='more-info')
+                    h3() Size of these pollutants put into perspective:
+                    img(class="img-fluid human-comp", src="https://ww2.arb.ca.gov/sites/default/files/inline-images/human_hair_0.png")
+
+                    h3() Why are we so worried about PM₁₀ &amp; PM₂.₅?
+                    p As seen in the diagram above, PM10 and PM2.5 pollutants are extremely small meaning they can easily be inhaled and there could be some deposits throughout the airways. Due to these deposits, we usually see an increased number of hospital admissions for heart/lung issues where these pollutants are in abundance. Research shows older adults with chronic heart or lung disease are most likely to experience health problems when exposed to PM10 and PM2.5. However, this isn’t the only group of individuals who are at risk from these pollutants. Children and infants are also greatly at risk as they inhale more air per pound of body weight than adults do and spend more time outdoors whilst having a weaker immune system when compared to a healthy adult.
+                    img(class="img-fluid gov-img", src="https://assets.publishing.service.gov.uk/government/uploads/system/uploads/image_data/file/81010/Infographic_on_the_scale_of_the_problem_with_air_pollution.jpg")
+
+                
+  footer
+    p
+        | To learn more about air pollution, you can follow the latest government guidance 
+        a(href='https://www.gov.uk/government/publications/health-matters-air-pollution/health-matters-air-pollution?fbclid=IwAR1WCj4WuVHtGuDehhsQZ682MUpF4MIdM2AL8i4Z6UvyjnIkOiePaYjrQks') here
