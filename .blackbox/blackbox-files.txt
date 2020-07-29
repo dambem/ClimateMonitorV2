@@ -1,1 +1,0 @@
-ClimateMonitorV2/public/javascripts/config.js
