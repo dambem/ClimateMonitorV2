@@ -101,7 +101,14 @@ function human_display(people, infected,  id, preface) {
 
     //healthy = fractions[0]
     //infected = fractions[1]
-    $(id).append("<p> Out of " + String(people) + " people, " + String(infected) + " would sadly lose their lives due to pollution.")
+    if (infected == 0) {
+        $(id).append("<p> Out of " + String(people) + " people, nobody would lose their lives due to pollution!")
+
+    }
+    else {
+        $(id).append("<p> Out of " + String(people) + " people, " + String(infected) + " would sadly lose their lives due to pollution.")
+
+    }
 
     for (var i = 0; i < (people-infected); i++) {
         $(id).append(`
