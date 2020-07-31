@@ -1,6 +1,6 @@
 // Define colours for gauge segments
 var colours = {
-    "#6699cc": {
+    "#00A878": {
       min: 0,
       max: 50,
     },
