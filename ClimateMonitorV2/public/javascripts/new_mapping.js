@@ -16,7 +16,7 @@ var average_pm2
 var days_found
 var jsonData
 var circle_chosen
-
+var cigarette_svg = "<img src='images/cigarette3.svg' style='height:100px;max-width:100px' alt='cigarette'>"
 var average_pm10
 var $body
 import gauge from "./gauge.js"
@@ -71,7 +71,31 @@ function mortality(PM10, PM2, people, id, preface) {
     }
     human_display(people, mortalityOnPeoplePM10 + mortalityOnPeoplePM2, id, preface)
 }
+function cigarettes(pm2) {
+    var base_level = 22.0
+    var pm2_per_week =  (pm2 * 7.0)/base_level;
+    var pm2_per_year = (pm2 * 365.0) / base_level;
+    return [pm2_per_week, pm2_per_year]
+}
 
+function cigarette_display(cigarettes, id, preface) {
+    var weekly = cigarettes[0]
+    var yearly = cigarettes[1]
+    if (preface == null) {
+        preface = "<p></p>"
+    } else {
+        preface = "<p>" + preface + "</p>"
+    }
+    $(id).empty()
+    $(id).append(preface)
+    console.log(weekly)
+    console.log(yearly)
+    $(id).append("Weekly amount of cigarettes: " + Math.ceil(weekly) + "<br>")
+    for (var i=0; i < Math.ceil(weekly); i++) {
+        $(id).append(cigarette_svg)
+    }
+
+}
 /**
  * Fractional reducer, to try and get large fractions into small, simple fractions
  * @param {float} numerator - The numerator 
@@ -106,10 +130,9 @@ function human_display(people, infected,  id, preface) {
 
     }
     else {
-        $(id).append("<p> Out of " + String(people) + " people, " + String(infected) + " would sadly lose their lives due to pollution.")
+        $(id).append("<p> Out of " + String(people) + " people, " + String(infected) + " Are likely to  lose their lives due to pollution.")
 
     }
-
     for (var i = 0; i < (people-infected); i++) {
         $(id).append(`
             <svg
@@ -128,7 +151,7 @@ function human_display(people, infected,  id, preface) {
             </svg >
         `)
     }
-    
+
     for (i = 0; i < infected; i++) {
         $(id).append(`
             <svg
@@ -321,12 +344,12 @@ function currentAirQualityDisplay() {
         // appends danger_level div with certain human displays
         mortality(average_pm10, average_pm2, 500, "#mortality_pm10", "The current PM10 value is expected to cause the following increases in mortality over an average of 1000 people")
         dangerBasedOnPM(average_pm10, average_pm2, 100)
+        cigarette_display(cigarettes(average_pm2), '#cigarettes', "The current PM2 value is equivalent to the following:")
     });
 }
 
 // Everything required once loaded
 $(document).ready(() => {
-
     // Activate Carousel
     $('#pythongraphslideshow').carousel({ interval: 3000 });
 
