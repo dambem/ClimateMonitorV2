@@ -858,7 +858,7 @@ $(document).ready(() => {
             var iconPM10 = '<svg class="bi bi-heart-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="'+colorPM10+'" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" /> </svg>'
             var iconPM2 = '<svg class="bi bi-heart-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="'+colorPM2+'" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" /> </svg>'
 
-            circles[i].bindPopup("<h4><b>Past 24 Hour Average</b></h4><h4>pm10: " + items[i][3] + " " + iconPM10 + "</h4><p>" + colorForPollutionPhrase(parseFloat(items[i][3]), 0) + "</p><h4>pm2.5: " + items[i][4] + " " + iconPM2+ "</h4><p>" + colorForPollutionPhrase(0,parseFloat(items[i][4]))+ "</p><br> <button class='btn btn-primary' type='button' data-toggle='modal' data-target='#exampleModal'>Get Detailed Information And Statistics</button>");
+            circles[i].bindPopup("<h4><b>Past 24 Hour Average</b></h4><h4>pm10: " + items[i][3] + " " + iconPM10 + "</h4><p>" + colorForPollutionPhrase(parseFloat(items[i][3]), 0) + "</p><h4>pm2.5: " + items[i][4] + " " + iconPM2 + "</h4><p>" + colorForPollutionPhrase(0, parseFloat(items[i][4])) + "</p><br> <button class='ripple' type='button' data-toggle='modal'  data-target='#exampleModal'>Get Detailed Information And Statistics</button>");
             data_values.push([items[i][0], items[i][1]]);
             circles[i].on('click', function (event) {
                 //link = build_link_from_date(chosen_date, sensor_id)
