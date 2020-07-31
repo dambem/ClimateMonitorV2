@@ -352,14 +352,46 @@ function currentAirQualityDisplay() {
 }
 
 function heatMapDisplay(addressValues) {
+    var geojson = {
+        "type": "FeatureCollection",
+        "crs": {
+          "type": "name",
+          "properties": {
+            "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+          }
+        },
+        "features": [] 
+    }
+
+    var i = 0;
+
     addressValues.forEach(value => {
         const airQualityURL = "https://api.weather.com/v3/wx/globalAirQuality?geocode=" + value[0] + "," + value[1] + "&language=en-US&scale=DAQI&format=json&apiKey=" + config.WEATHER_COMPANY_KEY
         $.get(airQualityURL,
         function(airQuality) {
             value[2] = airQuality.globalairquality.pollutants.PM10.amount;
+            geojson.features.push({
+                "type": "Feature",
+                "properties": {
+                  "id": i,
+                  "mag": value[2],
+                  "time": 1507425650893,
+                  "felt": null,
+                  "tsunami": 1
+                },
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                    value[0],
+                    value[1],
+                    0.0
+                  ]
+                }
+              })
         }); 
+        i = i + 1;
     });
-    return addressValues;
+    return geojson;
 }
 
 // Everything required once loaded
@@ -541,19 +573,153 @@ $(document).ready(() => {
     var newAddressValues = heatMapDisplay(addressValues);
     console.log(newAddressValues);
 
-    var heat = L.heatLayer(newAddressValues).addTo(sensorMap);
-    // var draw = true;
+    mapboxgl.accessToken = config.MAP_KEY;
+    var map = new mapboxgl.Map({
+        container: 'mapid2',
+        style: 'mapbox://styles/mapbox/dark-v10',
+        center: [-120, 50],
+        zoom: 2
+    });
+    console.log("here");
+     
+    map.on('load', function() {
+    // Add a geojson point source.
+    // Heatmap layers also work with a vector tile source.
+        map.addSource('pollution', {
+            'type': 'geojson',
+            'data':
+            newAddressValues
+        });
+    
+        map.addLayer(
+        {
+            'id': 'pollution-heat',
+            'type': 'heatmap',
+            'source': 'pollution',
+            'maxzoom': 9,
+            'paint': {
+            // Increase the heatmap weight based on frequency and property magnitude
+            'heatmap-weight': [
+            'interpolate',
+            ['linear'],
+            ['get', 'mag'],
+            0,
+            0,
+            6,
+            1
+            ],
+            // Increase the heatmap color weight weight by zoom level
+            // heatmap-intensity is a multiplier on top of heatmap-weight
+            'heatmap-intensity': [
+            'interpolate',
+            ['linear'],
+            ['zoom'],
+            0,
+            1,
+            9,
+            3
+            ],
+            // Color ramp for heatmap.  Domain is 0 (low) to 1 (high).
+            // Begin color ramp at 0-stop with a 0-transparancy color
+            // to create a blur-like effect.
+            'heatmap-color': [
+            'interpolate',
+            ['linear'],
+            ['heatmap-density'],
+            0,
+            "#6699CC",
+            20,
+            "#FFF275",
+            30,
+            "#FF8C42",
+            50,
+            '#FF3C38',
+            75,
+            '#d600a4',
+            100,
+            '#a20049',
+            150,
+            '#1a0006'
+            ],
+            // Adjust the heatmap radius by zoom level
+            'heatmap-radius': [
+            'interpolate',
+            ['linear'],
+            ['zoom'],
+            0,
+            2,
+            9,
+            20
+            ],
+            // Transition from heatmap to circle layer by zoom level
+            'heatmap-opacity': [
+            'interpolate',
+            ['linear'],
+            ['zoom'],
+            7,
+            1,
+            9,
+            0
+            ]
+            }
+            },
+            'waterway-label'
+            );
 
-    // // add points on mouse move (except when interacting with the map)
-    // sensorMap.on({
-    //     movestart: function () { draw = false; },
-    //     moveend:   function () { draw = true; },
-    //     mousemove: function (e) {
-    //         if (draw) {
-    //             heat.addLatLng(e.latlng);
-    //         }
-    //     }
-    // })
+            map.addLayer(
+                {
+                'id': 'pollution-point',
+                'type': 'circle',
+                'source': 'pollution',
+                'minzoom': 7,
+                'paint': {
+                // Size circle radius by earthquake magnitude and zoom level
+                'circle-radius': [
+                'interpolate',
+                ['linear'],
+                ['zoom'],
+                7,
+                ['interpolate', ['linear'], ['get', 'mag'], 1, 1, 6, 4],
+                16,
+                ['interpolate', ['linear'], ['get', 'mag'], 1, 5, 6, 50]
+                ],
+                // Color circle by earthquake magnitude
+                'circle-color': [
+                'interpolate',
+                ['linear'],
+                ['get', 'mag'],
+                0,
+                "#6699CC",
+                20,
+                "#FFF275",
+                30,
+                "#FF8C42",
+                50,
+                '#FF3C38',
+                75,
+                '#d600a4',
+                100,
+                '#a20049',
+                150,
+                '#1a0006'],
+                'circle-stroke-color': 'white',
+                'circle-stroke-width': 1,
+                // Transition from heatmap to circle layer by zoom level
+                'circle-opacity': [
+                'interpolate',
+                ['linear'],
+                ['zoom'],
+                7,
+                0,
+                8,
+                1
+                ]
+                }
+                },
+                'waterway-label'
+                );
+                console.log("here 2");
+    })
 
     var noPollutionIcon = L.icon({
         iconUrl: 'markers/no_pollution.png',
@@ -670,6 +836,7 @@ $(document).ready(() => {
     //    link = build_link_from_date(current_date, sensor_id)
     //    getData(link)
     //}
+
     var picker = new Litepicker({
         element: document.getElementById('litepicker'),
         singleMode: false,
