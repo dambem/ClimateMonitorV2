@@ -9,7 +9,6 @@ block content
     script(src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8")
     script(src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@0.7.7")
     script(src="https://cdn.jsdelivr.net/npm/litepicker/dist/js/main.js")
-    
 
     
     body
@@ -40,7 +39,7 @@ block content
                 .modal-content
                     .modal-header
                         h5#exampleModalLabel.modal-title PM10 and PM2.5 Values Of Sensor 
-                        button.close(type='button' data-dismiss='modal' aria-label='Close')
+                        button.close(type='button' class="ripple" data-dismiss='modal' aria-label='Close')
                             span(aria-hidden='true') &times;
                     .modal-body
                         div(class="container-fluid")
@@ -56,7 +55,7 @@ block content
                                 //div(id='value') Today
                             div(class="row")
                                 div(class="col-md-6", id="modalbutton")
-                                        button.btn.btn-primary(id="available_dates") Get Available Dates
+                                        button(id="available_dates" class="ripple") Get Available Dates
                                 div(class="col-md-6")
                                     p() Days To Search:
                                     input(type="number" id="days" name="days" value= 100) 
@@ -64,7 +63,7 @@ block content
                                 div(class="col-md-12")
                                     input(id="litepicker" style="display:none")
                     .modal-footer
-                        button.btn.btn-secondary(type='button' data-dismiss='modal') Close
+                        button(type='button' class="ripple"  data-dismiss='modal') Close
 
         div(class='container-fluid' id="mainContainer")
             div(class="row")
@@ -109,12 +108,16 @@ block content
                                 div(id="power-gauge")
                                 h4(id="currentAQI")
                                 h6(id="currentCategory")
+                                h6(id="currentMessageGeneral")
+                                h6(id="currentMessageSensitive")
                             div(class="col-md-12" id = "healtheffects")
                     div(class="card")
                         div(class="card-body")
                             div(class="card-title")
                                 h2() Health Effects
                             h3() But what do the pollution values actually mean?
+                            div(class="col-md-12")
+                                div(id="cigarettes")
                             div(class="col-md-12")
                                 br
                                 div(id="mortality_pm10") 
