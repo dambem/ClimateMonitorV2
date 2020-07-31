@@ -273,11 +273,15 @@ function currentAirQualityDisplay() {
         const currentAQI = airQuality.globalairquality.airQualityIndex;
         const currentCategory = airQuality.globalairquality.airQualityCategory;
         const currentMessage = airQuality.globalairquality.messages.General.text;
+        const currentMessageSensitive = airQuality.globalairquality.messages['Sensitive Group'].text;
 
         // Set values for HTML attributes
         $('#aqi-header').html("Air Quality Index Average")
         $('#currentAQI').html(`<b><strong>${currentAQI}</strong></b>`);
-        $('#currentCategory').html(currentCategory + ': ' + currentMessage);
+        $('#currentCategory').html(currentCategory);
+        $('#currentMessageGeneral').html('<b>General Advice: </b>' + currentMessage);
+        $('#currentMessageSensitive').html('<b>Advice for Sensitive Groups: </b>' + currentMessageSensitive)
+
 
         // Set up gauge for AQI
         var powerGauge = gauge("#power-gauge", {
