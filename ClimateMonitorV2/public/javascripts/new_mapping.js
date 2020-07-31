@@ -16,7 +16,7 @@ var average_pm2
 var days_found
 var jsonData
 var circle_chosen
-var cigarette_svg = "<img src='images/cigarette.svg' style='height:100px;max-width:100px' alt='cigarette'>"
+var cigarette_svg = "<img src='images/cigarette3.svg' style='height:100px;max-width:100px' alt='cigarette'>"
 var average_pm10
 var $body
 import gauge from "./gauge.js"
