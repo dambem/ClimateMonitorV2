@@ -35,6 +35,25 @@ router.post('/link', function (req, res) {
     })
 })
 
+router.get('/airQualityIndex', async function (req, res) {
+    const airQualityURL = "https://api.weather.com/v3/wx/globalAirQuality?geocode=53.383331,-1.466667&language=en-US&scale=DAQI&format=json&apiKey=" + req.query.key;
+    try {
+        var airQualityData = await requestify.get(airQualityURL)
+    } catch (err){
+        console.log(err);
+    }
+    res.send(airQualityData.body)
+})
+router.get('/weatherCompanyData', async function (req, res) {
+    const weatherDataURL = "https://api.weather.com/v3/wx/forecast/hourly/2day?geocode=53.383331%2C-1.466667&format=json&units=e&language=en-US&apiKey=" + req.query.key
+    try {
+        var weatherData = await requestify.get(weatherDataURL)
+    } catch (err){
+        console.log(err);
+    }
+    res.send(weatherData.body)
+})
+
 const getMethods = (obj) => {
     let properties = new Set()
     let currentObj = obj
