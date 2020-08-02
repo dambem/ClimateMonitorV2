@@ -1,26 +1,26 @@
 // Define colours for gauge segments
 var colours = {
-    "#00e400": {
+    "#00A878": {
       min: 0,
       max: 50,
     },
-    "#ffff00": {
+    "#fff275": {
       min: 51,
       max: 100,
     },
-    "#ff7e00": {
+    "#ff8441": {
       min: 101,
       max: 150,
     },
-    "#ff0000": {
+    "#ff3c38": {
       min: 151,
       max: 200,
     },
-    "#8f3f97": {
+    "#d600a4": {
       min: 201,
       max: 300,
     },
-    "#7e0023": {
+    "#a20049": {
       min: 301,
       max: 500,
     },
