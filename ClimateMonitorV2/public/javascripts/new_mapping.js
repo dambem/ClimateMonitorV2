@@ -20,6 +20,7 @@ var cigarette_svg = "<img src='images/cigarette3.svg' style='height:100px;max-wi
 var average_pm10
 var $body
 import gauge from "./gauge.js"
+
 /**
  * Currently inactive function to calculate percentage danger based on PM2/PM10 (different than mortality as this is respiratory disease)
  * @param {float} PM10 - Average PM10 Value
@@ -274,9 +275,8 @@ function build_link_from_date(date) {
 }
 
 function currentWeatherDisplay() {
-    const weatherDataURL = "https://api.weather.com/v3/wx/forecast/hourly/2day?geocode=53.383331%2C-1.466667&format=json&units=e&language=en-US&apiKey=" + config.WEATHER_COMPANY_KEY
-    $.get(weatherDataURL,
-    function(weatherData){
+    $.get("/weatherCompanyData", { key: config.WEATHER_COMPANY_KEY }, function(res) {
+        const weatherData = JSON.parse(res);
         const currentTemp = weatherData.temperature[0];
         const currentTempCelcius = Math.floor((5/9) * (currentTemp - 32));
         const currentWindSpeed = weatherData.windSpeed[0];
@@ -289,10 +289,8 @@ function currentWeatherDisplay() {
 }
 
 function currentAirQualityDisplay() {
-    // get air quality data from weather company API
-    const airQualityURL = "https://api.weather.com/v3/wx/globalAirQuality?geocode=53.383331,-1.466667&language=en-US&scale=DAQI&format=json&apiKey=" + config.WEATHER_COMPANY_KEY
-    $.get(airQualityURL,
-    function(airQuality){
+    $.get("/airQualityIndex", { key: config.WEATHER_COMPANY_KEY }, function(res) {
+        const airQuality = JSON.parse(res);
         const currentAQI = airQuality.globalairquality.airQualityIndex;
         const currentCategory = airQuality.globalairquality.airQualityCategory;
         const currentMessage = airQuality.globalairquality.messages.General.text;
