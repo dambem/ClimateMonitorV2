@@ -355,97 +355,87 @@ $(document).ready(() => {
     // Activate Carousel
     $('#pythongraphslideshow').carousel({ interval: 3000 });
 
-    $.ajax({
-        url: 'https://api.github.com/repos/dambem/ClimateMonitorV2/contents/ClimateMonitorV2/public/files/images',
-        type: 'GET',
-        contentType: 'application/json',
-        password: config.GITHUB_API_TOKEN,
-        success: function (files) {
-            var images = []
+    $.get("/githubData", { key: config.GITHUB_API_TOKEN }, function(res) {
+        var images = []
+        var files = JSON.parse(res);
+        // Get image links
+        files.forEach(function (file) {
 
-            // Get image links
-            files.forEach(function (file) {
-
-                // Only extract images
-                if (file["name"].includes(".png", file["name"].length - 5)) {               
-                    
-                    console.log(`INFO: Importing ${file["name"]}...`)
-                    images.push(file['download_url'])
-
-                }
-
-            });
-            
-            if (images.length == 0) {
-                alert("WARNING: No png images were found at ClimateMonitorV2/public/files/images\nGraph carosuel will be empty")
-            }
-            
-            // Compile the indicators first
-            for (var currentCount = 1; currentCount < images.length; ++currentCount) {
-                var listItemNode = document.createElement("LI")
-                listItemNode.setAttribute("data-target", "#pythongraphslideshow")
-                listItemNode.setAttribute("data-slide-to", currentCount)
-
-                document.getElementById("graph_carousel_indicators").appendChild(listItemNode)
-            }
-
-            // Populate the carosuel
-            var altText = "Graph unavailable. Please check your GITHUB_API_TOKEN"
-            var activeImage = false
-            var imageCount = 0
-
-            images.forEach( function (image) {
-
-                if (!activeImage) {
-                    $(`#carosuel_items`).append(
-                        `
-                        <div class="carousel-item active">
-                            <a 
-                                target="_blank"
-                                href="${image}"
-                            >
-                                <img
-                                    src="${image}"
-                                    alt="${altText}"
-                                    width="100%"
-                                    height="100%"
-                                >
-                            </a>
-                        </div>
-                        `
-                    )
-                    activeImage = true
-                    imageCount++
-
-                } else {
-                    // Use a counter to make each class unique
-                    $(`#carosuel_items`).append(
-                        `
-                        <div class="carousel-item ${imageCount}">
-                            <a 
-                                target="_blank"
-                                href="${image}"
-                            >
-                                <img
-                                    src="${image}"
-                                    alt="${altText}"
-                                    width="100%"
-                                    height="100%"
-                                >
-                            </a>
-                        </div>
-                        `
-                    )
-                    imageCount++
-
-                }
+            // Only extract images
+            if (file["name"].includes(".png", file["name"].length - 5)) {               
                 
-            });
+                console.log(`INFO: Importing ${file["name"]}...`)
+                images.push(file['download_url'])
 
-        },
-        error: function (error) {
-            console.log(error)
+            }
+
+        });
+        
+        if (images.length == 0) {
+            alert("WARNING: No png images were found at ClimateMonitorV2/public/files/images\nGraph carosuel will be empty")
         }
+        
+        // Compile the indicators first
+        for (var currentCount = 1; currentCount < images.length; ++currentCount) {
+            var listItemNode = document.createElement("LI")
+            listItemNode.setAttribute("data-target", "#pythongraphslideshow")
+            listItemNode.setAttribute("data-slide-to", currentCount)
+
+            document.getElementById("graph_carousel_indicators").appendChild(listItemNode)
+        }
+
+        // Populate the carosuel
+        var altText = "Graph unavailable. Please check your GITHUB_API_TOKEN"
+        var activeImage = false
+        var imageCount = 0
+
+        images.forEach( function (image) {
+
+            if (!activeImage) {
+                $(`#carosuel_items`).append(
+                    `
+                    <div class="carousel-item active">
+                        <a 
+                            target="_blank"
+                            href="${image}"
+                        >
+                            <img
+                                src="${image}"
+                                alt="${altText}"
+                                width="100%"
+                                height="100%"
+                            >
+                        </a>
+                    </div>
+                    `
+                )
+                activeImage = true
+                imageCount++
+
+            } else {
+                // Use a counter to make each class unique
+                $(`#carosuel_items`).append(
+                    `
+                    <div class="carousel-item ${imageCount}">
+                        <a 
+                            target="_blank"
+                            href="${image}"
+                        >
+                            <img
+                                src="${image}"
+                                alt="${altText}"
+                                width="100%"
+                                height="100%"
+                            >
+                        </a>
+                    </div>
+                    `
+                )
+                imageCount++
+
+            }
+            
+        });
     })
   
     currentWeatherDisplay();
