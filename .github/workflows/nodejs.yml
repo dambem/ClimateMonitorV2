@@ -25,4 +25,3 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: cd ClimateMonitorV2 && npm install
-    - run: cd ClimateMonitorV2 && npm start
