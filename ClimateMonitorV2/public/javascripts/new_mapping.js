@@ -71,7 +71,10 @@ function mortality(PM10, PM2, people, id, preface) {
         var mortalityOnPeoplePM2 = people * (percentageMortalityPM2 * 0.01)
     }
     human_display(people, mortalityOnPeoplePM10 + mortalityOnPeoplePM2, id, preface)
-}
+}/**
+ * Cigarette calculation for the pollution values
+ * @param {float} PM2 - Average PM2 Value
+ */
 function cigarettes(pm2) {
     var base_level = 22.0
     var pm2_per_week =  (pm2 * 7.0)/base_level;
@@ -79,6 +82,10 @@ function cigarettes(pm2) {
     return [pm2_per_week, pm2_per_year]
 }
 
+}/**
+ * Cigarette calculation for the pollution values
+ * @param {float} PM2 - Average PM2 Value
+ */
 function cigarette_display(cigarettes, id, preface) {
     var weekly = cigarettes[0]
     var yearly = cigarettes[1]
