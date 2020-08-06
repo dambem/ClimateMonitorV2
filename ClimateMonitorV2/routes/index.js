@@ -7,7 +7,8 @@ var router = express.Router();
 var csv = require('csv-stream');
 var request = require("request")
 var requestify = require('requestify')
-
+var JSONStream = require('JSONStream')
+var parseUrl = require('url').parse
 router.get('/test', function (req, res) {
     res.render("newtest", { title: "SheffSenseV2: Sheffield Climate Monitor" });
 });
@@ -132,6 +133,17 @@ function csvParsing(link) {
             });
     });
 }
+router.post('/sensordetails', function (req, res, next) {
+    var url = 'http://data.sensor.community/static/v2/data.1h.json'
+    var items = [];
+    var counter = 0;
+    var req = request(url, function (res) {
+        res.pipe(JSONStream.parse()).on('data', function (obj) {
+            console.log(obj);
+        });
+    });
+    req.end();
+    })
 
 router.post('/fromto', function (req, res, next) {
     var promises = []

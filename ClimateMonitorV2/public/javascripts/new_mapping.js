@@ -354,7 +354,27 @@ function currentAirQualityDisplay() {
 $(document).ready(() => {
     // Activate Carousel
     $('#pythongraphslideshow').carousel({ interval: 3000 });
+    $.ajax({
+        url: 'sensordetails',
+        data: '',
+        contentType: 'application/json',
+        type: 'POST',
+        success: function (dataR) {
+            var ret = dataR
+            console.log("Success Hit")
+            console.log(ret)
+        },
+        complete: function (data, res) {
+            console.log("Complete Hit")
+            console.log(res)
+        },
+        error: function (xhr, status, error) {
+            console.log(error.message);
+        },
+        // shows the loader         
+        beforeSend: function () {  },
 
+    })
     $.ajax({
         url: 'https://api.github.com/repos/dambem/ClimateMonitorV2/contents/ClimateMonitorV2/public/files/images',
         type: 'GET',
