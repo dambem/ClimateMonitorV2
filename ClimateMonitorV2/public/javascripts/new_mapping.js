@@ -82,9 +82,11 @@ function cigarettes(pm2) {
     return [pm2_per_week, pm2_per_year]
 }
 
-}/**
- * Cigarette calculation for the pollution values
- * @param {float} PM2 - Average PM2 Value
+/**
+ * Cigarette display for the pollution values
+ * @param {int} cigarettes - Amount of weekly cigarettes
+ * @param {string} id - id of the location to append
+ * @param {string} preface - The preface of the div
  */
 function cigarette_display(cigarettes, id, preface) {
     var weekly = cigarettes[0]
@@ -117,7 +119,13 @@ function fractionalreducer(numerator, denominator) {
     gcd = gcd(numerator, denominator)
     return [numerator/gcd, denominator/gcd]
 }
-
+/**
+ * Human display, append HTML with showing how many people would lose they're lives due to pollution
+ * @param {int} people - Amount of people
+ * @param {int} infected - Amount of people
+ * @param {string} id - id of the location to append
+ * @param {string} preface - The preface of the div
+ */
 function human_display(people, infected,  id, preface) {
     if (preface == null) {
         preface = "<p></p>"
@@ -182,7 +190,10 @@ function human_display(people, infected,  id, preface) {
     
 }
 
-// Function for removing data from charts
+/**
+ * Remove data, function for clearing all the data from a chart
+ * @param {Object} chart - chartJS chart object
+ */
 function removeData(chart) {
     chart.data.labels.pop();
     chart.data.datasets.forEach((dataset) => {
@@ -190,7 +201,10 @@ function removeData(chart) {
     });
     chart.update();
 }
-
+/**
+ * linkExists
+ * @param {id} sensorID - checks against sensorID to ensure that a link exists at a certain date
+ */
 function linkExist(id) {
         jsonData = {'id': id}
         $.ajax({
@@ -209,7 +223,11 @@ function linkExist(id) {
         })
 }
 
-// Function that returns different phrase based on pollution 
+/**
+ * colour for pollution phrase, returns a phrase based on certain PM10 and PM2.5 values
+ * @param {float} PM10 - pm10 pollution value
+ * @param {float} PM2.5 - pm2.5 pollution value
+ */
 function colorForPollutionPhrase(pm10, pm2) {
     if (pm10 >= 20 && pm10 < 30 || pm2 >= 10 && pm2 < 15) {
         return "The pollution levels are just above WHO guidelines for safe pollution, and can lead to long term health issues"
@@ -235,9 +253,11 @@ function colorForPollutionPhrase(pm10, pm2) {
 }
 /*
 
-/*
-* Function that returns different colours based on pollution
-*/ 
+/**
+ * colour for pollution , returns a colour based on certain PM10 and PM2.5 values
+ * @param {float} PM10 - pm10 pollution value
+ * @param {float} PM2.5 - pm2.5 pollution value
+ */
 function colorForPollution(pm10, pm2) {
     if (pm10 >= 20 && pm10 < 30 || pm2 >= 10 && pm2 < 15) {
         return light
@@ -262,9 +282,10 @@ function colorForPollution(pm10, pm2) {
     }
 }
 
-/* 
-* This function builds the link to the sensor CSV given a certain date.
-*/
+/**
+ * Builds a link to the archive from a certain date
+ * @param {date} date - date object
+ */
 function build_link_from_date(date) {
     var year = date.getFullYear();
     var month = date.getMonth() + 1;
@@ -578,7 +599,11 @@ $(document).ready(() => {
         popupAnchor: [0, -50], // point from which the popup should open relative to the iconAnchor
         altText: "A marker representing pollution levels that are too high"
     })
-
+/**
+* icon for pollution , returns a map icon based on certain PM10 and PM2.5 values
+* @param {float} PM10 - pm10 pollution value
+* @param {float} PM2.5 - pm2.5 pollution value
+*/
     function iconForPollution(pm10, pm2) {
         if (pm10 >= 20 && pm10 < 30 || pm2 >= 10 && pm2 < 15) {
             return lightPollutionIcon
@@ -653,6 +678,10 @@ $(document).ready(() => {
         },
     });
     var currentValidDates = []
+/**
+* find dates, based on an id and amount of days, finds out how many sensor details are located on it.
+* @param {string} id_chosen - id for sensor
+*/
     function findDates(id_chosen) {
         days_found = parseInt(document.getElementById("days").value)
         jsonData = { id: id_chosen, days: days_found }
