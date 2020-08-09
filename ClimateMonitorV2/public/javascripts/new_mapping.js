@@ -44,6 +44,8 @@ function dangerBasedOnPM(PM10, PM2, people, id) {
     var mortalityOnPeoplePM10 = people * (percentageMortalityPM10 * 0.01)
     var respiratoryDiseasePeoplePM2 = people * (percentageMortalityPM10 * 0.01)
 }
+
+
 /**
  * Mortality calculation for the pollution values
  * @param {float} PM10 - Average PM10 Value
@@ -91,11 +93,35 @@ function cigarette_display(cigarettes, id, preface) {
     $(id).append(preface)
     console.log(weekly)
     console.log(yearly)
-    $(id).append("Weekly amount of cigarettes: " + Math.ceil(weekly) + "<br>")
+    $(id).append("<h3> Weekly amount of cigarettes: <b>" + Math.ceil(weekly) + "</b> </h3><br>")
     for (var i=0; i < Math.ceil(weekly); i++) {
         $(id).append(cigarette_svg)
     }
 
+}
+function lifeSpan(PM10, PM2) {
+    var validPM10 = 20
+    var validPM2 = 12
+    var PM10inc = (PM10 - validPM10) / 10
+    var PM2inc = (PM2 - validPM2) / 10
+    if (PM10inc < 0 && PM2inc < 0) {
+        return (0)
+    }
+    else {
+        return ((PM10inc * 7) + (PM2inc * 12))
+    }
+}
+function lifespan_display(PM10, PM2, id, preface) {
+    var lifeSpanDecrease = lifeSpan(PM10, PM2)
+    if (preface == null) {
+        preface = "<p></p>"
+    }
+    else {
+        preface = "<p>" + preface + "</p>"
+    }
+    $(id).empty()
+    $(id).append(preface)
+    $(id).append("<h2> Time you could gain if we fully adhered to WHO Air Quality Standards: <b> " + Math.round(lifeSpanDecrease) + " months. </b> </h3>")
 }
 /**
  * Fractional reducer, to try and get large fractions into small, simple fractions
@@ -346,7 +372,8 @@ function currentAirQualityDisplay() {
         // appends danger_level div with certain human displays
         mortality(average_pm10, average_pm2, 500, "#mortality_pm10", "The current PM10 value is expected to cause the following increases in mortality over an average of 1000 people")
         dangerBasedOnPM(average_pm10, average_pm2, 100)
-        cigarette_display(cigarettes(average_pm2), '#cigarettes', "The current PM2 value is equivalent to the following:")
+        lifespan_display(average_pm10, average_pm2, '#life-span', null)
+        cigarette_display(cigarettes(average_pm2), '#cigarettes', null)
     });
 }
 
