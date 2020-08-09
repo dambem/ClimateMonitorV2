@@ -121,7 +121,7 @@ function lifespan_display(PM10, PM2, id, preface) {
     }
     $(id).empty()
     $(id).append(preface)
-    $(id).append("<h2> Time you could gain if we fully adhered to WHO Air Quality Standards: <b> " + Math.round(lifeSpanDecrease) + " months. </b> </h3>")
+    $(id).append("<h2> Time you could gain if we fully adhered to WHO Air Quality Standards: <p></p> <b> " + Math.round(lifeSpanDecrease) + " months. </b> </h3>")
 }
 /**
  * Fractional reducer, to try and get large fractions into small, simple fractions
