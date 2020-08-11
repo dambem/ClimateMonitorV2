@@ -600,23 +600,20 @@ $(document).ready(() => {
     })
 
     function iconForPollution(pm10, pm2) {
-        if (pm10 >= 20 && pm10 < 30 || pm2 >= 10 && pm2 < 15) {
-            return lightPollutionIcon
-        }
-        else if (pm10 >= 30 && pm10 < 50 || pm2 >= 15 && pm2 < 25) {
-            return mediumPollutionIcon
-        }
-        else if (pm10 >= 50 && pm10 < 70 || pm2 >= 25 && pm2 < 35) {
-            return upperMedPollutionIcon
+        if (pm10 >= 150 || pm2 >= 75) {
+            return maximumPollutionIcon
         }
         else if (pm10 >= 70 && pm10 < 100 || pm2 >= 35 && pm2 < 50) {
             return highPollutionIcon
         }
-        else if (pm10 >= 100 && pm10 < 150 || pm2 >= 50 && pm2 < 75) {
-            return veryHighPollutionIcon
+        else if (pm10 >= 50 && pm10 < 70 || pm2 >= 25 && pm2 < 35) {
+            return upperMedPollutionIcon
         }
-        else if (pm10 >= 150 || pm2 >= 75) {
-            return maximumPollutionIcon
+        else if (pm10 >= 30 && pm10 < 50 || pm2 >= 15 && pm2 < 25) {
+            return mediumPollutionIcon
+        }
+        else if (pm10 >= 20 && pm10 < 30 || pm2 >= 10 && pm2 < 15) {
+            return lightPollutionIcon
         }
         else {
             return noPollutionIcon
