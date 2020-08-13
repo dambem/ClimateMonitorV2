@@ -468,11 +468,31 @@ $(document).ready(() => {
     currentWeatherDisplay();
     currentAirQualityDisplay();
   
-    var pm2Chart = document.getElementById('pm2Chart').getContext('2d');
-    var pm10Chart = document.getElementById('pm10Chart').getContext('2d');
+    //var pm2Chart = document.getElementById('pm2Chart').getContext('2d');
+    //var pm10Chart = document.getElementById('pm10Chart').getContext('2d');
     // Currently not in use, date range picker for graphs
    
 
+    // lineChartPM2
+    /*
+    var lineChartPM2 = new Chart(pm2Chart, {
+        type: 'line',
+        data: {
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                    type: 'time',
+                    position: 'bottom',
+                    time: {
+                        unit: 'day'
+                    }
+                }]
+            }
+        },
+    }) */
+    // start of scatter graph
+    /*
     var scatterChartPM2 = new Chart(pm2Chart, {
         type: 'scatter',
         data: {
@@ -489,7 +509,7 @@ $(document).ready(() => {
             }
         },
     })
-
+    */
     var scatterChartPM10 = new Chart(pm10Chart, {
         type: 'scatter',
         data: {
@@ -506,7 +526,7 @@ $(document).ready(() => {
             }
         },
     })
-
+    // end of scatter graph
     // Create the pollution chart 
     var ctx = document.getElementById("pollutionChart").getContext('2d');
 
@@ -619,7 +639,7 @@ $(document).ready(() => {
             return noPollutionIcon
         }
     }
-
+    
     if (config.GITHUB_API_TOKEN == "") {
         alert("WARNING: GITHUB_API_TOKEN is not set\nSome carosuel images may not be present")
     }
@@ -762,10 +782,12 @@ $(document).ready(() => {
         var label2 = "PM2.5 Values"
         var pm2Data = []
         var pm10Data = []
-        var pm2Color = []
-        var pm10Color = []
-        scatterChartPM10.data.datasets = []
-        scatterChartPM2.data.datasets = []
+       // var pm2Color = []
+       // var pm10Color = []
+        //scatterChartPM10.data.datasets = []
+        //scatterChartPM2.data.datasets = []
+        //lineChartPM2.data.datasets = []
+        console.log(data)
         if (data.length == 0) {
             alert("Sorry, the data wasn't found!")
         } else {
@@ -773,19 +795,49 @@ $(document).ready(() => {
                 var new_data = data[j]
                 for (i = 1; i < new_data.length; i++) {
                     var date = new Date(new_data[i]['timestamp'])
-                    var pm2 = { x: date, y: parseFloat(new_data[i]['P2']) }
-                    var pm10 = { x: date, y: parseFloat(new_data[i]['P1']) }
-                    pm2Color.push('green')
-                    pm10Color.push('red')
+                    var p2Time = parseFloat(new_data[i]['P2'])
+                    var p1Time = parseFloat(new_data[i]['P1'])
+                    var pm2 = [date, p2Time]
+                    var pm10 = [date, p1Time]
+                    //pm2Color.push('green')
+                    //pm10Color.push('red')
                     pm2Data.push(pm2)
                     pm10Data.push(pm10)
                 }
             }
-            scatterChartPM10.data.datasets.push({ label: "Pm10 Data", data: pm10Data, backgroundColor: 'red' })
-            scatterChartPM2.data.datasets.push({ label: "Pm2 Data", data: pm2Data, backgroundColor: 'blue' })
-            scatterChartPM10.update()
-            scatterChartPM2.update()
+            //scatterChartPM10.data.datasets.push({ label: "Pm10 Data", data: pm10Data, backgroundColor: 'red' })
+            //lineChartPM2.data.datasets.push({ label: "Pm2 Data", data: pm2Data, backgroundColor: 'blue'})
+            //scatterChartPM2.data.datasets.push({ label: "Pm2 Data", data: pm2Data, backgroundColor: 'blue' })
+            //scatterChartPM10.update()
+            //lineChartPM2.update()
+            //scatterChartPM2.update()
         }
+        var highestPM2Data = Math.max(... pm2Data) //Allows high number in pm2Data to be value range for graph
+        var highestPM10Data = Math.max(... pm10Data) //Allows high number in pm10Data to be value range for graph
+
+        var pm2Chart = new Dygraph(document.getElementById('graphdiv1'), pm2Data, { 
+            drawPoints: true,
+            legend: 'always',
+            valueRange: [0.0, highestPM2Data],
+            labels: ['Date', 'PM2'],
+            ylabel: 'PM2',
+            showRoller: true,
+            rollPeriod: 1, //Changes average period of data on graph
+            strokeWidth: 1.0,
+            pointSize: 2
+        }); 
+        var pm10Chart = new Dygraph(document.getElementById('graphdiv2'), pm10Data, { 
+            drawPoints: true,
+            legend: 'always',
+            valueRange: [0.0, highestPM10Data],
+            labels: ['Date', 'PM10'],
+            ylabel: 'PM10',
+            showRoller: true,
+            rollPeriod: 1, //Changes average period of data on graph
+            strokeWidth: 1.0,
+            pointSize: 2
+        }); 
+          
 
     }
     function updateGraph(data) {    
@@ -793,28 +845,56 @@ $(document).ready(() => {
         label2 = "PM2.5 Values"
         var pm2Data = []
         var pm10Data = []
-        var pm2Color = []
-        var pm10Color = []
-        scatterChartPM10.data.datasets = []
-        scatterChartPM2.data.datasets = []
+        //var pm2Color = []
+        //var pm10Color = []
+        //scatterChartPM10.data.datasets = []
+        //lineChartPM2.data.datasets = []
+        //scatterChartPM2.data.datasets = []
 
         if (data.length == 0) {
             alert("Sorry, the data wasn't found!")
         } else {
             for (var i = 1; i < data.length; i++) {
                 var date = new Date(data[i]['timestamp'])
-                var pm2 = { x: date, y: parseFloat(data[i]['P2']) }
-                var pm10 = { x: date, y: parseFloat(data[i]['P1']) }
-                pm2Color.push('green')
-                pm10Color.push('red')
+                var p2Time = parseFloat(data[i]['P2'])
+                var p1Time = parseFloat(data[i]['P1'])
+                var pm2 = [date, p2Time]
+                var pm10 = [date, p1Time]
+                //pm2Color.push('green')
+                //pm10Color.push('red')
                 pm2Data.push(pm2)
                 pm10Data.push(pm10)
             }
-            scatterChartPM10.data.datasets.push({ label: "Pm10 Data", data: pm10Data, backgroundColor: 'red' })
-            scatterChartPM2.data.datasets.push({ label: "Pm2 Data", data: pm2Data, backgroundColor: 'blue' })
-            scatterChartPM10.update()
-            scatterChartPM2.update()
+            //scatterChartPM10.data.datasets.push({ label: "Pm10 Data", data: pm10Data, backgroundColor: 'red' })
+            //scatterChartPM2.data.datasets.push({ label: "Pm2 Data", data: pm2Data, backgroundColor: 'blue' })
+            //scatterChartPM10.update()
+            //scatterChartPM2.update()
         }
+        var highestPM2Data = Math.max(... pm2Data) //Allows high number in pm2Data to be value range for graph
+        var highestPM10Data = Math.max(... pm10Data) //Allows high number in pm10Data to be value range for graph
+
+        var pm2Chart = new Dygraph(document.getElementById('graphdiv1'), pm2Data, { 
+            drawPoints: true,
+            legend: 'always',
+            valueRange: [0.0, highestPM2Data],
+            labels: ['Date', 'PM2'],
+            ylabel: 'PM2',
+            showRoller: true,
+            rollPeriod: 1, //Changes average period of data on graph
+            strokeWidth: 1.0,
+            pointSize: 2
+        }); 
+        var pm10Chart = new Dygraph(document.getElementById('graphdiv2'), pm10Data, { 
+            drawPoints: true,
+            legend: 'always',
+            valueRange: [0.0, highestPM10Data],
+            labels: ['Date', 'PM10'],
+            ylabel: 'PM10',
+            showRoller: true,
+            rollPeriod: 1, //Changes average period of data on graph
+            strokeWidth: 1.0,
+            pointSize: 2
+        }); 
 
     }
 
