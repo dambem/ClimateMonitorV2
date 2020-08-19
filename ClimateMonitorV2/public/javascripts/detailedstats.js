@@ -45,10 +45,10 @@ $(document).ready(() => {
         label2 = "PM2.5 Values"
         var pm2Data = []
         var pm10Data = []
-        var pm2Color = []
-        var pm10Color = []
-        scatterChartPM10.data.datasets = []
-        scatterChartPM2.data.datasets = []
+        //var pm2Color = []
+        //var pm10Color = []
+        //scatterChartPM10.data.datasets = []
+        //scatterChartPM2.data.datasets = []
         console.log(data)
         if (data.length == 0) {
             alert("Sorry, the data wasn't found!")
@@ -58,23 +58,52 @@ $(document).ready(() => {
                 new_data = data[j]
                 for (i = 1; i < new_data.length; i++) {
                     date = new Date(new_data[i]['timestamp'])
-                    pm2 = { x: date, y: parseFloat(new_data[i]['P2']) }
-                    pm10 = { x: date, y: parseFloat(new_data[i]['P1']) }
-                    pm2Color.push('green')
-                    pm10Color.push('red')
+                    p2Time = parseFloat(new_data[i]['P2']) 
+                    p1Time = parseFloat(new_data[i]['P1']) 
+                    pm2 = [date, p2Time] // To input data as an array to work with dygraph
+                    pm10 = [date, p1Time] // To input data as an array to work with dygraph
+                    //pm2Color.push('green')
+                    //pm10Color.push('red')
                     pm2Data.push(pm2)
                     pm10Data.push(pm10)
                 }
             }
-            scatterChartPM10.data.datasets.push({ label: "Pm10 Data", data: pm10Data, backgroundColor: 'red' })
-            scatterChartPM2.data.datasets.push({ label: "Pm2 Data", data: pm2Data, backgroundColor: 'blue' })
-            scatterChartPM10.update()
-            scatterChartPM2.update()
+            //scatterChartPM10.data.datasets.push({ label: "Pm10 Data", data: pm10Data, backgroundColor: 'red' })
+            //scatterChartPM2.data.datasets.push({ label: "Pm2 Data", data: pm2Data, backgroundColor: 'blue' })
+            //scatterChartPM10.update()
+            //scatterChartPM2.update()
         }
+        console.log(pm2Data)
+
+        var highestPM2Data = Math.max(... pm2Data) //Allows high number in pm2Data to be value range for graph
+        var highestPM10Data = Math.max(... pm10Data) //Allows high number in pm10Data to be value range for graph
+
+        pm2Chart = new Dygraph(document.getElementById('graphdiv3'), pm2Data, { 
+            drawPoints: true,
+            valueRange: [0.0, highestPM2Data],
+            labels: ['Date', 'PM2'],
+            ylabel: 'PM2',
+            showRoller: true,
+            rollPeriod: 1, //Changes average period of data on graph
+            strokeWidth: 1.0,
+            pointSize: 2
+        }); 
+        pm10Chart = new Dygraph(document.getElementById('graphdiv4'), pm10Data, { 
+            drawPoints: true,
+            valueRange: [0.0, highestPM10Data],
+            labels: ['Date', 'PM10'],
+            ylabel: 'PM10',
+            showRoller: true,
+            rollPeriod: 1, //Changes average period of data on graph
+            strokeWidth: 1.0,
+            pointSize: 2
+        }); 
 
     }
     var pm2Chart = document.getElementById('detailedstats').getContext('2d');
     var pm10Chart = document.getElementById('detailedstats2').getContext('2d');
+    
+      /*
 
     var scatterChartPM2 = new Chart(pm2Chart, {
         type: 'scatter',
@@ -91,7 +120,8 @@ $(document).ready(() => {
                 }]
             }
         },
-    })
+    }) */
+    /*
     var scatterChartPM10 = new Chart(pm10Chart, {
         type: 'scatter',
         data: {
@@ -107,5 +137,5 @@ $(document).ready(() => {
                 }]
             }
         },
-    })
+    }) */
 });

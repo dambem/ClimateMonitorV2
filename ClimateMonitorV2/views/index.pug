@@ -9,7 +9,8 @@ block content
     script(src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8")
     script(src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@0.7.7")
     script(src="https://cdn.jsdelivr.net/npm/litepicker/dist/js/main.js")
-
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.js")
+    link(href='https://cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.css' rel='stylesheet')
     
     body
         script(src="https://d3js.org/d3.v2.min.js")
@@ -39,13 +40,18 @@ block content
                 .modal-content
                     .modal-header
                         h5#exampleModalLabel.modal-title PM10 and PM2.5 Values Of Sensor 
-                        button.close(type='button' class="ripple" data-dismiss='modal' aria-label='Close')
+                        p For the chart below, you can click and drag to zoom. Double-clicking on the chart will zoom you back out. Shift-drag on the chart will pan. 
+                        button.close(type='button' data-dismiss='modal' aria-label='Close')
                             span(aria-hidden='true') &times;
                     .modal-body
                         div(class="container-fluid")
                             div(class="row")
+                            div(id="graphdiv1" width="1000" height="5000", style="width=800px; height=600px;")
+                            //graphdiv1 for dygraph
                                 div(class="col-md-12")
                                     canvas(id="pm2Chart" width="400" height="200")
+                            div(id="graphdiv2" width="1000" height="5000", style="width=800px; height=600px;")
+                            //graphdiv2 for dygraph
                             div(class="row")
                                 div(class="col-md-12")
                                     canvas(id="pm10Chart" width="400" height="200")
