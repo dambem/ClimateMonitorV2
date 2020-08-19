@@ -9,8 +9,15 @@ block content
     script(src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8")
     script(src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@0.7.7")
     script(src="https://cdn.jsdelivr.net/npm/litepicker/dist/js/main.js")
+<<<<<<< HEAD
     script(src="https://cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.js")
     link(href='https://cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.css' rel='stylesheet')
+=======
+    script(src="/javascripts/p5/p5.js")
+    script(src="/javascripts/p5/quicksettings.js")
+    script(src="/javascripts/p5/p5.gui.js")
+
+>>>>>>> Add mortality particle simulation
     
     body
         script(src="https://d3js.org/d3.v2.min.js")
@@ -131,7 +138,9 @@ block content
                                 div(id="danger_level2")
                             p(class="text-muted") Cigarette Calculation using research from - http://berkeleyearth.org/archive/air-pollution-and-cigarette-equivalence/
                             p(class="text-muted") Life-Span Calculation based on research from https://aqli.epic.uchicago.edu/
-
+                            h2() Pollution Effect Simulation
+                            p(class="text-muted") This simulation represents the effects of pollution in people's lifespan. The <span style="color: red">red cells</span> represent people under the conditions selected, whereas them <span style="color: blue">blue cells</span> represent the lifespan of people if there was no pollution.
+                                div(id="mortality_sim")
                 div(class="col", style="margin-left:2%;")
                     div(class="card")
                         div(class="card-title")
@@ -152,6 +161,8 @@ block content
         script(type="text/javascript" src="/javascripts/backup_data.js")
         script(type='module', src="/javascripts/gauge.js")
         script(type='module', src='/javascripts/new_mapping.js')
+        script(src="/javascripts/particles.js")
+
     script(src="https://cdn.jsdelivr.net/npm/litepicker/dist/js/main.js")
     footer(id = "sticky-footer" class="py-4 bg-light text-white-50")
         div(class="container text-center")
