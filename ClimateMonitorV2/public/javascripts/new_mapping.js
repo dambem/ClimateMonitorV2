@@ -301,8 +301,9 @@ function build_link_from_date(date) {
 }
 
 function currentWeatherDisplay() {
-    $.get("/weatherCompanyData", { key: config.WEATHER_COMPANY_KEY }, function(res) {
-        const weatherData = JSON.parse(res);
+    const weatherDataURL = "https://api.weather.com/v3/wx/forecast/hourly/2day?geocode=53.383331%2C-1.466667&format=json&units=e&language=en-US&apiKey=" + config.WEATHER_COMPANY_KEY
+    $.get(weatherDataURL,
+    function(weatherData){
         const currentTemp = weatherData.temperature[0];
         const currentTempCelcius = Math.floor((5/9) * (currentTemp - 32));
         const currentWindSpeed = weatherData.windSpeed[0];
@@ -315,8 +316,9 @@ function currentWeatherDisplay() {
 }
 
 function currentAirQualityDisplay() {
-    $.get("/airQualityIndex", { key: config.WEATHER_COMPANY_KEY }, function(res) {
-        const airQuality = JSON.parse(res);
+    const airQualityURL = "https://api.weather.com/v3/wx/globalAirQuality?geocode=53.383331,-1.466667&language=en-US&scale=DAQI&format=json&apiKey=" + config.WEATHER_COMPANY_KEY
+    $.get(airQualityURL,
+    function(airQuality){
         const currentAQI = airQuality.globalairquality.airQualityIndex;
         const currentCategory = airQuality.globalairquality.airQualityCategory;
         const currentMessage = airQuality.globalairquality.messages.General.text;
@@ -381,10 +383,10 @@ function currentAirQualityDisplay() {
 $(document).ready(() => {
     // Activate Carousel
     $('#pythongraphslideshow').carousel({ interval: 3000 });
-
-    $.get("/githubData", { key: config.GITHUB_API_TOKEN }, function(res) {
+    const githubURL = 'https://api.github.com/repos/dambem/ClimateMonitorV2/contents/ClimateMonitorV2/public/files/images?password=' + config.GITHUB_API_TOKEN; 
+    $.get(githubURL, 
+    function(files) {
         var images = []
-        var files = JSON.parse(res);
         // Get image links
         files.forEach(function (file) {
 
