@@ -625,6 +625,9 @@ $(document).ready(() => {
         if (pm10 >= 150 || pm2 >= 75) {
             return maximumPollutionIcon
         }
+        else if (pm10 >= 100 && pm10 < 150|| pm2 >= 50 && pm2 < 75) {
+            return veryHighPollutionIcon
+        }
         else if (pm10 >= 70 && pm10 < 100 || pm2 >= 35 && pm2 < 50) {
             return highPollutionIcon
         }
