@@ -30,27 +30,18 @@ block content
             div(class="sidebar-footer")
                 a(class="sidebar-footer-link" href="https://urbanflows.ac.uk/" target="_blank")
                     img(class="img-fluid", id="urbanflowsimage", src="images/urbanlogo.png", alt="The Urban Flows logo: A ring of navy, lilac & green dots interlaced with a star made of purple dots")
-        div(class='container-fluid' id="mainContainer")
-            div(class="row")
-                div(class="col-md-12")
-                    canvas(id="detailedstats" width="400" height="200")
+
             div(class="row")
                 div(class="col-md-12")
                     div(id='mapid')
                         div(class="loader")
 
-        p For the chart below, you can click and drag to zoom. Double-clicking on the chart will zoom you back out. Shift-drag on the chart will pan. 
-        div(id="graphdiv3" width="1000" height="5000", style="width=800px; height=600px;")
-        //graphdiv3 for dygraph
-        div(id="graphdiv4" width="1000" height="5000", style="width=800px; height=600px;")
-        //graphdiv4 for dygraph
-        div(class="row")
-            div(class="col-md-12")
-                canvas(id="detailedstats" width="400" height="200")
-
-        div(class="row")
-            div(class="col-md-12")
-                canvas(id="detailedstats2" width="400" height="200")
+        div(class='container-fluid' id="mainContainer")
+            div(class="row")
+                div(class="col-md-12")
+                    h6() For the chart below, you can click and drag to zoom. Double-clicking on the chart will zoom you back out. Shift-drag on the chart will pan. 
+                    div(id="graphdiv3" width="2500" height="5000", style="width=2000px; height=1000px;")
+                    div(id="graphdiv4" width="2500" height="5000", style="width=2000px; height=1000px;")
 
         script(type='text/javascript' src='/javascripts/config.js')
         script(type='text/javascript', src='/javascripts/detailedstats.js')
