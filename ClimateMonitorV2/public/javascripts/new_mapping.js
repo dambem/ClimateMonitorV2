@@ -302,8 +302,8 @@ function build_link_from_date(date) {
 
 function currentWeatherDisplay() {
     const weatherDataURL = "https://api.weather.com/v3/wx/forecast/hourly/2day?geocode=53.383331%2C-1.466667&format=json&units=e&language=en-US&apiKey=" + config.WEATHER_COMPANY_KEY
-    $.get(weatherDataURL,
-    function(weatherData){
+    $.get(weatherDataURL)
+    .done(function(weatherData){
         const currentTemp = weatherData.temperature[0];
         const currentTempCelcius = Math.floor((5/9) * (currentTemp - 32));
         const currentWindSpeed = weatherData.windSpeed[0];
@@ -312,6 +312,9 @@ function currentWeatherDisplay() {
         $('#currentWind').html(currentWindSpeed + 'mph');
         $('#weather-image').attr('src', '../files/weather-icons/' + currentIconCode + '.png');
         $('#weather-image').attr('alt', 'A forecast-style weather icon for the current weather conditions');
+        return true
+    }).fail(function(jqXHR, textStatus, errrorThrown) {
+        return false
     });
 }
 
@@ -467,7 +470,7 @@ $(document).ready(() => {
         });
     })
   
-    currentWeatherDisplay();
+    const weatherSuccess = currentWeatherDisplay();    
     currentAirQualityDisplay();
   
     //var pm2Chart = document.getElementById('pm2Chart').getContext('2d');
@@ -906,6 +909,9 @@ $(document).ready(() => {
 
     var json = $.getJSON('http://data.sensor.community/static/v2/data.1h.json', function (data) {
         var counter = 0
+        var totalpm2 = 0
+        var totalpm10 = 0
+        
         $.each(data, function (key, val) {
             if ((val.location.longitude > -1.58) && (val.location.longitude < -1.34) && (val.location.latitude <= 53.468) && (val.location.latitude >= 53.29)) {
                 if (val.sensordatavalues[0].value_type == "P1" && val.sensordatavalues.length > 1) {
@@ -944,7 +950,33 @@ $(document).ready(() => {
             }
             else {
                 circles.push(marker.addTo(sensorMap));
+                if (!weatherSuccess) {
+                    totalpm10 += parseFloat(pm10)
+                    totalpm2 += parseFloat(pm2)
+                }
             }
+        }
+        if (!weatherSuccess) {
+            var average_pm10 = Math.round((totalpm10 / counter))
+
+            var currentpm10Colour = colorForPollution(average_pm10, 0)
+            $('#pm10averagetotal').html(`<u><strong>${average_pm10}</strong></u>`)
+            $('#pm10averagetotal').css("color", currentpm10Colour)
+
+            $('#pm10averageheader').html("PM10 Average")
+            $('#pm10averageheader').css("color", currentpm10Colour)
+
+            $('#pm10averagedesc').html(colorForPollutionPhrase(average_pm10, 0))
+
+            var average_pm2 = Math.round((totalpm2 / counter))
+
+            var currentpm2Colour = colorForPollution(0, average_pm2)
+            $('#pm2averagetotal').html(`<u><strong>${average_pm2}</strong></u>`)
+            $('#pm2averagetotal').css("color", currentpm2Colour)
+
+            $('#pm2averageheader').html("PM2.5 Average")
+            $('#pm2averageheader').css("color", currentpm2Colour)
+            $('#pm2averagedesc').html(colorForPollutionPhrase(0, average_pm2))           
         }
         for (var i = 0; i < circles.length; i++) {
             var colorPM10 = colorForPollution(parseFloat(circles[i].options.p10), 0)
