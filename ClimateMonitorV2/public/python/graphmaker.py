@@ -26,7 +26,7 @@ daily_averages = []
 daily_dates = []
 
 for n in range(days):
-    date_chosen = date_getter(date.today(), 4, n)
+    date_chosen = '2020-01-21'
     pm10_list = []
 
     with open(date_chosen + '/sds011/31706.csv', 'rt') as csvfile:
