@@ -184,10 +184,7 @@ function removeParticle(particle) {
     particles[i].index--;
   }
 }
-// Debugging because printing every frame is overkill, mean to memory, and unnecessary really
-function keyPressed() {
-  console.log(particles);
-}
+
 // Some helper functions because I'm very lazy
 function addDictValues(dict1, dict2) {
   sum = {};

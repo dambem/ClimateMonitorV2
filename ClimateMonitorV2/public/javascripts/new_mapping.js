@@ -470,8 +470,8 @@ $(document).ready(() => {
         });
     })
   
-    const weatherSuccess = currentWeatherDisplay();    
-    currentAirQualityDisplay();
+    const weatherSuccess = false;    
+    //currentAirQualityDisplay();
   
     //var pm2Chart = document.getElementById('pm2Chart').getContext('2d');
     //var pm10Chart = document.getElementById('pm10Chart').getContext('2d');
@@ -662,7 +662,7 @@ $(document).ready(() => {
         attribution: 'Sensor Data <a href="https://luftdaten.info/en/home-en/">Luftdaten</a> | Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         maxZoom: 18,
         id: 'mapbox.streets',
-        accessToken: config.MAP_KEY
+        accessToken: 'pk.eyJ1IjoiZGFtYmVtIiwiYSI6ImNrYjJnbjQ1djBvbTkzMmxvMTFpZ2lvMWEifQ.jwAs_GyT8Q1Rhu8NAPcJYA'
     }).addTo(sensorMap);
 
     // Localises the view to go to Sheffield
@@ -795,7 +795,6 @@ $(document).ready(() => {
         //scatterChartPM10.data.datasets = []
         //scatterChartPM2.data.datasets = []
         //lineChartPM2.data.datasets = []
-        console.log(data)
         if (data.length == 0) {
             alert("Sorry, the data wasn't found!")
         } else {
@@ -909,9 +908,56 @@ $(document).ready(() => {
     $('#available_dates').click(function () {
         findDates(sensor_id)
     });
+    var counter = 0
+    console.log("Failing, using backup")
+    console.log(backup_data)
+    var items = backup_data
+    $('#input[name="dates"]').daterangepicker();
+    var circles = []
+    for (var i = 0; i < items.length; i++) {
+        var pm10 = parseFloat(items[i][3])
+        var pm2 = parseFloat(items[i][4])
+        var color = colorForPollution(items[i][3], items[i][4])
+        var marker = L.circle([items[i][1], items[i][2]], {
+            color: 'black',
+            fillColor: color,
+            fillOpacity: 0.8,
+            radius: 100,
+            p10: [items[i][3]],
+            p2: [items[i][4]],
+            sensor_id: [items[i][5]],
+            choice_id: i
+        })
+        var icon_poll = iconForPollution(pm10, pm2)
+        var marker = L.marker([items[i][1], items[i][2]], {
+            icon: icon_poll,
+            p10: pm10,
+            p2: pm2,
+            sensor_id: [items[i][5]],
+            choice_id: i
+        })
+        circles.push(marker.addTo(sensorMap));
+    }
+    for (var i = 0; i < circles.length; i++) {
+        var colorPM10 = colorForPollution(parseFloat(items[i][3]), 0)
+        var colorPM2 = colorForPollution(0, parseFloat(items[i][4]))
+        var iconPM10 = '<svg class="bi bi-heart-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="' + colorPM10 + '" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" /> </svg>'
+        var iconPM2 = '<svg class="bi bi-heart-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="' + colorPM2 + '" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" /> </svg>'
 
-    var json = $.getJSON('http://data.sensor.community/static/v2/data.1h.json', function (data) {
+        circles[i].bindPopup("<h4><b>Past 24 Hour Average</b></h4><h4>pm10: " + items[i][3] + " " + iconPM10 + "</h4><p>" + colorForPollutionPhrase(parseFloat(items[i][3]), 0) + "</p><h4>pm2.5: " + items[i][4] + " " + iconPM2 + "</h4><p>" + colorForPollutionPhrase(0, parseFloat(items[i][4])) + "</p><br> <button class='btn btn-primary' type='button' data-toggle='modal' data-target='#exampleModal'>Get Detailed Information And Statistics</button>");
+        data_values.push([items[i][0], items[i][1]]);
+        circles[i].on('click', function (event) {
+            //link = build_link_from_date(chosen_date, sensor_id)
+            //getData(link)
+            circle_chosen = event.target.options.choice_id
+            sensor_id = event.target.options.sensor_id
+        })
+    }
+    $('#pm10averagetotal').html(`Calculating..`)
+
+    var json = $.getJSON('https://data.sensor.community/static/v2/data.1h.json', function (data) {
         var counter = 0
+        console.log("Parsing Data")
         var totalpm2 = 0
         var totalpm10 = 0
         
@@ -959,7 +1005,6 @@ $(document).ready(() => {
                 }
             }
         }
-        if (!weatherSuccess) {
             var average_pm10 = Math.round((totalpm10 / counter))
 
             var currentpm10Colour = colorForPollution(average_pm10, 0)
@@ -980,7 +1025,7 @@ $(document).ready(() => {
             $('#pm2averageheader').html("PM2.5 Average")
             $('#pm2averageheader').css("color", currentpm2Colour)
             $('#pm2averagedesc').html(colorForPollutionPhrase(0, average_pm2))           
-        }
+        
         for (var i = 0; i < circles.length; i++) {
             var colorPM10 = colorForPollution(parseFloat(circles[i].options.p10), 0)
             var colorPM2 = colorForPollution(0, parseFloat(circles[i].options.p2))
@@ -997,52 +1042,4 @@ $(document).ready(() => {
             })
         }
     })
-        .fail(function () {
-            var counter = 0
-            console.log("Failing, using backup")
-            console.log(backup_data)
-            var items = backup_data
-            $('#input[name="dates"]').daterangepicker();
-            var circles = []
-            for (var i = 0; i < items.length; i++) {
-                var pm10 = parseFloat(items[i][3])
-                var pm2 = parseFloat(items[i][4])
-                var color = colorForPollution(items[i][3], items[i][4])
-                var marker = L.circle([items[i][1], items[i][2]], {
-                    color: 'black',
-                    fillColor: color,
-                    fillOpacity: 0.8,
-                    radius: 100,
-                    p10: [items[i][3]],
-                    p2: [items[i][4]],
-                    sensor_id: [items[i][5]],
-                    choice_id: i
-                })
-                var icon_poll = iconForPollution(pm10, pm2)
-                var marker = L.marker([items[i][1], items[i][2]], {
-                    icon: icon_poll,
-                    p10: pm10,
-                    p2: pm2,
-                    sensor_id: [items[i][5]],
-                    choice_id: i
-                })
-                circles.push(marker.addTo(sensorMap));
-            }
-            for (var i = 0; i < circles.length; i++) {
-                var colorPM10 = colorForPollution(parseFloat(items[i][3]), 0)
-                var colorPM2 = colorForPollution(0, parseFloat(items[i][4]))
-                var iconPM10 = '<svg class="bi bi-heart-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="' + colorPM10 + '" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" /> </svg>'
-                var iconPM2 = '<svg class="bi bi-heart-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="' + colorPM2 + '" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" /> </svg>'
-
-                circles[i].bindPopup("<h4><b>Past 24 Hour Average</b></h4><h4>pm10: " + items[i][3] + " " + iconPM10 + "</h4><p>" + colorForPollutionPhrase(parseFloat(items[i][3]), 0) + "</p><h4>pm2.5: " + items[i][4] + " " + iconPM2 + "</h4><p>" + colorForPollutionPhrase(0, parseFloat(items[i][4])) + "</p><br> <button class='btn btn-primary' type='button' data-toggle='modal' data-target='#exampleModal'>Get Detailed Information And Statistics</button>");
-                data_values.push([items[i][0], items[i][1]]);
-                circles[i].on('click', function (event) {
-                    //link = build_link_from_date(chosen_date, sensor_id)
-                    //getData(link)
-                    circle_chosen = event.target.options.choice_id
-                    sensor_id = event.target.options.sensor_id
-                })
-            }
-    });
-    
 });
