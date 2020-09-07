@@ -153,7 +153,8 @@ class Particle {
     }
     this.age += 1 / 60; // Equivalent of seconds based on framerate
     this.alpha = map(this.age, 0, this.lifespan, 255, 0);
-    this.size = map(this.age, 0, this.lifespan, 3, 9);
+      this.size = map(this.age, 0, this.lifespan, 3, 9);
+
     this.angularFactor += FORCE;
     // this.neighbours = findNeighbours(this.position, MIN_DISTANCE, MAX_DISTANCE);
   }
