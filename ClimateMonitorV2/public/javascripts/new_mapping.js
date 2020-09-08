@@ -1024,7 +1024,11 @@ $(document).ready(() => {
 
             $('#pm2averageheader').html("PM2.5 Average")
             $('#pm2averageheader').css("color", currentpm2Colour)
-            $('#pm2averagedesc').html(colorForPollutionPhrase(0, average_pm2))           
+        $('#pm2averagedesc').html(colorForPollutionPhrase(0, average_pm2))           
+        mortality(average_pm10, average_pm2, 500, "#mortality_pm10", "The current PM10 value is expected to cause the following increases in mortality over an average of 1000 people")
+        dangerBasedOnPM(average_pm10, average_pm2, 100)
+        lifespan_display(average_pm10, average_pm2, '#life-span', null)
+        cigarette_display(cigarettes(average_pm2), '#cigarettes', null)
         
         for (var i = 0; i < circles.length; i++) {
             var colorPM10 = colorForPollution(parseFloat(circles[i].options.p10), 0)
