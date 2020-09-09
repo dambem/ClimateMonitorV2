@@ -9,19 +9,19 @@ var request = require("request")
 var requestify = require('requestify')
 
 router.get('/test', function (req, res) {
-    res.render("newtest", { title: "SheffSenseV2: Sheffield Climate Monitor" });
+    res.render("newtest", { title: "SheffSense: Sheffield Climate Monitor" });
 });
 router.get('/', function (req, res) {
-    res.render('index', { title: 'SheffSenseV2: Sheffield Climate Monitor' });
+    res.render('index', { title: 'SheffSense: Sheffield Climate Monitor' });
 });
 router.get('/about', function (req, res) {
-    res.render('about', { title: 'About SheffSenseV2' });
+    res.render('about', { title: 'SheffSense: About ' });
 });
 router.get('/detailedstats', function (req, res) {
     res.render('detailedstats', { title: 'SheffSenseV2: Detailed Statistics' });
 });
 router.get('/our-team', function (req, res) {
-    res.render('our-team', { title: 'Our team' });
+    res.render('our-team', { title: 'SheffSense: Our team' });
 });
 router.get('/local', function (req, res) {
     res.render('index', { title: "Parsing Some Local Data" })
