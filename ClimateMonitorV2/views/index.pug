@@ -19,25 +19,24 @@ block content
     
     body
         script(src="https://d3js.org/d3.v2.min.js")
-
         div(class="sidebar")
             div(class="sidebar-header")
                 a(href="https://github.com/dambem/ClimateMonitorV2", id="sheffsenseImageHolder", target="_blank")
                     img(class="img-fluid", id="sheffsenseImage", src="sheffsense.png", alt="The Sheffsense logo: A colourful mosaic circle on a blurred landscape background")
-            div(class="sidebar-section-active")
+            div(class="sidebar-section")
                 img(class="sidebar-icon" src="icons/home.svg")
-                a(class="nav-link" href="/") Home
+                a(class="nav-link" href="/") Pollution Map
             div(class="sidebar-section")
                 img(class="sidebar-icon" src="icons/info.svg")
                 a(class="nav-link" href="/about") About
-            div(class="sidebar-section")
-                img(class="sidebar-icon" src="icons/statistics.svg")
-                a(class="nav-link" href="/detailedstats") Statistics
+            //div(class="sidebar-section-active")
+            //    img(class="sidebar-icon" src="icons/statistics.svg")
+            //    a(class="nav-link" href="/detailedstats") Statistics
             div(class="sidebar-section")
                 img(class="sidebar-icon" src="icons/group.svg")
                 a(class="nav-link" href="/our-team") Our Team
             div(class="sidebar-footer")
-                a(href="https://urbanflows.ac.uk/" target="_blank")
+                a(class="sidebar-footer-link" href="https://urbanflows.ac.uk/" target="_blank")
                     img(class="img-fluid", id="urbanflowsimage", src="images/urbanlogo.png", alt="The Urban Flows logo: A ring of navy, lilac & green dots interlaced with a star made of purple dots")
 
         #exampleModal.modal.fade.modal-lg(tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true')
@@ -59,7 +58,7 @@ block content
                             //graphdiv2 for dygraph
                             div(class="row")
                                 div(class="col-md-12")
-                                    canvas(id="pm10Chart" width="400" height="200")
+                                    //canvas(id="pm10Chart" width="400" height="200")
                                 //input(type="text" name="daterange" value="01/01/2018 - 01/15/2018") 
                                 //div(class='slidecontainer')
                                 //    input(type="range", min=-364, max=0, value=0, class="slider", id="myRange")

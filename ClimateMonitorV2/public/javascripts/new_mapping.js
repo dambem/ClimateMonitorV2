@@ -532,22 +532,22 @@ $(document).ready(() => {
         },
     })
     */
-    var scatterChartPM10 = new Chart(pm10Chart, {
-        type: 'scatter',
-        data: {
-        },
-        options: {
-            scales: {
-                xAxes: [{
-                    type: 'time',
-                    position: 'bottom',
-                    time: {
-                        unit: 'hour'
-                    }
-                }]
-            }
-        },
-    })
+    //var scatterChartPM10 = new Chart(pm10Chart, {
+    //    type: 'scatter',
+    //    data: {
+    //    },
+    //    options: {
+    //        scales: {
+    //            xAxes: [{
+    //                type: 'time',
+    //                position: 'bottom',
+    //                time: {
+    //                    unit: 'hour'
+    //                }
+    //            }]
+    //        }
+    //    },
+    //})
     // end of scatter graph
     // Create the pollution chart 
     var ctx = document.getElementById("pollutionChart").getContext('2d');
