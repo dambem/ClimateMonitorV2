@@ -108,7 +108,13 @@ function lifeSpan(PM10, PM2) {
         return (0)
     }
     else {
-        return ((PM10inc * 7) + (PM2inc * 12))
+        const lifespan = ((PM10inc * 7) + (PM2inc * 12));
+        if (lifespan <= 0) {
+            return 0;
+        }
+        else {
+            return lifespan;
+        }
     }
 }
 function lifespan_display(PM10, PM2, id, preface) {
