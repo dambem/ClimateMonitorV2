@@ -103,7 +103,37 @@ block content
                                 p1(id="pm2averagedesc") 
                             hr
                             h4(id="aqi-header")
-                        
+                            div(id="air-quality")
+                                div(id="power-gauge")
+                                h4(id="currentAQI")
+                                h6(id="currentCategory")
+                                h6(id="currentMessageGeneral")
+                                h6(id="currentMessageSensitive")
+                            h4() Pollution Forecast
+
+                            div(class='aqiTable')
+                                    table(style='width:100%', border='0')
+                                        tr
+                                            th 
+                                            th(id="date1")
+                                            th(id="date2")
+                                            th(id="date3")
+                                            th(id="date4")
+                                            th(id="date5")
+                                        tr 
+                                            th PM10
+                                            td(id="pm10_1")
+                                            td(id="pm10_2")
+                                            td(id="pm10_3")
+                                            td(id="pm10_4")
+                                            td(id="pm10_5")
+                                        tr
+                                            th PM2.5
+                                            td(id="pm25_1")
+                                            td(id="pm25_2")
+                                            td(id="pm25_3")
+                                            td(id="pm25_4")
+                                            td(id="pm25_5")
                             div(class="col-md-12" id = "healtheffects")
                     div(class="card")
                         div(class="card-body")

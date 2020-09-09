@@ -319,20 +319,20 @@ function currentWeatherDisplay() {
 }
 
 function currentAirQualityDisplay() {
-    const airQualityURL = "https://api.weather.com/v3/wx/globalAirQuality?geocode=53.383331,-1.466667&language=en-US&scale=DAQI&format=json&apiKey=" + config.WEATHER_COMPANY_KEY
+    const airQualityURL = "https://api.waqi.info/feed/sheffield/?token=3d23ae70180b539813cf9dbc45744037d482065d"
     $.get(airQualityURL,
     function(airQuality){
-        const currentAQI = airQuality.globalairquality.airQualityIndex;
-        const currentCategory = airQuality.globalairquality.airQualityCategory;
-        const currentMessage = airQuality.globalairquality.messages.General.text;
-        const currentMessageSensitive = airQuality.globalairquality.messages['Sensitive Group'].text;
+        const currentAQI = airQuality.data.aqi;
+        //const currentCategory = airQuality.globalairquality.airQualityCategory;
+        //const currentMessage = airQuality.globalairquality.messages.General.text;
+        //const currentMessageSensitive = airQuality.globalairquality.messages['Sensitive Group'].text;
 
         // Set values for HTML attributes
         $('#aqi-header').html("Air Quality Index Average")
         $('#currentAQI').html(`<b><strong>${currentAQI}</strong></b>`);
-        $('#currentCategory').html(currentCategory);
-        $('#currentMessageGeneral').html('<b>General Advice: </b>' + currentMessage);
-        $('#currentMessageSensitive').html('<b>Advice for Sensitive Groups: </b>' + currentMessageSensitive)
+        //$('#currentCategory').html(currentCategory);
+        //$('#currentMessageGeneral').html('<b>General Advice: </b>' + currentMessage);
+        //$('#currentMessageSensitive').html('<b>Advice for Sensitive Groups: </b>' + currentMessageSensitive)
 
 
         // Set up gauge for AQI
@@ -354,9 +354,27 @@ function currentAirQualityDisplay() {
         
         updateReadings(currentAQI);
 
+        $('#date1').html(airQuality.data.forecast.daily.pm10[0].day);
+        $('#date2').html(airQuality.data.forecast.daily.pm10[1].day);
+        $('#date3').html(airQuality.data.forecast.daily.pm10[2].day);
+        $('#date4').html(airQuality.data.forecast.daily.pm10[3].day);
+        $('#date5').html(airQuality.data.forecast.daily.pm10[4].day);
+
+        $('#pm10_1').html(airQuality.data.forecast.daily.pm10[0].avg);
+        $('#pm10_2').html(airQuality.data.forecast.daily.pm10[1].avg);
+        $('#pm10_3').html(airQuality.data.forecast.daily.pm10[2].avg);
+        $('#pm10_4').html(airQuality.data.forecast.daily.pm10[3].avg);
+        $('#pm10_5').html(airQuality.data.forecast.daily.pm10[4].avg);
+
+        $('#pm25_1').html(airQuality.data.forecast.daily.pm25[0].avg);
+        $('#pm25_2').html(airQuality.data.forecast.daily.pm25[1].avg);
+        $('#pm25_3').html(airQuality.data.forecast.daily.pm25[2].avg);
+        $('#pm25_4').html(airQuality.data.forecast.daily.pm25[3].avg);
+        $('#pm25_5').html(airQuality.data.forecast.daily.pm25[4].avg);
+
         // Get average values of PM10 and PM2.5 for Sheffield
-        var average_pm10 = airQuality.globalairquality.pollutants.PM10.amount;
-        var average_pm2 = airQuality.globalairquality.pollutants["PM2.5"].amount;
+        var average_pm10 = airQuality.data.iaqi.pm10.v;
+        var average_pm2 = airQuality.data.iaqi.pm25.v;
 
         // Set values for average PM10 levels
         $('#pm10averagetotal').html(`<u><strong>${average_pm10}</strong></u>`)
@@ -470,9 +488,8 @@ $(document).ready(() => {
         });
     })
   
-    const weatherSuccess = false;    
-    //currentAirQualityDisplay();
-  
+    currentAirQualityDisplay(); 
+
     //var pm2Chart = document.getElementById('pm2Chart').getContext('2d');
     //var pm10Chart = document.getElementById('pm10Chart').getContext('2d');
     // Currently not in use, date range picker for graphs
@@ -956,10 +973,10 @@ $(document).ready(() => {
     $('#pm10averagetotal').html(`Calculating..`)
 
     var json = $.getJSON('https://data.sensor.community/static/v2/data.1h.json', function (data) {
-        var counter = 0
+        //var counter = 0
         console.log("Parsing Data")
-        var totalpm2 = 0
-        var totalpm10 = 0
+        //var totalpm2 = 0
+        //var totalpm10 = 0
         
         $.each(data, function (key, val) {
             if ((val.location.longitude > -1.58) && (val.location.longitude < -1.34) && (val.location.latitude <= 53.468) && (val.location.latitude >= 53.29)) {
@@ -999,37 +1016,37 @@ $(document).ready(() => {
             }
             else {
                 circles.push(marker.addTo(sensorMap));
-                if (!weatherSuccess) {
-                    totalpm10 += parseFloat(pm10)
-                    totalpm2 += parseFloat(pm2)
-                }
+                //totalpm10 += parseFloat(pm10)
+                //totalpm2 += parseFloat(pm2)
             }
         }
-            var average_pm10 = Math.round((totalpm10 / counter))
 
-            var currentpm10Colour = colorForPollution(average_pm10, 0)
-            $('#pm10averagetotal').html(`<u><strong>${average_pm10}</strong></u>`)
-            $('#pm10averagetotal').css("color", currentpm10Colour)
+    
+        // var average_pm10 = Math.round((totalpm10 / counter))
 
-            $('#pm10averageheader').html("PM10 Average")
-            $('#pm10averageheader').css("color", currentpm10Colour)
+        // var currentpm10Colour = colorForPollution(average_pm10, 0)
+        // $('#pm10averagetotal').html(`<u><strong>${average_pm10}</strong></u>`)
+        // $('#pm10averagetotal').css("color", currentpm10Colour)
 
-            $('#pm10averagedesc').html(colorForPollutionPhrase(average_pm10, 0))
+        // $('#pm10averageheader').html("PM10 Average")
+        // $('#pm10averageheader').css("color", currentpm10Colour)
 
-            var average_pm2 = Math.round((totalpm2 / counter))
+        // $('#pm10averagedesc').html(colorForPollutionPhrase(average_pm10, 0))
 
-            var currentpm2Colour = colorForPollution(0, average_pm2)
-            $('#pm2averagetotal').html(`<u><strong>${average_pm2}</strong></u>`)
-            $('#pm2averagetotal').css("color", currentpm2Colour)
+        // var average_pm2 = Math.round((totalpm2 / counter))
 
-            $('#pm2averageheader').html("PM2.5 Average")
-            $('#pm2averageheader').css("color", currentpm2Colour)
-        $('#pm2averagedesc').html(colorForPollutionPhrase(0, average_pm2))           
-        mortality(average_pm10, average_pm2, 500, "#mortality_pm10", "The current PM10 value is expected to cause the following increases in mortality over an average of 1000 people")
-        dangerBasedOnPM(average_pm10, average_pm2, 100)
-        lifespan_display(average_pm10, average_pm2, '#life-span', null)
-        cigarette_display(cigarettes(average_pm2), '#cigarettes', null)
-        
+        // var currentpm2Colour = colorForPollution(0, average_pm2)
+        // $('#pm2averagetotal').html(`<u><strong>${average_pm2}</strong></u>`)
+        // $('#pm2averagetotal').css("color", currentpm2Colour)
+
+        // $('#pm2averageheader').html("PM2.5 Average")
+        // $('#pm2averageheader').css("color", currentpm2Colour)
+        // $('#pm2averagedesc').html(colorForPollutionPhrase(0, average_pm2))           
+        // mortality(average_pm10, average_pm2, 500, "#mortality_pm10", "The current PM10 value is expected to cause the following increases in mortality over an average of 1000 people")
+        // dangerBasedOnPM(average_pm10, average_pm2, 100)
+        // lifespan_display(average_pm10, average_pm2, '#life-span', null)
+        // cigarette_display(cigarettes(average_pm2), '#cigarettes', null)
+    
         for (var i = 0; i < circles.length; i++) {
             var colorPM10 = colorForPollution(parseFloat(circles[i].options.p10), 0)
             var colorPM2 = colorForPollution(0, parseFloat(circles[i].options.p2))
