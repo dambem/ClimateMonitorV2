@@ -1,6 +1,5 @@
 // Everything required once loaded
 
-
 $(document).ready(() => {
     /**
     * Multi_date_search, throws a call to the backend to search through multiple dates for sensor details given a sensor id.
@@ -43,99 +42,75 @@ $(document).ready(() => {
     function updateGraphMultiDay(data) {
         var i;
         label2 = "PM2.5 Values"
-        var pm2Data = []
-        var pm10Data = []
-        //var pm2Color = []
-        //var pm10Color = []
-        //scatterChartPM10.data.datasets = []
-        //scatterChartPM2.data.datasets = []
-        console.log(data)
+        var pm2DatePlotly = []
+        var pm2DataPlotly = []
+        var pm10DatePlotly = []
+        var pm10DataPlotly = []
         if (data.length == 0) {
             alert("Sorry, the data wasn't found!")
         } else {
             for (j = 1; j < data.length; j++) {
-                console.log(data[j])
                 new_data = data[j]
                 for (i = 1; i < new_data.length; i++) {
                     date = new Date(new_data[i]['timestamp'])
                     p2Time = parseFloat(new_data[i]['P2']) 
                     p1Time = parseFloat(new_data[i]['P1']) 
-                    pm2 = [date, p2Time] // To input data as an array to work with dygraph
-                    pm10 = [date, p1Time] // To input data as an array to work with dygraph
-                    //pm2Color.push('green')
-                    //pm10Color.push('red')
-                    pm2Data.push(pm2)
-                    pm10Data.push(pm10)
+                    pm2DatePlotly.push(date)
+                    pm2DataPlotly.push(p2Time)
+                    pm10DatePlotly.push(date)
+                    pm10DataPlotly.push(p1Time)
                 }
             }
-            //scatterChartPM10.data.datasets.push({ label: "Pm10 Data", data: pm10Data, backgroundColor: 'red' })
-            //scatterChartPM2.data.datasets.push({ label: "Pm2 Data", data: pm2Data, backgroundColor: 'blue' })
-            //scatterChartPM10.update()
-            //scatterChartPM2.update()
         }
-        console.log(pm2Data)
+ 
+        var trace1 = {
+            x: pm2DatePlotly,
+            y: pm2DataPlotly,
+            type: 'scatter',
+            name: 'PM2 Data'
+          };
+          
+          var trace2 = {
+            x: pm10DatePlotly,
+            y: pm10DataPlotly,
+            type: 'scatter',
+            name: 'PM10 Data'
+          };
 
-        var highestPM2Data = Math.max(... pm2Data) //Allows high number in pm2Data to be value range for graph
-        var highestPM10Data = Math.max(... pm10Data) //Allows high number in pm10Data to be value range for graph
-
-        pm2Chart = new Dygraph(document.getElementById('graphdiv3'), pm2Data, { 
-            drawPoints: true,
-            valueRange: [0.0, highestPM2Data],
-            labels: ['Date', 'PM2'],
-            ylabel: 'PM2',
-            showRoller: true,
-            rollPeriod: 1, //Changes average period of data on graph
-            strokeWidth: 1.0,
-            pointSize: 2
-        }); 
-        pm10Chart = new Dygraph(document.getElementById('graphdiv4'), pm10Data, { 
-            drawPoints: true,
-            valueRange: [0.0, highestPM10Data],
-            labels: ['Date', 'PM10'],
-            ylabel: 'PM10',
-            showRoller: true,
-            rollPeriod: 1, //Changes average period of data on graph
-            strokeWidth: 1.0,
-            pointSize: 2
-        }); 
-
-    }
-    var pm2Chart = document.getElementById('detailedstats').getContext('2d');
-    var pm10Chart = document.getElementById('detailedstats2').getContext('2d');
+          var data = [trace1, trace2];
+          var dataPM2 = [trace1];
+          var dataPM10 = [trace2];
+          var layout = {
+              title: 'PM2 and PM10 data combined',
+              xaxis: {
+                  title: 'Timeframe'
+              },
+              yaxis: {
+                  title: 'PM Values'
+              },
+          };
+          var layoutPM2 = {
+            title: 'PM2 data',
+            xaxis: {
+                title: 'Timeframe'
+            },
+            yaxis: {
+                title: 'PM2 Values'
+            },
+        };
     
-      /*
-
-    var scatterChartPM2 = new Chart(pm2Chart, {
-        type: 'scatter',
-        data: {
-        },
-        options: {
-            scales: {
-                xAxes: [{
-                    type: 'time',
-                    position: 'bottom',
-                    time: {
-                        unit: 'day'
-                    }
-                }]
-            }
-        },
-    }) */
-    /*
-    var scatterChartPM10 = new Chart(pm10Chart, {
-        type: 'scatter',
-        data: {
-        },
-        options: {
-            scales: {
-                xAxes: [{
-                    type: 'time',
-                    position: 'bottom',
-                    time: {
-                        unit: 'day'
-                    }
-                }]
-            }
-        },
-    }) */
+          var layoutPM10 = {
+              title: 'PM10 data',
+              xaxis: {
+                title: 'Timeframe'
+            },
+            yaxis: {
+                title: 'PM10 Values'
+            },
+        };
+          
+          Plotly.newPlot('graphtest', data, layout);
+          Plotly.newPlot('graphtest2', dataPM2, layoutPM2);
+          Plotly.newPlot('graphtest3', dataPM10, layoutPM10);
+    }
 });

@@ -477,61 +477,6 @@ $(document).ready(() => {
     //var pm10Chart = document.getElementById('pm10Chart').getContext('2d');
     // Currently not in use, date range picker for graphs
    
-
-    // lineChartPM2
-    /*
-    var lineChartPM2 = new Chart(pm2Chart, {
-        type: 'line',
-        data: {
-        },
-        options: {
-            scales: {
-                xAxes: [{
-                    type: 'time',
-                    position: 'bottom',
-                    time: {
-                        unit: 'day'
-                    }
-                }]
-            }
-        },
-    }) */
-    // start of scatter graph
-    /*
-    var scatterChartPM2 = new Chart(pm2Chart, {
-        type: 'scatter',
-        data: {
-        },
-        options: {
-            scales: {
-                xAxes: [{
-                    type: 'time',
-                    position: 'bottom',
-                    time: {
-                        unit: 'day'
-                    }
-                }]
-            }
-        },
-    })
-    */
-    var scatterChartPM10 = new Chart(pm10Chart, {
-        type: 'scatter',
-        data: {
-        },
-        options: {
-            scales: {
-                xAxes: [{
-                    type: 'time',
-                    position: 'bottom',
-                    time: {
-                        unit: 'hour'
-                    }
-                }]
-            }
-        },
-    })
-    // end of scatter graph
     // Create the pollution chart 
     var ctx = document.getElementById("pollutionChart").getContext('2d');
 
@@ -785,13 +730,10 @@ $(document).ready(() => {
     function updateGraphMultiDay(data) {
         var i;
         var label2 = "PM2.5 Values"
-        var pm2Data = []
-        var pm10Data = []
-       // var pm2Color = []
-       // var pm10Color = []
-        //scatterChartPM10.data.datasets = []
-        //scatterChartPM2.data.datasets = []
-        //lineChartPM2.data.datasets = []
+        var pm2DatePlotly = []
+        var pm2DataPlotly = []
+        var pm10DatePlotly = []
+        var pm10DataPlotly = []
         console.log(data)
         if (data.length == 0) {
             alert("Sorry, the data wasn't found!")
@@ -802,60 +744,60 @@ $(document).ready(() => {
                     var date = new Date(new_data[i]['timestamp'])
                     var p2Time = parseFloat(new_data[i]['P2'])
                     var p1Time = parseFloat(new_data[i]['P1'])
-                    var pm2 = [date, p2Time]
-                    var pm10 = [date, p1Time]
-                    //pm2Color.push('green')
-                    //pm10Color.push('red')
-                    pm2Data.push(pm2)
-                    pm10Data.push(pm10)
+                    pm2DatePlotly.push(date)
+                    pm2DataPlotly.push(p2Time)
+                    pm10DatePlotly.push(date)
+                    pm10DataPlotly.push(p1Time)
                 }
             }
-            //scatterChartPM10.data.datasets.push({ label: "Pm10 Data", data: pm10Data, backgroundColor: 'red' })
-            //lineChartPM2.data.datasets.push({ label: "Pm2 Data", data: pm2Data, backgroundColor: 'blue'})
-            //scatterChartPM2.data.datasets.push({ label: "Pm2 Data", data: pm2Data, backgroundColor: 'blue' })
-            //scatterChartPM10.update()
-            //lineChartPM2.update()
-            //scatterChartPM2.update()
         }
-        var highestPM2Data = Math.max(... pm2Data) //Allows high number in pm2Data to be value range for graph
-        var highestPM10Data = Math.max(... pm10Data) //Allows high number in pm10Data to be value range for graph
-
-        var pm2Chart = new Dygraph(document.getElementById('graphdiv1'), pm2Data, { 
-            drawPoints: true,
-            legend: 'always',
-            valueRange: [0.0, highestPM2Data],
-            labels: ['Date', 'PM2'],
-            ylabel: 'PM2',
-            showRoller: true,
-            rollPeriod: 1, //Changes average period of data on graph
-            strokeWidth: 1.0,
-            pointSize: 2
-        }); 
-        var pm10Chart = new Dygraph(document.getElementById('graphdiv2'), pm10Data, { 
-            drawPoints: true,
-            legend: 'always',
-            valueRange: [0.0, highestPM10Data],
-            labels: ['Date', 'PM10'],
-            ylabel: 'PM10',
-            showRoller: true,
-            rollPeriod: 1, //Changes average period of data on graph
-            strokeWidth: 1.0,
-            pointSize: 2
-        }); 
+        var trace1 = {
+            x: pm2DatePlotly,
+            y: pm2DataPlotly,
+            type: 'scatter',
+            name: 'PM2 Data'
+          };
           
+          var trace2 = {
+            x: pm10DatePlotly,
+            y: pm10DataPlotly,
+            type: 'scatter',
+            name: 'PM10 Data'
+          };
+
+          var dataPM2 = [trace1];
+          var dataPM10 = [trace2];
+          var layoutPM2 = {
+            title: 'PM2 data',
+            xaxis: {
+                title: 'Timeframe'
+            },
+            yaxis: {
+                title: 'PM2 Values'
+            },
+        };
+    
+          var layoutPM10 = {
+              title: 'PM10 data',
+              xaxis: {
+                title: 'Timeframe'
+            },
+            yaxis: {
+                title: 'PM10 Values'
+            },
+        };
+          
+          Plotly.newPlot('graphdiv1', dataPM2, layoutPM2);
+          Plotly.newPlot('graphdiv2', dataPM10, layoutPM10);
 
     }
     function updateGraph(data) {    
         var i;
         label2 = "PM2.5 Values"
-        var pm2Data = []
-        var pm10Data = []
-        //var pm2Color = []
-        //var pm10Color = []
-        //scatterChartPM10.data.datasets = []
-        //lineChartPM2.data.datasets = []
-        //scatterChartPM2.data.datasets = []
-
+        var pm2DatePlotly = []
+        var pm2DataPlotly = []
+        var pm10DatePlotly = []
+        var pm10DataPlotly = []
         if (data.length == 0) {
             alert("Sorry, the data wasn't found!")
         } else {
@@ -863,43 +805,50 @@ $(document).ready(() => {
                 var date = new Date(data[i]['timestamp'])
                 var p2Time = parseFloat(data[i]['P2'])
                 var p1Time = parseFloat(data[i]['P1'])
-                var pm2 = [date, p2Time]
-                var pm10 = [date, p1Time]
-                //pm2Color.push('green')
-                //pm10Color.push('red')
-                pm2Data.push(pm2)
-                pm10Data.push(pm10)
+                pm2DatePlotly.push(date)
+                pm2DataPlotly.push(p2Time)
+                pm10DatePlotly.push(date)
+                pm10DataPlotly.push(p1Time)
             }
-            //scatterChartPM10.data.datasets.push({ label: "Pm10 Data", data: pm10Data, backgroundColor: 'red' })
-            //scatterChartPM2.data.datasets.push({ label: "Pm2 Data", data: pm2Data, backgroundColor: 'blue' })
-            //scatterChartPM10.update()
-            //scatterChartPM2.update()
         }
-        var highestPM2Data = Math.max(... pm2Data) //Allows high number in pm2Data to be value range for graph
-        var highestPM10Data = Math.max(... pm10Data) //Allows high number in pm10Data to be value range for graph
+        var trace1 = {
+            x: pm2DatePlotly,
+            y: pm2DataPlotly,
+            type: 'scatter',
+            name: 'PM2 Data'
+          };
+          
+          var trace2 = {
+            x: pm10DatePlotly,
+            y: pm10DataPlotly,
+            type: 'scatter',
+            name: 'PM10 Data'
+          };
 
-        var pm2Chart = new Dygraph(document.getElementById('graphdiv1'), pm2Data, { 
-            drawPoints: true,
-            legend: 'always',
-            valueRange: [0.0, highestPM2Data],
-            labels: ['Date', 'PM2'],
-            ylabel: 'PM2',
-            showRoller: true,
-            rollPeriod: 1, //Changes average period of data on graph
-            strokeWidth: 1.0,
-            pointSize: 2
-        }); 
-        var pm10Chart = new Dygraph(document.getElementById('graphdiv2'), pm10Data, { 
-            drawPoints: true,
-            legend: 'always',
-            valueRange: [0.0, highestPM10Data],
-            labels: ['Date', 'PM10'],
-            ylabel: 'PM10',
-            showRoller: true,
-            rollPeriod: 1, //Changes average period of data on graph
-            strokeWidth: 1.0,
-            pointSize: 2
-        }); 
+          var dataPM2 = [trace1];
+          var dataPM10 = [trace2];
+          var layoutPM2 = {
+            title: 'PM2 data',
+            xaxis: {
+                title: 'Timeframe'
+            },
+            yaxis: {
+                title: 'PM2 Values'
+            },
+        };
+    
+          var layoutPM10 = {
+              title: 'PM10 data',
+              xaxis: {
+                title: 'Timeframe'
+            },
+            yaxis: {
+                title: 'PM10 Values'
+            },
+        };
+          
+          Plotly.newPlot('graphdiv1', dataPM2, layoutPM2);
+          Plotly.newPlot('graphdiv2', dataPM10, layoutPM10);
 
     }
 
