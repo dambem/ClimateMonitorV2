@@ -675,11 +675,11 @@ $(document).ready(() => {
         alert("WARNING: WEATHER_COMPANY_KEY is not set\nWeather company infomation will be unavailable.")
     }
 
-    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
         attribution: 'Sensor Data <a href="https://luftdaten.info/en/home-en/">Luftdaten</a> | Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         maxZoom: 18,
-        id: 'mapbox.streets',
-        accessToken: 'pk.eyJ1IjoiZGFtYmVtIiwiYSI6ImNrYjJnbjQ1djBvbTkzMmxvMTFpZ2lvMWEifQ.jwAs_GyT8Q1Rhu8NAPcJYA'
+        id: 'mapbox/streets-v11',
+        accessToken: 'pk.eyJ1IjoiZGFtYmVtIiwiYSI6ImNrbTNkbWp2cTRmZWUyb253OXp4c2Y3bHUifQ.FrZ4QICwAA6z1izPGE2afw'
     }).addTo(sensorMap);
 
     // Localises the view to go to Sheffield

@@ -60,6 +60,7 @@
     <Content Include="views\footer.pug">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="views\our-team.pug" />
     <Content Include="views\Page1.pug">
       <SubType>Code</SubType>
       <Publish>False</Publish>
