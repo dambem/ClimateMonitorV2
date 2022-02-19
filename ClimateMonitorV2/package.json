@@ -4,8 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node app",
-    "test": "mocha --recursive test",
-    "pylint": "flake8 public/**/*.py --count --extend-ignore=E111,E302,E501,E722,W293 --show-source --statistics"
+    "test": "mocha --recursive test"
   },
   "description": "ClimateMonitorV2",
   "author": {

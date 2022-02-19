@@ -300,23 +300,23 @@ function build_link_from_date(date) {
     return link
 }
 
-function currentWeatherDisplay() {
-    const weatherDataURL = "https://api.weather.com/v3/wx/forecast/hourly/2day?geocode=53.383331%2C-1.466667&format=json&units=e&language=en-US&apiKey=" + config.WEATHER_COMPANY_KEY
-    $.get(weatherDataURL)
-    .done(function(weatherData){
-        const currentTemp = weatherData.temperature[0];
-        const currentTempCelcius = Math.floor((5/9) * (currentTemp - 32));
-        const currentWindSpeed = weatherData.windSpeed[0];
-        const currentIconCode = weatherData.iconCode[0];
-        $('#currentTemp').html(currentTempCelcius +'ºC');
-        $('#currentWind').html(currentWindSpeed + 'mph');
-        $('#weather-image').attr('src', '../files/weather-icons/' + currentIconCode + '.png');
-        $('#weather-image').attr('alt', 'A forecast-style weather icon for the current weather conditions');
-        return true
-    }).fail(function(jqXHR, textStatus, errrorThrown) {
-        return false
-    });
-}
+// function currentWeatherDisplay() {
+//     const weatherDataURL = "https://api.weather.com/v3/wx/forecast/hourly/2day?geocode=53.383331%2C-1.466667&format=json&units=e&language=en-US&apiKey=" + config.WEATHER_COMPANY_KEY
+//     $.get(weatherDataURL)
+//     .done(function(weatherData){
+//         const currentTemp = weatherData.temperature[0];
+//         const currentTempCelcius = Math.floor((5/9) * (currentTemp - 32));
+//         const currentWindSpeed = weatherData.windSpeed[0];
+//         const currentIconCode = weatherData.iconCode[0];
+//         $('#currentTemp').html(currentTempCelcius +'ºC');
+//         $('#currentWind').html(currentWindSpeed + 'mph');
+//         $('#weather-image').attr('src', '../files/weather-icons/' + currentIconCode + '.png');
+//         $('#weather-image').attr('alt', 'A forecast-style weather icon for the current weather conditions');
+//         return true
+//     }).fail(function(jqXHR, textStatus, errrorThrown) {
+//         return false
+//     });
+// }
 
 function currentAirQualityDisplay() {
     const airQualityURL = "https://api.waqi.info/feed/sheffield/?token=3d23ae70180b539813cf9dbc45744037d482065d"
@@ -403,90 +403,90 @@ function currentAirQualityDisplay() {
 // Everything required once loaded
 $(document).ready(() => {
     // Activate Carousel
-    $('#pythongraphslideshow').carousel({ interval: 3000 });
-    const githubURL = 'https://api.github.com/repos/dambem/ClimateMonitorV2/contents/ClimateMonitorV2/public/files/images?password=' + config.GITHUB_API_TOKEN; 
-    $.get(githubURL, 
-    function(files) {
-        var images = []
-        // Get image links
-        files.forEach(function (file) {
+    // $('#pythongraphslideshow').carousel({ interval: 3000 });
+    // const githubURL = 'https://api.github.com/repos/dambem/ClimateMonitorV2/contents/ClimateMonitorV2/public/files/images?password=' + config.GITHUB_API_TOKEN; 
+    // $.get(githubURL, 
+    // function(files) {
+    //     var images = []
+    //     // Get image links
+    //     files.forEach(function (file) {
 
-            // Only extract images
-            if (file["name"].includes(".png", file["name"].length - 5)) {               
+    //         // Only extract images
+    //         if (file["name"].includes(".png", file["name"].length - 5)) {               
                 
-                console.log(`INFO: Importing ${file["name"]}...`)
-                images.push(file['download_url'])
+    //             console.log(`INFO: Importing ${file["name"]}...`)
+    //             images.push(file['download_url'])
 
-            }
+    //         }
 
-        });
+    //     });
         
-        if (images.length == 0) {
-            alert("WARNING: No png images were found at ClimateMonitorV2/public/files/images\nGraph carosuel will be empty")
-        }
+    //     if (images.length == 0) {
+    //         alert("WARNING: No png images were found at ClimateMonitorV2/public/files/images\nGraph carosuel will be empty")
+    //     }
         
-        // Compile the indicators first
-        for (var currentCount = 1; currentCount < images.length; ++currentCount) {
-            var listItemNode = document.createElement("LI")
-            listItemNode.setAttribute("data-target", "#pythongraphslideshow")
-            listItemNode.setAttribute("data-slide-to", currentCount)
+    //     // Compile the indicators first
+    //     for (var currentCount = 1; currentCount < images.length; ++currentCount) {
+    //         var listItemNode = document.createElement("LI")
+    //         listItemNode.setAttribute("data-target", "#pythongraphslideshow")
+    //         listItemNode.setAttribute("data-slide-to", currentCount)
 
-            document.getElementById("graph_carousel_indicators").appendChild(listItemNode)
-        }
+    //         document.getElementById("graph_carousel_indicators").appendChild(listItemNode)
+    //     }
 
-        // Populate the carosuel
-        var altText = "Graph unavailable. Please check your GITHUB_API_TOKEN"
-        var activeImage = false
-        var imageCount = 0
+    //     // Populate the carosuel
+    //     var altText = "Graph unavailable. Please check your GITHUB_API_TOKEN"
+    //     var activeImage = false
+    //     var imageCount = 0
 
-        images.forEach( function (image) {
+    //     images.forEach( function (image) {
 
-            if (!activeImage) {
-                $(`#carosuel_items`).append(
-                    `
-                    <div class="carousel-item active">
-                        <a 
-                            target="_blank"
-                            href="${image}"
-                        >
-                            <img
-                                src="${image}"
-                                alt="${altText}"
-                                width="100%"
-                                height="100%"
-                            >
-                        </a>
-                    </div>
-                    `
-                )
-                activeImage = true
-                imageCount++
+    //         if (!activeImage) {
+    //             $(`#carosuel_items`).append(
+    //                 `
+    //                 <div class="carousel-item active">
+    //                     <a 
+    //                         target="_blank"
+    //                         href="${image}"
+    //                     >
+    //                         <img
+    //                             src="${image}"
+    //                             alt="${altText}"
+    //                             width="100%"
+    //                             height="100%"
+    //                         >
+    //                     </a>
+    //                 </div>
+    //                 `
+    //             )
+    //             activeImage = true
+    //             imageCount++
 
-            } else {
-                // Use a counter to make each class unique
-                $(`#carosuel_items`).append(
-                    `
-                    <div class="carousel-item ${imageCount}">
-                        <a 
-                            target="_blank"
-                            href="${image}"
-                        >
-                            <img
-                                src="${image}"
-                                alt="${altText}"
-                                width="100%"
-                                height="100%"
-                            >
-                        </a>
-                    </div>
-                    `
-                )
-                imageCount++
+    //         } else {
+    //             // Use a counter to make each class unique
+    //             $(`#carosuel_items`).append(
+    //                 `
+    //                 <div class="carousel-item ${imageCount}">
+    //                     <a 
+    //                         target="_blank"
+    //                         href="${image}"
+    //                     >
+    //                         <img
+    //                             src="${image}"
+    //                             alt="${altText}"
+    //                             width="100%"
+    //                             height="100%"
+    //                         >
+    //                     </a>
+    //                 </div>
+    //                 `
+    //             )
+    //             imageCount++
 
-            }
+    //         }
             
-        });
-    })
+    //     });
+    // })
   
     currentAirQualityDisplay(); 
 
@@ -665,21 +665,21 @@ $(document).ready(() => {
         }
     }
     
-    if (config.GITHUB_API_TOKEN == "") {
-        alert("WARNING: GITHUB_API_TOKEN is not set\nSome carosuel images may not be present")
-    }
-    if (config.MAP_KEY == "") {
-        alert("WARNING: MAP_KEY is not set\nThe mapbox will likely appear as a grey void.")
-    }
-    if (config.WEATHER_COMPANY_KEY == "") {
-        alert("WARNING: WEATHER_COMPANY_KEY is not set\nWeather company infomation will be unavailable.")
-    }
+    // if (config.GITHUB_API_TOKEN == "") {
+    //     alert("WARNING: GITHUB_API_TOKEN is not set\nSome carosuel images may not be present")
+    // }
+    // if (config.MAP_KEY == "") {
+    //     alert("WARNING: MAP_KEY is not set\nThe mapbox will likely appear as a grey void.")
+    // }
+    // if (config.WEATHER_COMPANY_KEY == "") {
+    //     alert("WARNING: WEATHER_COMPANY_KEY is not set\nWeather company infomation will be unavailable.")
+    // }
 
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
         attribution: 'Sensor Data <a href="https://luftdaten.info/en/home-en/">Luftdaten</a> | Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         maxZoom: 18,
         id: 'mapbox/streets-v11',
-        accessToken: 'pk.eyJ1IjoiZGFtYmVtIiwiYSI6ImNrbTNkbWp2cTRmZWUyb253OXp4c2Y3bHUifQ.FrZ4QICwAA6z1izPGE2afw'
+        accessToken: 'pk.eyJ1IjoiZGFtYmVtMiIsImEiOiJja3p1MHAxNmsxdjg1MndwZWVsYTBjeDdkIn0.tL7y6KsIDQn1pd1Zavc5yw'
     }).addTo(sensorMap);
 
     // Localises the view to go to Sheffield
