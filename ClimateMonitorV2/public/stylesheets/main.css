@@ -6,8 +6,8 @@ REFERENCES
 body {
     padding: 0 1% 0 1%;
     font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-    margin-left: 7%; /* Same as the width as the sidebar*/
     display: flex;
+    margin-left: 6%;
     min-height: 100vh;
     flex-direction: column;
 }
@@ -65,8 +65,10 @@ main {
     position: fixed;
     z-index: 1;
     top: 0;
+    border-top-right-radius: 50px;
+    border-bottom-right-radius: 50px;
     left: 0;
-    background-color: #e3f4ff;
+    background-color: #ffffff;
     overflow-x: hidden;
     overflow-y: hidden;
     padding-top: 1em;
@@ -163,7 +165,7 @@ main {
     background-color: red;
 }
 
-h2, h3 {
+h2, h3, h4 {
     font-family: 'Bellota Text', cursive;
 }
 
