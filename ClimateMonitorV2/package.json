@@ -38,7 +38,7 @@
     "morgan": "^1.10.0",
     "package.json": "^2.0.1",
     "papaparse": "^5.2.0",
-    "pug": "^2.0.0-beta6",
+    "pug": "^3.0.1",
     "puppeteer": "^4.0.0",
     "request": "2.88.2",
     "request-progress": "^3.0.0",
